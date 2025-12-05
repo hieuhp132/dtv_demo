@@ -4,12 +4,7 @@
   --primary-orange: #FFA63D;   /* cam vàng đậm */
 
   /* Gradient chuẩn theo ảnh */
-  --header-gradient: linear-gradient(
-    135deg,
-    #FFA63D 0%,
-    #FF6D5A 50%,
-    #FF465E 100%
-  );
+  --header-gradient: linear-gradient(135deg, orange, #ff5e62);
 
   /* GIỮ NGUYÊN */
   --text-dark: #1a1a1a;
