@@ -151,31 +151,6 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Banner Slider */}
-      {banners.length > 0 && (
-        <section className="banner-slider">
-          <div className="banner-track" style={{ transform: `translateX(-${bannerIndex * 100}%)` }}>
-              {banners.map((src, i) => (
-                <div className="banner-slide" key={`${src}-${i}`}>
-                <img src={src} alt={`banner ${i+1}`} />
-                {(() => { const t = deriveCaption(src,i); return (
-                  <div className="banner-caption">
-                    <div className="caption-title">{t.title}</div>
-                    <div className="caption-sub">{t.sub}</div>
-                  </div>
-                ); })()}
-                </div>
-              ))}
-          </div>
-          <button className="banner-prev" aria-label="Previous" onClick={() => setBannerIndex(i => (i - 1 + banners.length) % banners.length)}>‹</button>
-          <button className="banner-next" aria-label="Next" onClick={() => setBannerIndex(i => (i + 1) % banners.length)}>›</button>
-          <div className="banner-dots">
-            {banners.map((_, i) => (
-              <button key={`dot-${i}`} className={`dot ${i===bannerIndex?'active':''}`} onClick={() => setBannerIndex(i)} aria-label={`Go to slide ${i+1}`}></button>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* Hero Section */}
       <section className="hero" id="hero">
@@ -202,7 +177,7 @@ export default function HomePage() {
       {/* Jobs Section */}
       <section className="jobs-section" id="jobs">
         <div className="homepage-container">
-          {/* <h1 className="section-title">Job Openings</h1> */}
+          <h1 className="homepage-section-title">Job Openings</h1>
             <div className="hero-search">
               <select defaultValue="all" aria-label="Role type">
                 <option value="all">All roles</option>
@@ -309,7 +284,7 @@ export default function HomePage() {
       {/* Top Jobs This Week */}
       <section className="topjobs-section">
         <div className="homepage-container">
-          <h1 className="homepage-section-title">Top Jobs This Week</h1>
+          <h1 className="homepage-section-title">Top Jobs</h1>
           <div className="toptabs">
             <button className={`toptab ${activeTopTab==='it'?'active':''}`} onClick={() => { setActiveTopTab('it'); setSearchParams({ tab: 'it' }); }}>
               IT Jobs <span className="count">{topIt.length}</span>
@@ -322,7 +297,6 @@ export default function HomePage() {
             {(activeTopTab==='it' ? topIt : topNonIt).slice(0,8).map(j => (
               <div key={`top-${j.id}`} className="topjob-item">
                 <div className="topjob-title">{j.title}</div>
-                {isHot(j) && (<span className="hot-badge">Hot</span>)}
                 <div className="topjob-sub">{j.company || 'N/A'} • {j.location || 'Remote/Onsite'}</div>
                 <div className="topjob-tags">
                   {(Array.isArray(j.keywords) ? j.keywords.slice(0,3) : []).map(t => (
@@ -577,26 +551,26 @@ export default function HomePage() {
     </div>
   );
 }
-const deriveCaption = (src, index) => {
-  const banners_title = [
-    {
-      title: 'Welcome to Our Plattform. Ant-Tech Headhunting',
-      sub: 'We would like to work with you'
-    },
-    {
-      title:'You know someone who specialist at Ai, Security, Networking, or just a person that can solve real world problem in IT',
-      sub: 'Congratulation, this is a right place for you. Lets Refers And Earns'
-    },
-    {
-      title:'Or, you know someone that good at finance situation',
-      sub:'Lets work together. Refers and Earns'
-    },
-    {
-      title:'Even jobs, that are asked on market',
-      sub:'Lets explore our plattform for more informations'
-    }
-  ];
+// const deriveCaption = (src, index) => {
+//   const banners_title = [
+//     {
+//       title: 'Welcome to Our Plattform. Ant-Tech Headhunting',
+//       sub: 'We would like to work with you'
+//     },
+//     {
+//       title:'You know someone who specialist at Ai, Security, Networking, or just a person that can solve real world problem in IT',
+//       sub: 'Congratulation, this is a right place for you. Lets Refers And Earns'
+//     },
+//     {
+//       title:'Or, you know someone that good at finance situation',
+//       sub:'Lets work together. Refers and Earns'
+//     },
+//     {
+//       title:'Even jobs, that are asked on market',
+//       sub:'Lets explore our plattform for more informations'
+//     }
+//   ];
 
-  return banners_title[index] || banners_title[0];
-};
+//   return banners_title[index] || banners_title[0];
+// };
 
