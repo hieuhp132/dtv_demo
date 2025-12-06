@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSupabaseSession } from "../supabaseClient";
+import { supabase } from "../supabaseClient";
 import { API_BASE } from "../api";
 
 const AuthContext = createContext();
@@ -67,6 +68,27 @@ export function AuthProvider({ children }) {
       } catch {}
     })();
   }, [user]);
+
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "SIGNED_IN" && session?.user) {
+        const email = session.user.email;
+        const name = session.user.user_metadata?.full_name || session.user.user_metadata?.name || "";
+        try {
+          const res = await fetch(`${API_BASE}/db/users/oauthLogin`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, name })
+          });
+          const data = await res.json();
+          if (res.ok && data?.user) {
+            login(data.user);
+          }
+        } catch {}
+      }
+    });
+    return () => data.subscription?.unsubscribe();
+  }, [login]);
 
   // auto-logout when expired (check every minute)
   useEffect(() => {
