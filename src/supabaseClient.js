@@ -30,4 +30,14 @@ export async function resetPassword(email) {
     });
 }
   
+
+export async function signInWithProvider(provider) {
+  const redirectTo = window.location.origin;
+  return await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } });
+}
+
+export async function getSupabaseSession() {
+  const { data } = await supabase.auth.getSession();
+  return data?.session || null;
+}
   

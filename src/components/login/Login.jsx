@@ -8,7 +8,7 @@ import teleIcon from "../../assets/tele.png";
 
 import { useAuth } from "../../context/AuthContext";
 import { API_BASE } from "../../api";
-import { resetPassword } from "../../supabaseClient";
+import { resetPassword, signInWithProvider } from "../../supabaseClient";
 import "./Login.css";
 
 
@@ -227,9 +227,9 @@ export default function Login() {
 
           {/* Social login */}
           <div className="social-login">
-            <button type="button" className="social-btn email"><FaEnvelope /> Email</button>
-            <button type="button" className="social-btn facebook"><FaFacebook /> Facebook</button>
-            <button type="button" className="social-btn linkedin"><FaLinkedin /> LinkedIn</button>
+            <button type="button" className="social-btn email" onClick={() => signInWithProvider("google")}><FaEnvelope /> Gmail</button>
+            <button type="button" className="social-btn facebook" onClick={() => signInWithProvider("facebook")}><FaFacebook /> Facebook</button>
+            <button type="button" className="social-btn linkedin" onClick={() => signInWithProvider("linkedin")}><FaLinkedin /> LinkedIn</button>
           </div>
         </form>
       </div>

@@ -1,6 +1,8 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getSupabaseSession } from "../supabaseClient";
+import { API_BASE } from "../api";
 
 const AuthContext = createContext();
 const LS_SESSION = "authSession"; // stored in sessionStorage to isolate per tab
@@ -45,6 +47,26 @@ export function AuthProvider({ children }) {
     }
     setAuthReady(true);
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      const s = await getSupabaseSession();
+      if (!s?.user || user) return;
+      const email = s.user.email;
+      const name = s.user.user_metadata?.full_name || s.user.user_metadata?.name || s.user.user_metadata?.preferred_username || "";
+      try {
+        const res = await fetch(`${API_BASE}/db/users/oauthLogin`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name })
+        });
+        const data = await res.json();
+        if (res.ok && data?.user) {
+          login(data.user);
+        }
+      } catch {}
+    })();
+  }, [user]);
 
   // auto-logout when expired (check every minute)
   useEffect(() => {
