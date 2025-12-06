@@ -32,9 +32,11 @@ export async function resetPassword(email) {
   
 
 export async function signInWithProvider(provider) {
-  const redirectTo = window.location.origin;
-  return await supabase.auth.signInWithOAuth({ provider, options: { redirectTo } });
+  const providerMap = { linkedin: "linkedin_oidc" };
+  const p = providerMap[provider] || provider;
+  return await supabase.auth.signInWithOAuth({ provider: p });
 }
+
 
 export async function getSupabaseSession() {
   const { data } = await supabase.auth.getSession();
