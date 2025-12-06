@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { listSubmissions, listArchivedSubmissions } from "../../api";
+import { listSubmissions, listArchivedSubmissions, getBalances } from "../../api";
 import { useAuth } from "../../context/AuthContext";
 import "./MyCandidates.css";
 import Icons from "../Icons";
@@ -216,11 +216,9 @@ export default function MyCandidates() {
         setArchived(arch.filter((a) => String(a.ctv) === String(ctvId)));
       }
     );
-    import("../../api").then(({ getBalances }) => {
-      getBalances().then((b) => {
-        const id = user?._id || user?.id || user?.email;
-        setBalance(b.ctvBonusById?.[id] || 0);
-      });
+    getBalances().then((b) => {
+      const id = user?._id || user?.id || user?.email;
+      setBalance(b.ctvBonusById?.[id] || 0);
     });
   }, [ctvId, user]);
 
