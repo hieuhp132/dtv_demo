@@ -6,9 +6,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Tạo client
 const supabaseEmail = createClient(
-    import.meta.env.VITE_SUPABASE_URL_MAIL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY_MAIL
-  );
+  import.meta.env.VITE_SUPABASE_URL_MAIL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY_MAIL,
+  { auth: { storageKey: "supabase-mail" } }
+);
 
 // Hàm gọi action signup
 export async function signup(name, email) {

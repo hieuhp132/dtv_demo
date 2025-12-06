@@ -1,5 +1,5 @@
 // src/context/AuthContext.jsx
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSupabaseSession } from "../supabaseClient";
 import { supabase } from "../supabaseClient";
@@ -105,12 +105,12 @@ export function AuthProvider({ children }) {
     return () => clearInterval(interval);
   }, [user, navigate]);
 
-  const login = (nextUser) => {
+  const login = useCallback((nextUser) => {
     setUser(nextUser);
     writeSession(nextUser);
     if (nextUser.role === "admin") navigate("/admin");
     else navigate("/dashboard");
-  };
+  }, [navigate]);
 
   const logout = () => {
     setUser(null);
@@ -118,7 +118,7 @@ export function AuthProvider({ children }) {
     navigate("/login");
   };
 
-  const value = useMemo(() => ({ user, authReady, login, logout, setUser }), [user, authReady]);
+  const value = useMemo(() => ({ user, authReady, login, logout, setUser }), [user, authReady, login]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
