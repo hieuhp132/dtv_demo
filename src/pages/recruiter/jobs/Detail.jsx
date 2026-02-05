@@ -455,6 +455,7 @@ export default function JobDetail() {
             </div>
           </div>
         </aside>
+      </div>
 
       {/* Modal Submit */}
       {open && (
