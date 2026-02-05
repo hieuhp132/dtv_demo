@@ -119,7 +119,7 @@ export default function Navbar() {
             ) : (
               <div className="navbar-actions">
                 {/* MESSENGER */}
-                <button
+                {/* <button
                   className="icon-btn messenger-btn"
                   onClick={() => setMessengerOpen(true)}
                   title="Messages"
@@ -128,7 +128,7 @@ export default function Navbar() {
                   {unreadCount > 0 && (
                     <span className="badge">{unreadCount}</span>
                   )}
-                </button>
+                </button> */}
 
                 {/* NOTIFICATIONS */}
                 <button

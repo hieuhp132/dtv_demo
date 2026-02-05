@@ -1,0 +1,199 @@
+.activity-section {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.activity-section h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.activity-section h3::before {
+  content: "📊";
+  font-size: 1.25rem;
+}
+
+.no-activities {
+  text-align: center;
+  color: #9ca3af;
+  padding: 32px 16px;
+  font-style: italic;
+}
+
+/* Activity Timeline */
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+/* Vertical line */
+.activity-timeline::before {
+  content: "";
+  position: absolute;
+  left: 19px;
+  top: 40px;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #3b82f6, #10b981, #f59e0b, #ef4444);
+  opacity: 0.3;
+}
+
+/* Activity Item */
+.activity-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  position: relative;
+  z-index: 1;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.activity-item:hover {
+  background: #f9fafb;
+}
+
+/* Activity Icon */
+.activity-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+/* Activity Content */
+.activity-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-description {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+  margin: 0 0 6px 0;
+  line-height: 1.4;
+}
+
+.activity-details {
+  color: #6b7280;
+  font-size: 13px;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.activity-time {
+  display: inline-block;
+  font-size: 12px;
+  color: #9ca3af;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Activity Types - Different Styles */
+
+/* Create activity */
+.activity-item:has(.activity-icon[style*="rgb(16, 185, 129)"]) {
+  border-left: 3px solid #10b981;
+}
+
+/* Edit activity */
+.activity-item:has(.activity-icon[style*="rgb(245, 158, 11)"]) {
+  border-left: 3px solid #f59e0b;
+}
+
+/* Delete activity */
+.activity-item:has(.activity-icon[style*="rgb(239, 68, 68)"]) {
+  border-left: 3px solid #ef4444;
+}
+
+/* Submit activity */
+.activity-item:has(.activity-icon[style*="rgb(59, 130, 246)"]) {
+  border-left: 3px solid #3b82f6;
+}
+
+/* Comment activity */
+.activity-item:has(.activity-icon[style*="rgb(139, 92, 246)"]) {
+  border-left: 3px solid #8b5cf6;
+}
+
+/* Upload/Download activity */
+.activity-item:has(.activity-icon[style*="rgb(6, 182, 212)"]) {
+  border-left: 3px solid #06b6d4;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .activity-section {
+    padding: 16px;
+  }
+
+  .activity-item {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .activity-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .activity-description {
+    font-size: 13px;
+  }
+
+  .activity-details {
+    font-size: 12px;
+  }
+
+  .activity-time {
+    font-size: 11px;
+  }
+
+  .activity-timeline::before {
+    left: 17px;
+  }
+}
+
+/* Scrollable Timeline (if many activities) */
+.activity-timeline {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.activity-timeline::-webkit-scrollbar {
+  width: 6px;
+}
+
+.activity-timeline::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.activity-timeline::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.activity-timeline::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

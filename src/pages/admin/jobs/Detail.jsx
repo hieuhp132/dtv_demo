@@ -12,6 +12,8 @@ import {
 import { useAuth } from "../../../context/AuthContext.jsx";
 import FilesView from "../../../components/FileView";
 import FileUploader from "../../../components/FileUploader";
+import Comments from "../../../components/Comments";
+import Activity from "../../../components/Activity";
 import "./Detail.css";
 
 export default function JobDetail() {
@@ -426,6 +428,16 @@ export default function JobDetail() {
           )}
         </aside>
       </div>
+
+      {/* Comments Section */}
+      <section className="comments-activity-container">
+        <Comments jobId={id} isAdmin={isAdmin} />
+      </section>
+
+      {/* Activity Section */}
+      <section className="comments-activity-container">
+        <Activity jobId={id} />
+      </section>
 
       {/* Modal Submit */}
       {open && (
