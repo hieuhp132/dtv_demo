@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import "./Comments.css";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 export default function Comments({ jobId, isAdmin }) {
   const { user } = useAuth();
   const [comments, setComments] = useState([]);
@@ -9,47 +11,74 @@ export default function Comments({ jobId, isAdmin }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // Load comments from localStorage
+  // Load comments from API
   useEffect(() => {
-    const savedComments = localStorage.getItem(`comments_${jobId}`);
-    if (savedComments) {
-      try {
-        setComments(JSON.parse(savedComments));
-      } catch (err) {
-        console.error("Error loading comments:", err);
-      }
-    }
+    if (!jobId) return;
+    loadComments();
   }, [jobId]);
 
-  // Save comments to localStorage
-  useEffect(() => {
-    if (comments.length > 0) {
-      localStorage.setItem(`comments_${jobId}`, JSON.stringify(comments));
+  const loadComments = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_BASE}/api/comments/${jobId}`);
+      const data = await res.json();
+      if (data.success) setComments(data.comments || []);
+    } catch (err) {
+      console.error("Error loading comments:", err);
+    } finally {
+      setLoading(false);
     }
-  }, [comments, jobId]);
+  };
 
-  const handleAddComment = (e) => {
+  const handleAddComment = async (e) => {
     e.preventDefault();
     if (!commentText.trim() || !user) return;
 
-    const newComment = {
-      id: Date.now(),
-      text: commentText,
-      author: user.name || user.email,
-      authorRole: user.role,
-      timestamp: new Date().toISOString(),
-      userId: user.id || user.email,
-    };
+    try {
+      setIsSubmitting(true);
+      const res = await fetch(`${API_BASE}/api/comments/${jobId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: commentText,
+          author: user.name || user.email,
+          authorRole: user.role,
+          userId: user.id || user.email,
+        }),
+      });
 
-    setComments([newComment, ...comments]);
-    setCommentText("");
+      const data = await res.json();
+      if (data.success) {
+        setComments((s) => [data.comment, ...s]);
+        setCommentText("");
+      } else {
+        alert("Failed to add comment: " + data.message);
+      }
+    } catch (err) {
+      console.error("Error adding comment:", err);
+      alert("Failed to add comment");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleDeleteComment = (id) => {
-    if (!window.confirm("Are you sure you want to delete this comment?"))
-      return;
-    setComments(comments.filter((c) => c.id !== id));
+  const handleDeleteComment = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this comment?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/api/comments/${jobId}/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id || user.email, isAdmin }),
+      });
+      const data = await res.json();
+      if (data.success) setComments((s) => s.filter((c) => c.id !== id));
+      else alert("Failed to delete comment: " + data.message);
+    } catch (err) {
+      console.error("Error deleting comment:", err);
+      alert("Failed to delete comment");
+    }
   };
 
   const handleEditComment = (id) => {
@@ -60,20 +89,25 @@ export default function Comments({ jobId, isAdmin }) {
     }
   };
 
-  const handleSaveEdit = (id) => {
-    setComments(
-      comments.map((c) =>
-        c.id === id
-          ? {
-              ...c,
-              text: editText,
-              editedAt: new Date().toISOString(),
-            }
-          : c
-      )
-    );
-    setEditingId(null);
-    setEditText("");
+  const handleSaveEdit = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/comments/${jobId}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: editText, userId: user.id || user.email }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setComments((s) => s.map((c) => (c.id === id ? { ...c, text: editText, editedAt: new Date().toISOString() } : c)));
+        setEditingId(null);
+        setEditText("");
+      } else {
+        alert("Failed to update comment: " + data.message);
+      }
+    } catch (err) {
+      console.error("Error updating comment:", err);
+      alert("Failed to update comment");
+    }
   };
 
   const formatDate = (dateString) => {
@@ -83,29 +117,35 @@ export default function Comments({ jobId, isAdmin }) {
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
-
     if (diffMins < 1) return "Just now";
     if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`;
     if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
     if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
-
     return date.toLocaleDateString();
   };
 
   const getRoleBadge = (role) => {
-    const colors = {
-      admin: "#ef4444",
-      recruiter: "#3b82f6",
-      user: "#6b7280",
-    };
+    const colors = { admin: "#ef4444", recruiter: "#3b82f6", user: "#6b7280" };
     return colors[role] || "#6b7280";
   };
+
+  if (loading) return (
+    <div className="comments-section">
+      <h3>Comments & Discussion</h3>
+      <p className="no-comments">Loading comments...</p>
+    </div>
+  );
 
   return (
     <div className="comments-section">
       <h3>Comments & Discussion</h3>
+      {user && (
+        <form className="add-comment-form" onSubmit={handleAddComment}>
+          <textarea placeholder="Add a comment..." value={commentText} onChange={(e) => setCommentText(e.target.value)} rows="3" />
+          <button type="submit" disabled={isSubmitting || !commentText.trim()} className="btn-submit">{isSubmitting ? "Posting..." : "Post Comment"}</button>
+        </form>
+      )}
 
-      {/* Comments List */}
       <div className="comments-list">
         {comments.length === 0 ? (
           <p className="no-comments">No comments yet. Be the first to comment!</p>
@@ -115,32 +155,17 @@ export default function Comments({ jobId, isAdmin }) {
               <div className="comment-header">
                 <div className="comment-author">
                   <span className="author-name">{comment.author}</span>
-                  <span
-                    className="author-role"
-                    style={{ backgroundColor: getRoleBadge(comment.authorRole) }}
-                  >
-                    {comment.authorRole}
-                  </span>
+                  <span className="author-role" style={{ backgroundColor: getRoleBadge(comment.authorRole) }}>{comment.authorRole}</span>
                 </div>
-                <span className="comment-time">
-                  {formatDate(comment.timestamp)}
-                  {comment.editedAt && " (edited)"}
-                </span>
+                <span className="comment-time">{formatDate(comment.timestamp)}{comment.editedAt && " (edited)"}</span>
               </div>
 
               {editingId === comment.id ? (
                 <div className="edit-comment">
                   <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows="3" />
                   <div className="edit-actions">
-                    <button onClick={() => handleSaveEdit(comment.id)} className="btn-save">
-                      Save
-                    </button>
-                    <button
-                      onClick={() => setEditingId(null)}
-                      className="btn-cancel"
-                    >
-                      Cancel
-                    </button>
+                    <button onClick={() => handleSaveEdit(comment.id)} className="btn-save">Save</button>
+                    <button onClick={() => setEditingId(null)} className="btn-cancel">Cancel</button>
                   </div>
                 </div>
               ) : (
@@ -149,44 +174,14 @@ export default function Comments({ jobId, isAdmin }) {
 
               {(isAdmin || user?.id === comment.userId || user?.email === comment.userId) && (
                 <div className="comment-actions">
-                  {editingId !== comment.id && (
-                    <button
-                      onClick={() => handleEditComment(comment.id)}
-                      className="btn-edit"
-                    >
-                      Edit
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleDeleteComment(comment.id)}
-                    className="btn-delete"
-                  >
-                    Delete
-                  </button>
+                  {editingId !== comment.id && (<button onClick={() => handleEditComment(comment.id)} className="btn-edit">Edit</button>)}
+                  <button onClick={() => handleDeleteComment(comment.id)} className="btn-delete">Delete</button>
                 </div>
               )}
             </div>
           ))
         )}
       </div>
-            {/* Add Comment Form */}
-      {user && (
-        <form className="add-comment-form" onSubmit={handleAddComment}>
-          <textarea
-            placeholder="Add a comment..."
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            rows="3"
-          />
-          <button
-            type="submit"
-            disabled={isSubmitting || !commentText.trim()}
-            className="btn-submit"
-          >
-            Post Comment
-          </button>
-        </form>
-      )}
     </div>
   );
 }

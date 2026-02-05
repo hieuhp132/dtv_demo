@@ -44,14 +44,35 @@ export default function Activity({ jobId }) {
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
+      const [loading, setLoading] = useState(true);
+      const mounted = useRef(true);
 
-    if (diffMins < 1) return "Just now";
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
+      useEffect(() => {
+        mounted.current = true;
+        loadActivities();
+        const id = setInterval(loadActivities, 10000);
+        return () => {
+          mounted.current = false;
+          clearInterval(id);
+        };
+      }, [jobId]);
 
-    return date.toLocaleDateString();
+      const loadActivities = async () => {
+        try {
+          setLoading(true);
+          const res = await fetch(`${API_BASE}/api/comments/activities?limit=50`);
+          const data = await res.json();
+          if (!mounted.current) return;
+          if (data.success) {
+            const list = (data.activities || []).filter((a) => (jobId ? (a.metadata?.jobId === jobId || a.jobId === jobId) : true));
+            setActivities(list);
+          }
+        } catch (err) {
+          console.error("Failed loading activities:", err);
+        } finally {
+          if (mounted.current) setLoading(false);
+        }
+      };
   };
 
   const getActivityIcon = (type) => {
@@ -66,7 +87,6 @@ export default function Activity({ jobId }) {
       upload: "📁",
       download: "📥",
       status_change: "🔄",
-      view: "👁️",
     };
     return icons[type] || "📌";
   };
