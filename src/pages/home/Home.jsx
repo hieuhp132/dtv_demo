@@ -133,7 +133,7 @@ export default function HomePage() {
       {/* Jobs Section */}
       <section className="jobs-section" id="jobs">
         <div className="homepage-container">
-          <h1 className="homepage-section-title">Job Openings</h1>
+          <h3 className="homepage-section-title">Job Openings</h3>
           <div className="hero-search">
             <input
               type="text"
@@ -331,9 +331,9 @@ export default function HomePage() {
       {/* FAQ Section */}
       <section className="faq-section" id="faq">
         <div className="homepage-container">
-          <h1 className="homepage-section-title">
+          <h3 className="homepage-section-title">
             Frequently Asked Questions (FAQ)
-          </h1>
+          </h3>
           <div className="faq-content">
             <div className="faq-item">
               <h3>Who can join the collaborator program?</h3>
