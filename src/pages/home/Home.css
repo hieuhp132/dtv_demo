@@ -145,7 +145,7 @@
 
 .hero {
   background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-  padding: 80px 0;
+  padding: 5px 0;
   text-align: center;
 }
 
@@ -261,7 +261,7 @@
   font-size: 1.2rem;
   transition: all 0.3s ease;
   box-shadow: var(--shadow-lg);
-  margin-top: 24px;
+  margin: 10px 0;
 }
 
 .btn-cta:hover {
@@ -292,7 +292,7 @@
 }
 
 .about-section {
-  padding: 80px 0;
+  padding: 5px 0;
   background: var(--bg-light);
 }
 
@@ -331,7 +331,7 @@
 }
 
 .jobs-section {
-  padding: 80px 0;
+  padding: 10px 0;
   background: var(--bg-white);
 }
 
@@ -587,7 +587,7 @@
 }
 
 .features-section {
-  padding: 80px 0;
+  padding: 5px 0;
   background: var(--bg-white);
 }
 
@@ -632,7 +632,7 @@
 }
 
 .process-section {
-  padding: 80px 0;
+  padding: 25px 0;
   background: var(--bg-light);
 }
 
@@ -645,7 +645,7 @@
 .process-item {
   background: white;
   border-radius: 16px;
-  padding: 40px 24px;
+  padding: 5px 24px;
   box-shadow: var(--shadow-sm);
   text-align: center;
   transition: all 0.3s ease;
@@ -684,7 +684,7 @@
 }
 
 .faq-section {
-  padding: 80px 0;
+  padding: 25px 0;
   background: var(--bg-white);
 }
 
