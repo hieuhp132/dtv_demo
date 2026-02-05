@@ -40,7 +40,7 @@ export default function Footer() {
                 (Headhunter Referral Program)
               </p>
             </div>
-            <div className="testimonial">
+            {/* <div className="testimonial">
               <p className="quote" style={{ color: "#ffffff" }}>
                 “Through Ant-Tech Asia’s program, I was able to earn additional
                 income while helping my network find amazing job opportunities.
@@ -51,7 +51,7 @@ export default function Footer() {
                 <FaStar className="author-icon" />
                 <span style={{ color: "#ffffff" }}>Top Collaborator</span>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="footer-divider1"></div>
           <div className="footer-bottom">
