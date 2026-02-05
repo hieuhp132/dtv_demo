@@ -684,7 +684,7 @@
 }
 
 .faq-section {
-  padding: 25px 0;
+
   background: var(--bg-white);
 }
 
@@ -700,7 +700,7 @@
   background: white;
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
-  padding: 24px;
+
   position: relative;
   border: 1px solid var(--border-light);
   transition: all 0.3s ease;

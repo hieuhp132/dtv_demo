@@ -193,10 +193,10 @@ export default function Navbar() {
       </header>
 
       {/* OVERLAYS */}
-      <Messenger
+      {/* <Messenger
         isOpen={messengerOpen}
         onClose={() => setMessengerOpen(false)}
-      />
+      /> */}
 
       <Notifications
         isOpen={notificationsOpen}
