@@ -334,6 +334,7 @@ export default function JobDetail() {
 
   return (
     <div className="job-detail">
+      {console.log("Rendering JobDetail with job:", job)}
       <header className="page-header">
         <h2>{job.title || "Untitled Job"}</h2>
         {keywords.length > 0 && (
