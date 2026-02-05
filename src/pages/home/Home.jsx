@@ -87,7 +87,7 @@ export default function HomePage() {
     );
     setLoading(true);
     try {
-      let list = await fetchAllJobs(24);
+      let list = await fetchAllJobs(9);
       list = Array.isArray(list) ? list : [];
       if (keyword)
         list = list.filter((j) =>
