@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import "./Comments.css";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { API_BASE } from "../services/api.js";
 
 export default function Comments({ jobId, isAdmin }) {
   const { user } = useAuth();
