@@ -33,6 +33,7 @@
   align-items: start;
   margin: 0 auto;
   padding: 0 16px;
+  width: 100% !important;
 }
 
 /* SIDEBAR - Contains files and comments/activity */

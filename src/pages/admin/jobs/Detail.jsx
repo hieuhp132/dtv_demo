@@ -363,18 +363,21 @@ export default function JobDetail() {
           </div>
 
           <section className="job-section">
-            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.description || "No description provided" }} />
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.description || "No description provided" }} />
           </section>
 
           <section className="job-section">
-            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.requirements || "No requirements listed" }} />
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.requirements || "No requirements listed" }} />
           </section>
 
           {job.benefits && (
             <section className="job-section">
-              <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.benefits }} />
+              <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.benefits || "No benefits listed" }} />
             </section>
           )}
+          <section className="job-section">
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.other || "No other information provided" }} />
+          </section>
         </main>
 
         {/* Sidebar - Files, Comments & Activity */}
