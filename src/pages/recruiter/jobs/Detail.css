@@ -30,9 +30,8 @@
   grid-template-columns: minmax(0, 1fr) 400px;
   gap: 24px;
   align-items: start;
-  margin: 0 auto;
-  padding: 0 16px;
-  width: 100% !important;
+  width: 100%;
+  padding: 0 16px 24px 16px;
 }
 
 /* SIDEBAR - Contains files and comments/activity */
