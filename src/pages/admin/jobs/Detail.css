@@ -1,0 +1,247 @@
+
+.job-detail {
+  background: #f9fafb;
+}
+
+.job-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+/* ✅ FIX LAYOUT */
+.job-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start; /* ⭐ rất quan trọng */
+}
+
+
+
+/* TAGS */
+.job-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.job-tags span {
+  background: #eef2ff;
+  color: #3730a3;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* INFO GRID */
+.job-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.info-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-box label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.info-box.highlight strong {
+  color: #f59e0b;
+}
+
+/* SECTIONS */
+.job-section {
+  min-width: 0;
+}
+
+.job-section h4 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+/* SIDEBAR */
+.job-sidebar .card {
+  margin-bottom: 16px;
+}
+
+.primary {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: grid;
+  place-items: center;
+  z-index: 999;
+}
+
+.modal-form {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+  .job-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .job-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.job-html-content {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.job-html-content ul {
+  list-style-type: disc;
+  margin-left: 1.25rem;
+  padding-left: 1rem;
+}
+
+.job-html-content ol {
+  list-style-type: decimal;
+  margin-left: 1.25rem;
+  padding-left: 1rem;
+}
+
+.job-html-content li {
+  margin-bottom: 0.35rem;
+}
+
+/* Support Quill indent metadata: data-indent="N" or class ql-indent-N */
+.job-html-content li[data-indent],
+.job-html-content li[class*="ql-indent-"] {
+  /* ensure marker is outside and we can shift the whole item */
+  list-style-position: outside;
+}
+
+.job-html-content li[data-indent="1"],
+.job-html-content li.ql-indent-1 {
+  margin-left: 1.5rem;
+}
+.job-html-content li[data-indent="2"],
+.job-html-content li.ql-indent-2 {
+  margin-left: 3rem;
+}
+.job-html-content li[data-indent="3"],
+.job-html-content li.ql-indent-3 {
+  margin-left: 4.5rem;
+}
+.job-html-content li[data-indent="4"],
+.job-html-content li.ql-indent-4 {
+  margin-left: 6rem;
+}
+.job-html-content li[data-indent="5"],
+.job-html-content li.ql-indent-5 {
+  margin-left: 7.5rem;
+}
+
+/* Also support block-level paragraphs that Quill may indent using inline styles */
+.job-html-content p[data-indent],
+.job-html-content p[class*="ql-indent-"] {
+  margin-left: 1.5rem;
+}
+
+/* ensure Quill-editor generated content keeps its spacing */
+.job-html-content p {
+  margin: 0 0 0.75rem 0;
+}
+
+/* small fix: nested lists */
+.job-html-content ul ul,
+.job-html-content ol ol,
+.job-html-content ul ol,
+.job-html-content ol ul {
+  margin-left: 1rem;
+}
+
+/* Quill sometimes stores bullet lists as <ol data-list="bullet"> */
+.job-html-content ol[data-list="bullet"] {
+  list-style-type: disc; /* render bullets instead of numbers */
+}
+
+/* Ensure list items with Quill-specific attributes behave like normal list items */
+.job-html-content li[data-list="bullet"] {
+  display: list-item;
+}
+
+/* Render a bullet marker for list items that Quill marked as bullets (even when parent is <ol>) */
+.job-html-content li[data-list="bullet"]::marker {
+  /* use a solid bullet and a small space */
+  content: "• ";
+  color: inherit;
+}
+
+/* Hide quill UI helper spans inside rendered content (they're non-editable markers) */
+.job-html-content .ql-ui {
+  display: none;
+}
+
+/* Quill size classes - render custom px/rem font sizes from editor */
+.job-html-content .ql-size-12px { font-size: 12px; }
+.job-html-content .ql-size-14px { font-size: 14px; }
+.job-html-content .ql-size-16px { font-size: 16px; }
+.job-html-content .ql-size-18px { font-size: 18px; }
+.job-html-content .ql-size-20px { font-size: 20px; }
+.job-html-content .ql-size-24px { font-size: 24px; }
+.job-html-content .ql-size-28px { font-size: 28px; }
+.job-html-content .ql-size-32px { font-size: 32px; }
+.job-html-content .ql-size-0\.75rem { font-size: 0.75rem; }
+.job-html-content .ql-size-1rem { font-size: 1rem; }
+.job-html-content .ql-size-1\.25rem { font-size: 1.25rem; }
+.job-html-content .ql-size-1\.5rem { font-size: 1.5rem; }
+.job-html-content .ql-size-1\.75rem { font-size: 1.75rem; }
+.job-html-content .ql-size-2rem { font-size: 2rem; }
+.job-html-content .ql-size-2\.5rem { font-size: 2.5rem; }
+
+/* Support data-size attribute format for custom sizes */
+.job-html-content span[data-size="12px"] { font-size: 12px; }
+.job-html-content span[data-size="14px"] { font-size: 14px; }
+.job-html-content span[data-size="16px"] { font-size: 16px; }
+.job-html-content span[data-size="18px"] { font-size: 18px; }
+.job-html-content span[data-size="20px"] { font-size: 20px; }
+.job-html-content span[data-size="24px"] { font-size: 24px; }
+.job-html-content span[data-size="28px"] { font-size: 28px; }
+.job-html-content span[data-size="32px"] { font-size: 32px; }
+.job-html-content span[data-size="0.75rem"] { font-size: 0.75rem; }
+.job-html-content span[data-size="1rem"] { font-size: 1rem; }
+.job-html-content span[data-size="1.25rem"] { font-size: 1.25rem; }
+.job-html-content span[data-size="1.5rem"] { font-size: 1.5rem; }
+.job-html-content span[data-size="1.75rem"] { font-size: 1.75rem; }
+.job-html-content span[data-size="2rem"] { font-size: 2rem; }
+.job-html-content span[data-size="2.5rem"] { font-size: 2.5rem; }
