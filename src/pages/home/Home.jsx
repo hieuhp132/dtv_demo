@@ -44,7 +44,7 @@ export default function HomePage() {
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    fetchAllJobs(12)
+    fetchAllJobs(6)
       .then((list) => {
         if (mounted) setJobs(Array.isArray(list) ? list : []);
       })
