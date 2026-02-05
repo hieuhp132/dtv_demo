@@ -105,25 +105,6 @@ export default function Comments({ jobId, isAdmin }) {
     <div className="comments-section">
       <h3>Comments & Discussion</h3>
 
-      {/* Add Comment Form */}
-      {user && (
-        <form className="add-comment-form" onSubmit={handleAddComment}>
-          <textarea
-            placeholder="Add a comment..."
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            rows="3"
-          />
-          <button
-            type="submit"
-            disabled={isSubmitting || !commentText.trim()}
-            className="btn-submit"
-          >
-            Post Comment
-          </button>
-        </form>
-      )}
-
       {/* Comments List */}
       <div className="comments-list">
         {comments.length === 0 ? (
@@ -188,6 +169,24 @@ export default function Comments({ jobId, isAdmin }) {
           ))
         )}
       </div>
+            {/* Add Comment Form */}
+      {user && (
+        <form className="add-comment-form" onSubmit={handleAddComment}>
+          <textarea
+            placeholder="Add a comment..."
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            rows="3"
+          />
+          <button
+            type="submit"
+            disabled={isSubmitting || !commentText.trim()}
+            className="btn-submit"
+          >
+            Post Comment
+          </button>
+        </form>
+      )}
     </div>
   );
 }
