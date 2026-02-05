@@ -410,14 +410,32 @@
 .job-html-content span[data-size="2rem"] { font-size: 2rem; }
 .job-html-content span[data-size="2.5rem"] { font-size: 2.5rem; }
 /* Comments and Activity Container */
-.comments-activity-container {
+.comments-activity-wrapper {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px 24px 16px;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.comments-activity-container {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .comments-activity-wrapper {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 @media (max-width: 900px) {
   .comments-activity-container {
     padding: 0 12px 20px 12px;
+  }
+  
+  .comments-activity-wrapper {
+    padding: 0 12px;
   }
 }

@@ -429,15 +429,16 @@ export default function JobDetail() {
         </aside>
       </div>
 
-      {/* Comments Section */}
-      <section className="comments-activity-container">
-        <Comments jobId={id} isAdmin={isAdmin} />
-      </section>
+      {/* Comments and Activity Section */}
+      <div className="comments-activity-wrapper">
+        <section className="comments-activity-container">
+          <Comments jobId={id} isAdmin={isAdmin} />
+        </section>
 
-      {/* Activity Section */}
-      <section className="comments-activity-container">
-        <Activity jobId={id} />
-      </section>
+        <section className="comments-activity-container">
+          <Activity jobId={id} />
+        </section>
+      </div>
 
       {/* Modal Submit */}
       {open && (
