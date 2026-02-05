@@ -33,6 +33,7 @@ export default function JobDetail() {
   const [creatingPDF, setCreatingPDF] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [pdfFileName, setPdfFileName] = useState(null);
+  const [activeTab, setActiveTab] = useState("comments");
   const [candidateForm, setCandidateForm] = useState({
     candidateName: "", candidateEmail: "", candidatePhone: "",
     linkedin: "", portfolio: "", suitability: "",
@@ -375,7 +376,7 @@ export default function JobDetail() {
           )}
         </main>
 
-        {/* Sidebar */}
+        {/* Sidebar - Files, Comments & Activity */}
         <aside className="job-sidebar">
           {isCTV && (
             <div className="card">
@@ -426,19 +427,34 @@ export default function JobDetail() {
               )}
             </div>
           )}
+
+          {/* Comments and Activity Tabs */}
+          <div className="comments-activity-wrapper">
+            <div className="comments-activity-tabs">
+              <button
+                className={`tab-button ${activeTab === "comments" ? "active" : ""}`}
+                onClick={() => setActiveTab("comments")}
+              >
+                💬 Comments
+              </button>
+              <button
+                className={`tab-button ${activeTab === "activity" ? "active" : ""}`}
+                onClick={() => setActiveTab("activity")}
+              >
+                📊 Activity
+              </button>
+            </div>
+
+            <div className="comments-activity-content">
+              {activeTab === "comments" && (
+                <Comments jobId={id} isAdmin={isAdmin} />
+              )}
+              {activeTab === "activity" && (
+                <Activity jobId={id} />
+              )}
+            </div>
+          </div>
         </aside>
-      </div>
-
-      {/* Comments and Activity Section */}
-      <div className="comments-activity-wrapper">
-        <section className="comments-activity-container">
-          <Comments jobId={id} isAdmin={isAdmin} />
-        </section>
-
-        <section className="comments-activity-container">
-          <Activity jobId={id} />
-        </section>
-      </div>
 
       {/* Modal Submit */}
       {open && (
