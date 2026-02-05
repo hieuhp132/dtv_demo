@@ -5,7 +5,7 @@ import {
   AreaChart, Area
 } from 'recharts';
 import './LoginAnalytics.css';
-
+import { API_BASE } from '../../../services/api';
 const LoginAnalytics = () => {
   const [summary, setSummary] = useState(null);
   const [userStats, setUserStats] = useState([]);
@@ -14,8 +14,6 @@ const LoginAnalytics = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('summary');
   const [error, setError] = useState(null);
-
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
     fetchAllData();
