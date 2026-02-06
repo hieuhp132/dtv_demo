@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const { callSupabaseFunction } = require("../utils/supabaseClient"); // chỗ bạn export supabase function
 const { logLogin } = require("../utils/authLogger");
 const { writeFile, readFile } = require("../utils/fileStore.js");
+const { logActivityInternal } = require("./comments.js");
 // -------------------- FILE HELPERS --------------------
 
 // -------------------- USERS --------------------
@@ -736,6 +737,19 @@ const createJob = (req, res) => {
   // Ghi lại file
   writeFile("jobs.json", jobs);
 
+  // Log activity
+  const adminName = req.body.adminName || req.user?.name || "Admin";
+  logActivityInternal(
+    "job_created",
+    `${adminName} created job "${newJob.title}"`,
+    {
+      jobId: newJob._id,
+      jobTitle: newJob.title,
+      adminName,
+      adminRole: "admin"
+    }
+  );
+
   res.json(newJob);
 };
 
@@ -753,14 +767,39 @@ const updateJob = (req, res) => {
         return res.status(404).json({ message: "Job not found" });
     }
 
+    const oldJob = jobs[index];
     const updatedJob = {
         ...jobs[index],
         ...req.body,
         _id: id, // giữ nguyên id
+        updatedAt: new Date().toISOString(),
     };
 
     jobs[index] = updatedJob;
     writeFile("jobs.json", jobs);
+
+    // Log activity
+    const adminName = req.body.adminName || req.user?.name || "Admin";
+    const changes = [];
+    
+    // Track what changed
+    if (oldJob.title !== updatedJob.title) changes.push(`title: "${oldJob.title}" → "${updatedJob.title}"`);
+    if (oldJob.status !== updatedJob.status) changes.push(`status: "${oldJob.status}" → "${updatedJob.status}"`);
+    if (oldJob.description !== updatedJob.description) changes.push("description updated");
+    
+    const changeDetails = changes.length > 0 ? changes.join(", ") : "general update";
+    
+    logActivityInternal(
+      "job_updated",
+      `${adminName} updated job "${updatedJob.title}"`,
+      {
+        jobId: id,
+        jobTitle: updatedJob.title,
+        adminName,
+        adminRole: "admin",
+        details: changeDetails
+      }
+    );
 
     res.json(updatedJob);
 };
@@ -772,6 +811,8 @@ const removeJob = (req, res) => {
   let jobs = readFile("jobs.json");
 
   const before = jobs.length;
+  
+  const removedJob = jobs.find(job => String(job._id) === String(id));
 
   jobs = jobs.filter(job => {
     // normalize both sides
@@ -790,6 +831,21 @@ const removeJob = (req, res) => {
   const removed = before - jobs.length;
 
   writeFile("jobs.json", jobs);
+
+  // Log activity if job was actually removed
+  if (removed && removedJob) {
+    const adminName = req.body?.adminName || req.user?.name || "Admin";
+    logActivityInternal(
+      "job_deleted",
+      `${adminName} deleted job "${removedJob.title}"`,
+      {
+        jobId: id,
+        jobTitle: removedJob.title,
+        adminName,
+        adminRole: "admin"
+      }
+    );
+  }
 
   res.json({
     message: removed ? "Job removed" : "Job not found",
@@ -963,6 +1019,20 @@ const createReferral = (req, res) => {
     referrals.push(referral);
     writeFile("referrals.json", referrals);
 
+    // Log activity
+    const recruiterName = req.body.recruiterName || "Recruiter";
+    logActivityInternal(
+      "referral_created",
+      `${recruiterName} submitted referral for "${candidateName}" on job "${job.title}"`,
+      {
+        referralId: referral._id,
+        jobId,
+        candidateName,
+        recruiterName,
+        recruiterRole: "recruiter"
+      }
+    );
+
     res.status(201).json(referral);
   } catch (err) {
     console.error("createReferral local error:", err);
@@ -982,6 +1052,20 @@ const removeReferral = (req, res) => {
 
   referrals = referrals.filter(r => r._id !== id);
   writeFile("referrals.json", referrals);
+
+  // Log activity
+  const adminName = req.body?.adminName || req.user?.name || "Admin";
+  logActivityInternal(
+    "referral_deleted",
+    `${adminName} deleted referral for "${found.candidateName}"`,
+    {
+      referralId: id,
+      candidateName: found.candidateName,
+      adminName,
+      adminRole: "admin"
+    }
+  );
+
   res.json({ message: "Referral removed", id });
 };
 
@@ -993,8 +1077,35 @@ const updateReferral = (req, res) => {
   const index = referrals.findIndex(r => r._id === id);
   if (index === -1) return res.status(404).json({ message: "Referral not found" });
 
+  const oldReferral = referrals[index];
   referrals[index] = { ...referrals[index], ...updates, updatedAt: new Date().toISOString() };
   writeFile("referrals.json", referrals);
+
+  // Log activity
+  const adminName = req.body?.adminName || req.user?.name || "Admin";
+  const changes = [];
+  
+  // Track what changed
+  if (oldReferral.status !== referrals[index].status) {
+    changes.push(`status: "${oldReferral.status}" → "${referrals[index].status}"`);
+  }
+  if (oldReferral.suitability !== referrals[index].suitability) {
+    changes.push(`suitability: "${oldReferral.suitability}" → "${referrals[index].suitability}"`);
+  }
+  
+  const changeDetails = changes.length > 0 ? changes.join(", ") : "general update";
+  
+  logActivityInternal(
+    "referral_updated",
+    `${adminName} updated referral for "${referrals[index].candidateName}"`,
+    {
+      referralId: id,
+      candidateName: referrals[index].candidateName,
+      adminName,
+      adminRole: "admin",
+      details: changeDetails
+    }
+  );
 
   res.json({ message: "Referral updated", referral: referrals[index] });
 };

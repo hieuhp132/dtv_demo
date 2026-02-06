@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { API_BASE } from "../services/api.js";
 import "./Activity.css";
 
-export default function Activity({ jobId }) {
+export default function Activity({ jobId, showAll = false }) {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const mounted = useRef(true);
@@ -15,7 +15,7 @@ export default function Activity({ jobId }) {
       mounted.current = false;
       clearInterval(id);
     };
-  }, [jobId]);
+  }, [jobId, showAll]);
 
   const loadActivities = async () => {
     try {
@@ -26,12 +26,13 @@ export default function Activity({ jobId }) {
       if (!mounted.current) return;
 
       if (data.success) {
-        // Filter by jobId if provided, otherwise show all activities
-        const list = jobId
-          ? (data.activities || []).filter(
+        // If showAll is true or no jobId provided, show all activities (system-wide)
+        // Otherwise filter by jobId (for job detail page)
+        const list = showAll || !jobId
+          ? data.activities || []
+          : (data.activities || []).filter(
               (a) => a.metadata?.jobId === jobId || a.jobId === jobId
-            )
-          : data.activities || [];
+            );
         setActivities(list);
       }
     } catch (err) {
@@ -70,6 +71,9 @@ export default function Activity({ jobId }) {
       job_updated: "✏️",
       job_deleted: "🗑️",
       job_status_changed: "🔄",
+      referral_created: "👥",
+      referral_updated: "📋",
+      referral_deleted: "🗑️",
       candidate_updated: "👤",
       candidate_status_changed: "🎯",
       create: "📝",
@@ -94,6 +98,9 @@ export default function Activity({ jobId }) {
       job_updated: "#f59e0b",
       job_deleted: "#ef4444",
       job_status_changed: "#3b82f6",
+      referral_created: "#06b6d4",
+      referral_updated: "#f59e0b",
+      referral_deleted: "#ef4444",
       candidate_updated: "#06b6d4",
       candidate_status_changed: "#3b82f6",
       create: "#10b981",
