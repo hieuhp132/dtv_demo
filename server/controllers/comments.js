@@ -158,7 +158,119 @@ const deleteComment = (req, res) => {
   }
 };
 
-// ========== ACTIVITIES ==========
+// ========== REPLIES ==========
+
+const addReply = (req, res) => {
+  try {
+    const { jobId, commentId } = req.params;
+    const { text, author, authorRole, userId } = req.body;
+
+    if (!jobId || !commentId || !text || !author || !authorRole || !userId) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    // Only admins can add replies
+    if (authorRole !== "admin") {
+      return res.status(403).json({ success: false, message: "Only admins can add replies" });
+    }
+
+    const jobs = readFile("jobs.json") || [];
+    const jobIndex = jobs.findIndex(j => j._id === jobId);
+
+    if (jobIndex === -1) {
+      return res.status(404).json({ success: false, message: "Job not found" });
+    }
+
+    const commentIndex = (jobs[jobIndex].comments || []).findIndex(c => c.id === commentId);
+
+    if (commentIndex === -1) {
+      return res.status(404).json({ success: false, message: "Comment not found" });
+    }
+
+    if (!jobs[jobIndex].comments[commentIndex].replies) {
+      jobs[jobIndex].comments[commentIndex].replies = [];
+    }
+
+    const newReply = {
+      id: Date.now().toString(),
+      text,
+      author,
+      authorRole,
+      userId,
+      timestamp: new Date().toISOString()
+    };
+
+    jobs[jobIndex].comments[commentIndex].replies.push(newReply);
+    jobs[jobIndex].updatedAt = new Date().toISOString();
+
+    writeFile("jobs.json", jobs);
+
+    // Log activity
+    logActivityInternal(
+      "reply",
+      `${author} replied to a comment on job "${jobs[jobIndex].title}"`,
+      {
+        jobId,
+        commentId,
+        replyId: newReply.id,
+        author,
+        authorRole
+      }
+    );
+
+    res.json({ success: true, reply: newReply });
+  } catch (err) {
+    console.error("addReply error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+const deleteReply = (req, res) => {
+  try {
+    const { jobId, commentId, replyId } = req.params;
+    const { userId, isAdmin } = req.body;
+
+    if (!jobId || !commentId || !replyId) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    const jobs = readFile("jobs.json") || [];
+    const jobIndex = jobs.findIndex(j => j._id === jobId);
+
+    if (jobIndex === -1) {
+      return res.status(404).json({ success: false, message: "Job not found" });
+    }
+
+    const commentIndex = (jobs[jobIndex].comments || []).findIndex(c => c.id === commentId);
+
+    if (commentIndex === -1) {
+      return res.status(404).json({ success: false, message: "Comment not found" });
+    }
+
+    const replyIndex = (jobs[jobIndex].comments[commentIndex].replies || []).findIndex(r => r.id === replyId);
+
+    if (replyIndex === -1) {
+      return res.status(404).json({ success: false, message: "Reply not found" });
+    }
+
+    const reply = jobs[jobIndex].comments[commentIndex].replies[replyIndex];
+
+    // Check authorization
+    if (reply.userId !== userId && !isAdmin) {
+      return res.status(403).json({ success: false, message: "Not authorized to delete this reply" });
+    }
+
+    jobs[jobIndex].comments[commentIndex].replies.splice(replyIndex, 1);
+    jobs[jobIndex].updatedAt = new Date().toISOString();
+
+    writeFile("jobs.json", jobs);
+
+    res.json({ success: true, message: "Reply deleted" });
+  } catch (err) {
+    console.error("deleteReply error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 
 const getActivities = (req, res) => {
   try {
@@ -247,6 +359,9 @@ module.exports = {
   addComment,
   updateComment,
   deleteComment,
+  // Replies
+  addReply,
+  deleteReply,
   // Activities
   getActivities,
   logActivity,

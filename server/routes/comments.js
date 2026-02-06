@@ -8,6 +8,10 @@ router.post("/comments/:jobId", commentsCtrl.addComment);
 router.put("/comments/:jobId/:commentId", commentsCtrl.updateComment);
 router.delete("/comments/:jobId/:commentId", commentsCtrl.deleteComment);
 
+// Replies on comments
+router.post("/comments/:jobId/:commentId/replies", commentsCtrl.addReply);
+router.delete("/comments/:jobId/:commentId/replies/:replyId", commentsCtrl.deleteReply);
+
 // Activities - get notifications
 router.get("/activities", commentsCtrl.getActivities);
 router.post("/activities", commentsCtrl.logActivity);
