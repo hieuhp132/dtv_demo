@@ -22,7 +22,7 @@ export default function Comments({ jobId, isAdmin }) {
   const loadComments = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/api/comments/${jobId}`);
+      const res = await fetch(`${API_BASE}/api/comments/comments/${jobId}`);
       const data = await res.json();
       if (data.success) setComments(data.comments || []);
     } catch (err) {
@@ -38,7 +38,7 @@ export default function Comments({ jobId, isAdmin }) {
 
     try {
       setIsSubmitting(true);
-      const res = await fetch(`${API_BASE}/api/comments/${jobId}`, {
+      const res = await fetch(`${API_BASE}/api/comments/comments/${jobId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -91,7 +91,7 @@ export default function Comments({ jobId, isAdmin }) {
 
   const handleSaveEdit = async (id) => {
     try {
-      const res = await fetch(`${API_BASE}/api/comments/${jobId}/${id}`, {
+      const res = await fetch(`${API_BASE}/api/comments/comments/${jobId}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: editText, userId: user.id || user.email }),
