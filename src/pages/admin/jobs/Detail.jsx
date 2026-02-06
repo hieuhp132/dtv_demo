@@ -140,10 +140,6 @@ export default function JobDetail() {
               <div style="font-weight: bold; color: #2c3e50; font-size: 11px;">Location</div>
               <div style="color: #555; margin-top: 5px; font-size: 12px; word-wrap: break-word; overflow-wrap: break-word;">${job.location || "Remote"}</div>
             </div>
-            <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: bold; color: #2c3e50; font-size: 11px;">Reward</div>
-              <div style="color: #555; margin-top: 5px; font-size: 12px;">$${job.rewardCandidateUSD ?? 0}</div>
-            </div>
           </div>
 
           ${keywords.length > 0 ? `
