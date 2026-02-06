@@ -450,7 +450,7 @@ export default function JobDetail() {
                 <Comments jobId={id} isAdmin={isAdmin} />
               )}
               {activeTab === "activity" && (
-                <Activity jobId={id} />
+                <Activity showAll={true} />
               )}
             </div>
           </div>
