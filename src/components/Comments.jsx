@@ -139,43 +139,6 @@ export default function Comments({ jobId, isAdmin }) {
   return (
     <div className="comments-section">
       <h3>Comments & Discussion</h3>
-      
-      <div className="comments-list">
-        {comments.length === 0 ? (
-          <p className="no-comments">No comments yet. Be the first to comment!</p>
-        ) : (
-          comments.map((comment) => (
-            <div key={comment.id} className="comment-item">
-              <div className="comment-header">
-                <div className="comment-author">
-                  <span className="author-name">{comment.author}</span>
-                  <span className="author-role" style={{ backgroundColor: getRoleBadge(comment.authorRole) }}>{comment.authorRole}</span>
-                </div>
-                <span className="comment-time">{formatDate(comment.timestamp)}{comment.editedAt && " (edited)"}</span>
-              </div>
-
-              {editingId === comment.id ? (
-                <div className="edit-comment">
-                  <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows="3" />
-                  <div className="edit-actions">
-                    <button onClick={() => handleSaveEdit(comment.id)} className="btn-save">Save</button>
-                    <button onClick={() => setEditingId(null)} className="btn-cancel">Cancel</button>
-                  </div>
-                </div>
-              ) : (
-                <p className="comment-text">{comment.text}</p>
-              )}
-
-              {(isAdmin || user?.id === comment.userId || user?.email === comment.userId) && (
-                <div className="comment-actions">
-                  {editingId !== comment.id && (<button onClick={() => handleEditComment(comment.id)} className="btn-edit">Edit</button>)}
-                  <button onClick={() => handleDeleteComment(comment.id)} className="btn-delete">Delete</button>
-                </div>
-              )}
-            </div>
-          ))
-        )}
-      </div>
 
       {user && (
         <form className="add-comment-form" onSubmit={handleAddComment}>
@@ -183,6 +146,46 @@ export default function Comments({ jobId, isAdmin }) {
           <button type="submit" disabled={isSubmitting || !commentText.trim()} className="btn-submit">{isSubmitting ? "Posting..." : "Post Comment"}</button>
         </form>
       )}
+      
+      <div className="comments-list">
+        {comments.length === 0 ? (
+          <p className="no-comments">No comments yet. Be the first to comment!</p>
+        ) : (
+          comments.map((comment) => (
+            <div key={comment.id} className="comment-item">
+              <div className="comment-badge" style={{ backgroundColor: getRoleBadge(comment.authorRole) }}>
+                {comment.authorRole.charAt(0).toUpperCase() + comment.authorRole.slice(1)}
+              </div>
+              <div className="comment-content">
+                <div className="comment-header">
+                  <div className="comment-meta">
+                    <span className="author-name">{comment.author}</span>
+                    <span className="comment-time">{formatDate(comment.timestamp)}{comment.editedAt && " (edited)"}</span>
+                  </div>
+                  {(isAdmin || user?.id === comment.userId || user?.email === comment.userId) && (
+                    <div className="comment-actions">
+                      {editingId !== comment.id && (<button onClick={() => handleEditComment(comment.id)} className="btn-edit" title="Edit">✎</button>)}
+                      <button onClick={() => handleDeleteComment(comment.id)} className="btn-delete" title="Delete">✕</button>
+                    </div>
+                  )}
+                </div>
+
+                {editingId === comment.id ? (
+                  <div className="edit-comment">
+                    <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows="3" />
+                    <div className="edit-actions">
+                      <button onClick={() => handleSaveEdit(comment.id)} className="btn-save">Save</button>
+                      <button onClick={() => setEditingId(null)} className="btn-cancel">Cancel</button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="comment-text">{comment.text}</p>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
