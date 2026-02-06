@@ -69,10 +69,10 @@
 }
 
 .footer-divider1 {
-  width: 100%;
+  width: 70%;
   height: 1px;
   background: rgba(255, 255, 255, 0.2);
-  margin: 32px 0;
+  margin: 32px auto;
 }
 
 .footer-bottom {
