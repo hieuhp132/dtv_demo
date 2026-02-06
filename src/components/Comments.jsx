@@ -12,6 +12,9 @@ export default function Comments({ jobId, isAdmin }) {
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
   const [loading, setLoading] = useState(true);
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyText, setReplyText] = useState("");
+  const [isReplySubmitting, setIsReplySubmitting] = useState(false);
 
   // Load comments from API
   useEffect(() => {
@@ -124,9 +127,52 @@ export default function Comments({ jobId, isAdmin }) {
     return date.toLocaleDateString();
   };
 
-  const getRoleBadge = (role) => {
-    const colors = { admin: "#ef4444", recruiter: "#3b82f6", user: "#6b7280" };
-    return colors[role] || "#6b7280";
+  const handleAddReply = async (e, commentId) => {
+    e.preventDefault();
+    if (!replyText.trim() || !user) return;
+
+    try {
+      setIsReplySubmitting(true);
+      const res = await fetch(`${API_BASE}/api/comments/comments/${jobId}/${commentId}/replies`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: replyText,
+          author: user.name || user.email,
+          authorRole: user.role,
+          userId: user.id || user.email,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setComments((s) =>
+          s.map((c) =>
+            c.id === commentId
+              ? { ...c, replies: [...(c.replies || []), data.reply] }
+              : c
+          )
+        );
+        setReplyText("");
+        setReplyingTo(null);
+      } else {
+        alert("Failed to add reply: " + data.message);
+      }
+    } catch (err) {
+      console.error("Error adding reply:", err);
+      alert("Failed to add reply");
+    } finally {
+      setIsReplySubmitting(false);
+    }
+  };
+
+  const getAvatarInitials = (name) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   if (loading) return (
@@ -152,36 +198,73 @@ export default function Comments({ jobId, isAdmin }) {
           <p className="no-comments">No comments yet. Be the first to comment!</p>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="comment-item">
-              <div className="comment-badge" style={{ backgroundColor: getRoleBadge(comment.authorRole) }}>
-                {comment.authorRole.charAt(0).toUpperCase() + comment.authorRole.slice(1)}
-              </div>
-              <div className="comment-content">
-                <div className="comment-header">
-                  <div className="comment-meta">
-                    <span className="author-name">{comment.author}</span>
-                    <span className="comment-time">{formatDate(comment.timestamp)}{comment.editedAt && " (edited)"}</span>
-                  </div>
-                  {(isAdmin || user?.id === comment.userId || user?.email === comment.userId) && (
-                    <div className="comment-actions">
-                      {editingId !== comment.id && (<button onClick={() => handleEditComment(comment.id)} className="btn-edit" title="Edit">✎</button>)}
-                      <button onClick={() => handleDeleteComment(comment.id)} className="btn-delete" title="Delete">✕</button>
+            <div key={comment.id}>
+              <div className="comment-item">
+                <div className="comment-avatar">{getAvatarInitials(comment.author)}</div>
+                <div className="comment-content">
+                  <div className="comment-header">
+                    <div className="comment-meta">
+                      <span className="author-name">{comment.author}</span>
+                      <span className="comment-time">{formatDate(comment.timestamp)}{comment.editedAt && " (edited)"}</span>
                     </div>
+                    {(isAdmin || user?.id === comment.userId || user?.email === comment.userId) && (
+                      <div className="comment-actions">
+                        {editingId !== comment.id && (<button onClick={() => handleEditComment(comment.id)} className="btn-edit" title="Edit">Edit</button>)}
+                        <button onClick={() => handleDeleteComment(comment.id)} className="btn-delete" title="Delete">Delete</button>
+                      </div>
+                    )}
+                  </div>
+
+                  {editingId === comment.id ? (
+                    <div className="edit-comment">
+                      <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows="3" />
+                      <div className="edit-actions">
+                        <button onClick={() => handleSaveEdit(comment.id)} className="btn-save">Save</button>
+                        <button onClick={() => setEditingId(null)} className="btn-cancel">Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="comment-text">{comment.text}</p>
+                  )}
+
+                  <div className="comment-actions">
+                    {isAdmin && (
+                      <button onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)} className="btn-reply">
+                        {replyingTo === comment.id ? "Cancel" : "Reply"}
+                      </button>
+                    )}
+                  </div>
+
+                  {replyingTo === comment.id && (
+                    <form className="reply-form" onSubmit={(e) => handleAddReply(e, comment.id)}>
+                      <textarea placeholder="Add admin reply..." value={replyText} onChange={(e) => setReplyText(e.target.value)} rows="2" />
+                      <div className="reply-form-actions">
+                        <button type="submit" disabled={isReplySubmitting || !replyText.trim()} className="btn-submit-reply">{isReplySubmitting ? "Sending..." : "Send Reply"}</button>
+                        <button type="button" onClick={() => setReplyingTo(null)} className="btn-cancel-reply">Cancel</button>
+                      </div>
+                    </form>
                   )}
                 </div>
-
-                {editingId === comment.id ? (
-                  <div className="edit-comment">
-                    <textarea value={editText} onChange={(e) => setEditText(e.target.value)} rows="3" />
-                    <div className="edit-actions">
-                      <button onClick={() => handleSaveEdit(comment.id)} className="btn-save">Save</button>
-                      <button onClick={() => setEditingId(null)} className="btn-cancel">Cancel</button>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="comment-text">{comment.text}</p>
-                )}
               </div>
+
+              {comment.replies && comment.replies.length > 0 && (
+                <div className="replies-container">
+                  {comment.replies.map((reply) => (
+                    <div key={reply.id} className="reply-item">
+                      <div className="comment-avatar">✓</div>
+                      <div className="comment-content">
+                        <div className="comment-header">
+                          <div className="comment-meta">
+                            <span className="author-name">{reply.author}</span>
+                            <span className="comment-time">{formatDate(reply.timestamp)}</span>
+                          </div>
+                        </div>
+                        <p className="comment-text">{reply.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))
         )}
