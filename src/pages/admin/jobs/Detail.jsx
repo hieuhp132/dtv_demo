@@ -152,21 +152,21 @@ export default function JobDetail() {
             </div>
           ` : ''}
 
-          ${job.description ? `
+          ${job.jobsdetail.description ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
               <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Description</h2>
               <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.description}</div>
             </div>
           ` : ''}
 
-          ${job.requirements ? `
+          ${job.jobsdetail.requirements ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
               <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Requirements</h2>
               <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.requirements}</div>
             </div>
           ` : ''}
 
-          ${job.benefits ? `
+          ${job.jobsdetail.benefits ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
               <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Benefits</h2>
               <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.benefits}</div>
