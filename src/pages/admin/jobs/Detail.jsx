@@ -238,7 +238,35 @@ export default function JobDetail() {
 
           // Calculate how much of the canvas fits on this page
           const canvasHeightPerPage = (pageHeight * canvas.width * 25.4) / (imgWidth * 25.4);
-          const sourceYEnd = Math.min(sourceY + canvasHeightPerPage, canvas.height);
+          let targetEnd = Math.min(sourceY + canvasHeightPerPage, canvas.height);
+
+          const ctxFull = canvas.getContext('2d');
+          const width = canvas.width;
+          const sampleStepX = Math.max(1, Math.floor(width / 80));
+          const range = 40;
+          const threshold = 0.97;
+          const isRowWhite = (y) => {
+            const data = ctxFull.getImageData(0, y, width, 1).data;
+            let whiteCount = 0;
+            let samples = 0;
+            for (let x = 0; x < width; x += sampleStepX) {
+              const idx = x * 4;
+              const r = data[idx];
+              const g = data[idx + 1];
+              const b = data[idx + 2];
+              const a = data[idx + 3];
+              if (a === 0 || (r > 245 && g > 245 && b > 245)) whiteCount++;
+              samples++;
+            }
+            return whiteCount / samples >= threshold;
+          };
+          let sourceYEnd = targetEnd;
+          for (let dy = 0; dy <= range; dy++) {
+            const down = targetEnd + dy;
+            const up = targetEnd - dy;
+            if (down < canvas.height && isRowWhite(down)) { sourceYEnd = down; break; }
+            if (up > sourceY && isRowWhite(up)) { sourceYEnd = up; break; }
+          }
           const heightOnPage = (sourceYEnd - sourceY) / canvas.height * imgHeight;
 
           // Create temporary canvas for this page's content
