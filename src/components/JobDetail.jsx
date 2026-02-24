@@ -159,18 +159,18 @@ export default function JobDetail() {
       <header className="page-header">
         <h2>{job.title || "Untitled Job"}</h2>
       </header>
-
+{/* 
       {job.keywords?.length > 0 && (
         <div className="job-tags">
           {job.keywords.map((k) => (
             <span key={k}>{k}</span>
           ))}
         </div>
-      )}
+      )} */}
 
       <div className="job-layout">
         {/* LEFT */}
-        <div>
+        <div id="jd-print-area">
           <div className="job-info-grid">
             <div className="info-box">
               <strong>Salary</strong>
@@ -221,6 +221,7 @@ export default function JobDetail() {
           {isAdmin && (
             <div className="card admin">
               <h4>Admin: Manage JD File</h4>
+              <button className="export-btn" onClick={() => window.print()}>Xuất JD thành PDF</button>
               <FilesView publicUrl={jdPublicUrl} name={file} />
               <div style={{ height: 12 }} />
               <FileUploader onUploadSuccess={handleFileUploadSuccess} />

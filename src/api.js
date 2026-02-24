@@ -7,15 +7,13 @@ import axios from 'axios';
 
 // console.log(API_BASE);
 
-export async function getUsersList() {
-
-  const headers = {'Content-Type':'application/json'};
-  const res = await fetch(`${API_BASE}/db/users`, {
+export async function getUserByIdL(id) {
+  const res = await fetch(`${API_BASE}/local/users/${id}`, {
     method: 'GET',
-    headers,
-  })
-  if(!res.ok) throw new Error('[Client]: Failed get userlist');
-  return await res.json(); 
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error('[Client]: Failed get user by id');
+  return await res.json();
 }
 
 export async function getUsersListL() {

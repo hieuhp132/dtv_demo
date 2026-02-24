@@ -882,7 +882,7 @@
 
 .floating-icons {
   position: fixed;
-  bottom: 100px;
+  bottom: 10px;
   right: 32px;
   display: flex;
   flex-direction: row;
@@ -996,7 +996,7 @@
 
   .floating-icons {
     right: 16px;
-    bottom: 80px;
+    bottom: 10px;
     display: flex;
     flex-direction: column;
   }

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { listReferrals } from "../../api";
 import { useAuth } from "../../context/AuthContext";
+import LoginAnalytics from "./LoginAnalytics";
 import "./Statistics.css"; // Đảm bảo import file CSS bên dưới
 
 /* ================= CONSTANTS ================= */
@@ -171,6 +172,7 @@ export default function Statistics() {
         <p>Real-time overview of your referral pipeline performance.</p>
       </header>
       <CandidateStatusCharts />
+      {/* <LoginAnalytics /> */}
     </div>
   );
 }

@@ -2,6 +2,12 @@
   background: #f9fafb;
 }
 
+.export-btn {
+  padding: 8px 10px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
 .job-layout {
   display: grid;
   grid-template-columns: 1fr 340px;
@@ -108,6 +114,44 @@
 
   .job-info-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* PRINT */
+@media print {
+  html, body {
+    background: #ffffff !important;
+  }
+  .job-detail {
+    background: #ffffff !important;
+  }
+  .page-header {
+    margin: 0 0 8px 0;
+  }
+  .job-layout {
+    display: block !important;
+  }
+  .job-sidebar {
+    display: none !important;
+  }
+  .info-box,
+  .job-sidebar .card {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .job-section {
+    page-break-inside: avoid;
+  }
+  .job-section h4 {
+    page-break-after: avoid;
+  }
+  .job-html-content p,
+  .job-html-content ul,
+  .job-html-content ol {
+    page-break-inside: avoid;
+  }
+  .export-btn {
+    display: none !important;
   }
 }
 

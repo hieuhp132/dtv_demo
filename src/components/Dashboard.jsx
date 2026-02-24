@@ -108,6 +108,7 @@ export default function Dashboard() {
     }
   };
 
+
   // ================= Upload CV & Submit Candidate =================
   const uploadCV = async () => {
     setUploadingCV(true);

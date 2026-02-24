@@ -1,16 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useMessaging } from "../context/MessagingContext";
 import "./Navbar.css";
 import { getBalances } from "../api";
 import logoImg from "../assets/logo.png";
+import { MdMessage, MdNotifications } from "react-icons/md";
+import Messenger from "./Messenger/Messenger";
+import Notifications from "./Notifications/Notifications";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { unreadCount } = useMessaging();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [open, setOpen] = useState(false);
+  const [messengerOpen, setMessengerOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [balances, setBalances] = useState({ adminCredit: 0 });
 
@@ -107,7 +114,11 @@ export default function Navbar() {
                 </button>
               </div>
             ) : (
-            <div className="profile-dropdown" ref={dropdownRef}>
+            <div className="navbar-actions">
+
+
+              {/* PROFILE DROPDOWN */}
+              <div className="profile-dropdown" ref={dropdownRef}>
               {/* ADMIN CREDIT */}
               {user.role === "admin" && (
                 <span className="stat-pill">
@@ -162,6 +173,7 @@ export default function Navbar() {
                   Logout
                 </li>
               </ul>
+            </div>
             </div>
           )}
         </div>

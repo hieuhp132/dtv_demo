@@ -2,6 +2,7 @@ import CandidateManagement from "./components/Admin/CandidateManagement";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { MessagingProvider } from "./context/MessagingContext";
 import Login from "./components/login/Login";
 import Dashboard from "./components/Dashboard";
 import AdminDashboard from "./components/Admin/Dashboard";
@@ -57,7 +58,8 @@ export default function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
+        <MessagingProvider>
+          <Routes>
 
           {/* ✅ ROOT = HOME PAGE */}
           <Route path="/" element={<RootPage />} />
@@ -193,6 +195,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
+        </MessagingProvider>
       </AuthProvider>
     </Router>
   );
