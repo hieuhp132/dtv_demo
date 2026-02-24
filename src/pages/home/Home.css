@@ -31,8 +31,9 @@
 }
 
 .homepage-container {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 10px 24px;
+  padding: 0 24px;
 }
 
 .homepage-header {
@@ -65,15 +66,6 @@
   height: 48px;
   border-radius: 12px;
   object-fit: cover;
-}
-
-.mobile-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  padding: 8px;
 }
 
 .nav-menu {
@@ -143,9 +135,21 @@
   color: var(--primary-red);
 }
 
+.mobile-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+}
+
+
+
+
 .hero {
   background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-  padding: 5px 0;
+  padding: 80px 0;
   text-align: center;
 }
 
@@ -261,7 +265,7 @@
   font-size: 1.2rem;
   transition: all 0.3s ease;
   box-shadow: var(--shadow-lg);
-  margin: 10px 0;
+  margin-top: 24px;
 }
 
 .btn-cta:hover {
@@ -276,7 +280,7 @@
   margin-bottom: 48px;
   font-weight: 800;
   position: relative;
-  padding: 16px 0px;
+  padding-bottom: 16px;
 }
 
 .homepage-section-title::after {
@@ -286,13 +290,13 @@
   left: 50%;
   transform: translateX(-50%);
   width: 80px;
-  /* height: 4px; */
+  height: 4px;
   background: var(--header-gradient);
   border-radius: 2px;
 }
 
 .about-section {
-  padding: 5px 0;
+  padding: 80px 0;
   background: var(--bg-light);
 }
 
@@ -331,6 +335,7 @@
 }
 
 .jobs-section {
+  padding: 80px 0;
   background: var(--bg-white);
 }
 
@@ -586,7 +591,7 @@
 }
 
 .features-section {
-  padding: 5px 0;
+  padding: 80px 0;
   background: var(--bg-white);
 }
 
@@ -631,7 +636,7 @@
 }
 
 .process-section {
-  padding: 25px 0;
+  padding: 80px 0;
   background: var(--bg-light);
 }
 
@@ -644,7 +649,7 @@
 .process-item {
   background: white;
   border-radius: 16px;
-  padding: 5px 24px;
+  padding: 40px 24px;
   box-shadow: var(--shadow-sm);
   text-align: center;
   transition: all 0.3s ease;
@@ -683,7 +688,7 @@
 }
 
 .faq-section {
-  padding: 15px 0;
+  padding: 80px 0;
   background: var(--bg-white);
 }
 
@@ -799,10 +804,85 @@
   z-index: 2100;
 }
 
+.footer {
+  background: url(../assets/wanted.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  padding: 60px 0 24px;
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.85));
+  z-index: 0;
+}
+
+.footer .homepage-container {
+  position: relative;
+  z-index: 1;
+}
+
+.footer-content.grid-3 {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 40px;
+}
+
+.footer-section h4 {
+  color: white;
+  font-size: 1.25rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 1rem;
+}
+
+.footer-section ul li a:hover {
+  color: var(--primary-orange);
+}
+
+.platform-text {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.footer-divider1 {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 32px 0;
+}
+
+.footer-bottom {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+}
 
 .floating-icons {
   position: fixed;
-  bottom: 100px;
+  bottom: 10px;
   right: 32px;
   display: flex;
   flex-direction: row;
@@ -916,7 +996,7 @@
 
   .floating-icons {
     right: 16px;
-    bottom: 80px;
+    bottom: 10px;
     display: flex;
     flex-direction: column;
   }
@@ -999,4 +1079,3 @@
   color: var(--text-medium);
   font-size: 1.1rem;
 }
-
