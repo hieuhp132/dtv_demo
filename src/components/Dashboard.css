@@ -1,218 +1,359 @@
-/* ================= DASHBOARD ================= */
-.dashboard-container {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #222;
-  background: #fafafa;
-  box-sizing: border-box;
+.admin-dashboard {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-h2 {
-  font-weight: 700;
-  font-size: 22px;
-  margin-bottom: 16px;
+.tasks {
+  display: flex;
+  gap: 20px;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 32px;
 }
 
-/* ================= JOB GRID ================= */
-.job-list {
+.nav-tab {
+  padding: 12px 24px;
+  text-decoration: none;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 15px;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  position: relative;
+  top: 2px;
+}
+
+.nav-tab:hover {
+  color: #374151;
+  background: #f9fafb;
+}
+
+.nav-tab.active-tab {
+  color: #f97316;
+  border-bottom-color: #f97316;
+}
+
+.jobs-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-}
-
-.job-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.job-card-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
+  margin-top: 20px;
 }
 
 .save-btn {
-  margin-left: auto;
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  color: #bbb;
+  background: transparent;
+  color: black;
+  font-size: 1.2rem;
 }
-.save-btn.saved { color: #fa615a; }
+.save-btn.saved {
 
-.submit-btn {
-  margin-top: 14px;
-  padding: 10px;
-  background: linear-gradient(135deg,#fc813d,#fa615a);
-  border: none;
-  border-radius: 8px;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
+  color: #f59e0b;
 }
-
-/* ================= MODAL ================= */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.35);
+.section-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  z-index: 1500;
+}
+.section-title {
+  font-size: 24px;
 }
 
-.modal {
-  background: #fff;
-  padding: 26px 28px 22px;
-  border-radius: 14px;
-  width: 600px;   /* ✅ RỘNG HƠN */
-  box-shadow: 0 12px 34px rgba(0,0,0,.25);
-  animation: modalIn .25s ease;
+.section-title.red {
+  color: red;
 }
 
-@keyframes modalIn {
-  from { opacity: 0; transform: translateY(12px) scale(.97); }
-  to   { opacity: 1; transform: none; }
+.section-title.green {
+  color: green;
 }
 
-.modal h3 {
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-/* ================= FORM GRID ================= */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* ✅ 2 CỘT */
-  gap: 14px 18px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group.full {
-  grid-column: 1 / -1; /* textarea & file full width */
-}
-
-.form-group label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #444;
-}
-
-.form-group input,
-.form-group textarea {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  font-family: inherit;
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 90px;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #fa615a;
-  box-shadow: 0 0 0 2px rgba(250,97,90,.15);
-}
-
-/* File upload */
-.form-group input[type="file"] {
-  border: 1px dashed #ccc;
-  background: #fafafa;
-  padding: 8px;
-  font-size: 13px;
-}
-.form-group input[type="file"]::file-selector-button {
-  background: linear-gradient(135deg,#fc813d,#fa615a);
-  border: none;
+.add-job-btn {
+  background: #2ecc71;
   color: #fff;
-  padding: 6px 12px;
+  border: none;
+  padding: 8px 14px;
   border-radius: 6px;
   font-weight: 600;
-  margin-right: 10px;
   cursor: pointer;
 }
 
-/* ================= ACTIONS ================= */
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 18px;
+@media (max-width: 1024px) {
+  .jobs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.modal-actions button {
-  padding: 8px 18px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.modal-actions button:first-child {
-  background: linear-gradient(135deg,#fc813d,#fa615a);
-  color: #fff;
-}
-
-.modal-actions button:last-child {
-  background: #eee;
-  color: #555;
-}
-
-/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
-  .job-list { grid-template-columns: repeat(2,1fr); }
-}
-
-@media (max-width: 480px) {
-  .job-list { grid-template-columns: 1fr; }
-
-  .form-grid {
-    grid-template-columns: 1fr; /* 📱 mobile 1 cột */
-  }
-
-  .modal-actions {
-    flex-direction: column;
-  }
-
-  .modal-actions button {
-    width: 100%;
-  }
-  .modal {
-    width: 300px;
+  .jobs-grid {
+    grid-template-columns: 1fr;
   }
 }
-/* ================= FILTER BAR ================= */
-.filter-bar {
+
+.job-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  border-color: #f97316;
+}
+
+.job-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b7280;
+  margin: 12px 0;
+  align-items: center;
+}
+
+.job-meta > div {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 22px;
-  padding: 14px 16px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.job-bonus {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.job-deadline {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.reward-line {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
   flex-wrap: wrap;
 }
 
-/* ================= SEARCH INPUT ================= */
+.reward-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.reward-badge.secondary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.job-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.job-actions button {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  background: white;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #374151;
+}
+
+.job-actions button[style*="background"] {
+  color: white !important;
+  font-weight: 600;
+}
+
+.job-actions button:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  transform: translateY(-1px);
+}
+
+.job-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.job-actions button.danger {
+  color: #dc2626;
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.job-actions button.danger:hover {
+  background: #fee2e2;
+  border-color: #dc2626;
+}
+
+.candidate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.candidate-form input,
+.candidate-form textarea,
+.candidate-form select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.candidate-form input:focus,
+.candidate-form textarea:focus,
+.candidate-form select:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.candidate-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.candidate-form label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.candidate-form h4 {
+  margin: 0 0 12px 0;
+  color: #111827;
+  font-size: 16px;
+}
+
+.ql-container {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background: white;
+  min-height: 120px;
+}
+
+.ql-toolbar {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background: #f9fafb;
+}
+
+.ql-editor {
+  min-height: 120px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: #111827;
+}
+
+/* src/components/Dashboard.css (add at end) */
+/* FIX: Show actual size values in Quill size dropdown instead of repeated "Normal".
+   Quill renders static label text; we hide the native text and render the data-value
+   via a pseudo-element so users see the real size (e.g. 12px, 1rem). */
+.ql-snow .ql-picker.ql-size .ql-picker-label,
+.ql-snow .ql-picker.ql-size .ql-picker-item {
+  /* hide the default label text (which shows "Normal") but keep layout */
+  color: transparent !important;
+  position: relative;
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label::after,
+.ql-snow .ql-picker.ql-size .ql-picker-item::after {
+  content: attr(data-value) !important;
+  color: #111827 !important;
+  position: absolute;
+  left: 0.35em;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+/* Slightly increase picker min-width so longer values fit */
+.ql-snow .ql-picker.ql-size .ql-picker-label,
+.ql-snow .ql-picker.ql-size .ql-picker {
+  min-width: 4.5em;
+}
+
+/* Icon-only save button (star) - no background, just the icon */
+.job-card button[style*="color"] {
+  /* background: transparent !important; */
+  border: none !important;
+  padding: 0 !important;
+  margin-right: 8px;
+  font-size: 22px;
+  line-height: 1;
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: color 0.18s ease, transform 0.08s ease;
+}
+
+.job-card button[style*="color"]:hover {
+  color: #f97316 !important;
+  transform: translateY(-1px);
+}
+
+
+.filter-bar {
+
+  display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #00000014;
+    flex-wrap: wrap;
+}
+
+
 .filter-input {
   flex: 2;
   min-width: 240px;
@@ -236,3 +377,61 @@ h2 {
   border-color: #fa615a;
   box-shadow: 0 0 0 2px rgba(250,97,90,.18);
 }
+
+
+@media (max-width: 640px) {
+  .admin-dashboard {
+    padding: 20px 16px;
+  }
+
+  .job-actions {
+    flex-direction: column;
+  }
+
+  .job-actions button {
+    width: 100%;
+  }
+
+  .reward-line {
+    flex-direction: column;
+  }
+
+  /* Mobile filters: make inputs compact and full-width */
+  .admin-dashboard .filter-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+  }
+  .admin-dashboard .filter-input,
+  .admin-dashboard .filter-select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    font-size: 13px;
+    padding: 8px 10px;
+    height: 36px;
+    line-height: 1.2;
+    box-sizing: border-box;
+  }
+  .admin-dashboard .filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+  }
+}
+
+.ql-editor ul {
+  list-style-type: disc !important;
+  padding-left: 1.5em;
+}
+
+.ql-editor ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5em;
+}
+
+.ql-editor li {
+  margin-bottom: 0.4em;
+}
+
