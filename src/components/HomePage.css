@@ -812,6 +812,7 @@
   color: white;
   padding: 60px 0 24px;
   position: relative;
+  height: 300px;
 }
 
 .footer::before {
