@@ -17,7 +17,7 @@ import fbIcon from "../../assets/fb.jpg";
 import teleIcon from "../../assets/tele.png";
 import { fetchAllJobs } from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
-
+import Footer from "../../components/Footer.jsx";
 export default function HomePage() {
   const { user } = useAuth();
   const [jobs, setJobs] = useState([]);
@@ -181,10 +181,10 @@ export default function HomePage() {
                     <div className="job-title">{job.title}</div>
                     {/* <div className="job-company"><FaBuilding /> {job.company || "N/A"}</div> */}
                   </div>
-                  <div className="job-meta">
+                  <div className="job-meta-home">
                     {/* <span><FaMapMarkerAlt /> {job.location || "Remote/Onsite"}</span> */}
                     <span>
-                      <FaDollarSign /> {job.salary || "N/A"}
+                      {job.salary || "N/A"}
                     </span>
                   </div>
                   <div className="job-actions">
@@ -360,7 +360,7 @@ export default function HomePage() {
         </div>
       </section>
 
-
+      <Footer />
 
       {/* Floating icons */}
       <div className="floating-icons">

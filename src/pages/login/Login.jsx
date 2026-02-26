@@ -100,7 +100,29 @@ export default function Login() {
       console.error("Google Login Error:", err);
     }
   };
+  /* 🔹 Reset password */
+  const sendResetEmail = async () => {
+    setResetMessage("");
+    setResetLoading(true);
 
+    try {
+      const res = await fetch(`${API_BASE}/local/users/reset`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail, newPassword:"123456", responseWithEmail: true }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Reset failed");
+
+      setResetMessage("✔ A new password has been sent to your email.");
+    } catch (err) {
+      setResetMessage("❌ " + err.message);
+    }
+
+    setResetLoading(false);
+  };
   /* 🔹 Manual email/password login */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -145,8 +167,8 @@ export default function Login() {
       }
 
       login(user, token);
-      if (user.role == "admin") navigate("/admin/profile");
-      if (user.role == "recruiter") navigate("/recruiter/profile");
+      if (user.role == "admin") navigate("/admin/jobs");
+      if (user.role == "recruiter") navigate("/recruiter/jobs");
     } catch (err) {
       const msg = err.message || "Login failed";
       setServerMessage(msg);
@@ -238,14 +260,58 @@ export default function Login() {
               <label>Remember password</label>
             </div>
 
-            <button type="submit" disabled={loading}>
-              {loading ? <span className="spinner"></span> : "Login"}
-            </button>
+
+
+          <button type="submit" disabled={loading}>
+            {loading ? <span className="spinner"></span> : "Login"}
+          </button>
+
+          {/* SERVER MESSAGE */}
+          {serverMessage && (
+            <p className={`server-message ${serverMessage.includes("success") ? "success" : "error"}`}>
+              {serverMessage}
+            </p>
+          )}
+          </div>
+          {/* FORGOT PASSWORD */}
+          <div style={{ marginTop: "12px", textAlign: "right" }}>
+            <span
+              style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
+              onClick={() => setShowReset(true)}
+            >
+              Forgot password?
+            </span>
           </div>
 
-          {serverMessage && (
-            <p className="server-message error">{serverMessage}</p>
+          {/* RESET PASSWORD MODAL */}
+          {showReset && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <h3>Forgot your password?</h3>
+                <p>Enter your email, and we'll send you a new one.</p>
+
+                <input
+                  type="email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  placeholder="Your email"
+                  style={{ width: "100%", padding: "8px", margin: "10px 0" }}
+                />
+
+                <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+                  <button onClick={() => setShowReset(false)} disabled={resetLoading}>Cancel</button>
+                  <button onClick={sendResetEmail} disabled={resetLoading}>
+                    {resetLoading ? <span className="spinner"></span> : "Send"}
+                  </button>
+                </div>
+
+                {resetMessage && <p style={{ marginTop: "10px" }}>{resetMessage}</p>}
+              </div>
+            </div>
           )}
+          {/* {serverMessage && (
+            <p className="server-message error">{serverMessage}</p>
+          )} */}
 
           {/* <div className="divider">
             <span>or</span>

@@ -119,9 +119,9 @@ export default function JobDetail() {
       container.style.width = '210mm';
       container.style.padding = '15mm';
       container.style.background = 'white';
-      container.style.fontSize = '12px';
-      container.style.lineHeight = '1.5';
-      container.style.color = '#333';
+      container.style.fontSize = '95px';
+      container.style.lineHeight = '1.7';
+      container.style.color = '#000';
       container.style.fontFamily = 'Arial, sans-serif';
       container.style.wordWrap = 'break-word';
       container.style.overflowWrap = 'break-word';
@@ -129,43 +129,43 @@ export default function JobDetail() {
       
       container.innerHTML = `
         <div style="text-align: left;">
-          <h1 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 12px; font-size: 24px; margin: 0 0 15px 0; word-wrap: break-word; overflow-wrap: break-word;">${job.title || "Job Description"}</h1>
+          <h1 style="color: #000; border-bottom: 3px solid #3498db; padding-bottom: 12px; font-size: 28px; font-weight: 800; margin: 0 0 15px 0; word-wrap: break-word; overflow-wrap: break-word;">${job.title || "Job Description"}</h1>
           
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
             <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: bold; color: #2c3e50; font-size: 11px;">Salary</div>
-              <div style="color: #555; margin-top: 5px; font-size: 12px; word-wrap: break-word; overflow-wrap: break-word;">${job.salary || "Negotiable"}</div>
+              <div style="font-weight: 800; color: #000; font-size: 13px;">Salary</div>
+              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word;">${job.salary || "Negotiable"}</div>
             </div>
             <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: bold; color: #2c3e50; font-size: 11px;">Location</div>
-              <div style="color: #555; margin-top: 5px; font-size: 12px; word-wrap: break-word; overflow-wrap: break-word;">${job.location || "Remote"}</div>
+              <div style="font-weight: 800; color: #000; font-size: 13px;">Location</div>
+              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word;">${job.location || "Remote"}</div>
             </div>
           </div>
 
           ${keywords.length > 0 ? `
             <div style="margin-bottom: 12px;">
-              ${keywords.map(k => `<span style="display: inline-block; background: #3498db; color: white; padding: 4px 8px; margin-right: 6px; margin-bottom: 4px; border-radius: 15px; font-size: 10px; word-wrap: break-word;">${k}</span>`).join('')}
+              ${keywords.map(k => `<span style="display: inline-block; background: #3498db; color: white; padding: 6px 12px; margin-right: 6px; margin-bottom: 4px; border-radius: 15px; font-size: 12px; word-wrap: break-word;">${k}</span>`).join('')}
             </div>
           ` : ''}
 
           ${job.jobsdetail.description ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Description</h2>
-              <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.description}</div>
+              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Description</h2>
+              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.description}</div>
             </div>
           ` : ''}
 
-          ${job.jobsdetail.requirements ? `
+          ${job.jobsdetail?.requirement ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Requirements</h2>
-              <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.requirements}</div>
+              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Requirements</h2>
+              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.requirement}</div>
             </div>
           ` : ''}
 
           ${job.jobsdetail.benefits ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Benefits</h2>
-              <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.benefits}</div>
+              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Benefits</h2>
+              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.benefits}</div>
             </div>
           ` : ''}
 
@@ -387,19 +387,21 @@ export default function JobDetail() {
           </div>
 
           <section className="job-section">
+            <h1>Description</h1>
             <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.description || "No description provided" }} />
           </section>
 
           <section className="job-section">
-            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.requirements || "No requirements listed" }} />
+            <h1>Requirements</h1>
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.requirement || "No requirements listed" }} />
           </section>
 
-          {job.benefits && (
-            <section className="job-section">
-              <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.benefits || "No benefits listed" }} />
-            </section>
-          )}
           <section className="job-section">
+            <h1>Benefits</h1>
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.benefits || "No benefits listed" }} />
+          </section>
+          <section className="job-section">
+            <h1>Other Information</h1>
             <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.other || "No other information provided" }} />
           </section>
         </main>

@@ -119,57 +119,63 @@ export default function JobDetail() {
       container.style.width = '210mm';
       container.style.padding = '15mm';
       container.style.background = 'white';
-      container.style.fontSize = '12px';
-      container.style.lineHeight = '1.5';
-      container.style.color = '#333';
+      container.style.fontSize = '15px';
+      container.style.lineHeight = '1.7';
+      container.style.color = '#000';
       container.style.fontFamily = 'Arial, sans-serif';
       container.style.wordWrap = 'break-word';
       container.style.overflowWrap = 'break-word';
       container.style.whiteSpace = 'normal';
       
       container.innerHTML = `
+        <style>
+          p { margin: 7px 0; }
+          li { margin: 4px 0; }
+          ul, ol { padding-left: 18px; }
+          h2 { margin-top: 16px; }
+        </style>
         <div style="text-align: left;">
-          <h1 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 12px; font-size: 24px; margin: 0 0 15px 0; word-wrap: break-word; overflow-wrap: break-word;">${job.title || "Job Description"}</h1>
+          <h1 style="color: #000; border-bottom: 3px solid #3498db; padding-bottom: 12px; font-size: 28px; font-weight: 800; margin: 0 0 15px 0; word-wrap: break-word; overflow-wrap: break-word;">${job.title || "Job Description"}</h1>
           
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 15px;">
             <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: bold; color: #2c3e50; font-size: 11px;">Salary</div>
-              <div style="color: #555; margin-top: 5px; font-size: 12px; word-wrap: break-word; overflow-wrap: break-word;">${job.salary || "Negotiable"}</div>
+              <div style="font-weight: 800; color: #000; font-size: 13px;">Salary</div>
+              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word;">${job.salary || "Negotiable"}</div>
             </div>
             <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: bold; color: #2c3e50; font-size: 11px;">Location</div>
-              <div style="color: #555; margin-top: 5px; font-size: 12px; word-wrap: break-word; overflow-wrap: break-word;">${job.location || "Remote"}</div>
+              <div style="font-weight: 800; color: #000; font-size: 13px;">Location</div>
+              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word;">${job.location || "Remote"}</div>
             </div>
             <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: bold; color: #2c3e50; font-size: 11px;">Reward</div>
-              <div style="color: #555; margin-top: 5px; font-size: 12px;">$${job.rewardCandidateUSD ?? 0}</div>
+              <div style="font-weight: 800; color: #000; font-size: 13px;">Reward</div>
+              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600;">$${job.rewardCandidateUSD ?? 0}</div>
             </div>
           </div>
 
           ${keywords.length > 0 ? `
             <div style="margin-bottom: 12px;">
-              ${keywords.map(k => `<span style="display: inline-block; background: #3498db; color: white; padding: 4px 8px; margin-right: 6px; margin-bottom: 4px; border-radius: 15px; font-size: 10px; word-wrap: break-word;">${k}</span>`).join('')}
+              ${keywords.map(k => `<span style="display: inline-block; background: #3498db; color: white; padding: 6px 12px; margin-right: 6px; margin-bottom: 4px; border-radius: 15px; font-size: 12px; word-wrap: break-word;">${k}</span>`).join('')}
             </div>
           ` : ''}
 
           ${job.description ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Description</h2>
-              <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.description}</div>
+              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Description</h2>
+              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.description}</div>
             </div>
           ` : ''}
 
           ${job.requirements ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Requirements</h2>
-              <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.requirements}</div>
+              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Requirements</h2>
+              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.requirements}</div>
             </div>
           ` : ''}
 
           ${job.benefits ? `
             <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #34495e; margin: 0 0 10px 0; font-size: 14px; font-weight: bold; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Benefits</h2>
-              <div style="color: #555; font-size: 11px; line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.benefits}</div>
+              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Benefits</h2>
+              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.benefits}</div>
             </div>
           ` : ''}
 
@@ -234,6 +240,30 @@ export default function JobDetail() {
         let sourceY = 0;
         let pageNumber = 0;
 
+        // Reuse context across loop
+        const ctxFull = canvas.getContext('2d', { willReadFrequently: true });
+        const width = canvas.width;
+        const sampleStepX = Math.max(1, Math.floor(width / 120));
+        const SCAN_RANGE = 160;
+        const THRESH = 0.95;
+        const BAND = 6;
+        const OVERLAP = 8;
+        const rowWhiteness = (y) => {
+          if (y < 0 || y >= canvas.height) return 0;
+          const h = Math.min(BAND, canvas.height - y);
+          const data = ctxFull.getImageData(0, y, width, h).data;
+          let whiteCount = 0, samples = 0;
+          for (let yy = 0; yy < h; yy++) {
+            for (let x = 0; x < width; x += sampleStepX) {
+              const idx = (yy * width + x) * 4;
+              const r = data[idx], g = data[idx + 1], b = data[idx + 2], a = data[idx + 3];
+              if (a === 0 || (r > 238 && g > 238 && b > 238)) whiteCount++;
+              samples++;
+            }
+          }
+          return samples ? whiteCount / samples : 0;
+        };
+
         while (sourceY < canvas.height) {
           if (pageNumber > 0) {
             pdf.addPage();
@@ -242,7 +272,25 @@ export default function JobDetail() {
 
           // Calculate how much of the canvas fits on this page
           const canvasHeightPerPage = (pageHeight * canvas.width * 25.4) / (imgWidth * 25.4);
-          const sourceYEnd = Math.min(sourceY + canvasHeightPerPage, canvas.height);
+          const targetEnd = Math.min(sourceY + canvasHeightPerPage, canvas.height);
+
+          let bestY = targetEnd;
+          let bestScore = -1;
+          for (let dy = 0; dy <= SCAN_RANGE; dy++) {
+            const down = targetEnd + dy;
+            const up = targetEnd - dy;
+            if (down < canvas.height) {
+              const s = rowWhiteness(down);
+              if (s > bestScore) { bestScore = s; bestY = down; }
+              if (s >= THRESH) { bestY = down; break; }
+            }
+            if (up > sourceY) {
+              const s = rowWhiteness(up);
+              if (s > bestScore) { bestScore = s; bestY = up; }
+              if (s >= THRESH) { bestY = up; break; }
+            }
+          }
+          const sourceYEnd = bestY;
           const heightOnPage = (sourceYEnd - sourceY) / canvas.height * imgHeight;
 
           // Create temporary canvas for this page's content
@@ -266,7 +314,7 @@ export default function JobDetail() {
           const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.95);
           pdf.addImage(pageImgData, 'JPEG', margin, yPosition, imgWidth, heightOnPage);
 
-          sourceY = sourceYEnd;
+          sourceY = Math.max(sourceYEnd - OVERLAP, 0);
           pageNumber++;
         }
       }

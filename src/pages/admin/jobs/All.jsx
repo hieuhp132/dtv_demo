@@ -49,10 +49,15 @@ const mapJobToForm = (job) => ({
   keywords: Array.isArray(job.keywords)
     ? job.keywords.join(", ")
     : job.keywords || "",
-  description: job.description || "",
-  requirements: job.requirements || "",
-  benefits: job.benefits || "",
-  other: job.other || "",
+  // description: job.description || "",
+  // requirements: job.requirements || "",
+  // benefits: job.benefits || "",
+  // other: job.other || "",
+
+  description: job.jobsdetail?.description || "",
+  requirements: job.jobsdetail?.requirement || "",
+  benefits: job.jobsdetail?.benefits || "",
+  other: job.jobsdetail?.other || "",
 });
 
 export default function All() {
@@ -257,10 +262,12 @@ export default function All() {
   /* ================= RENDER ================= */
   return (
     <div className="admin-dashboard">
-      <div className="tasks">
-        <NavLink to="/admin-dashboard">Beta</NavLink>
-        <NavLink to="/admin/users">Users List</NavLink>
-      </div>
+      {user.role === "admin" && (
+        <div className="tasks">
+          <NavLink to="/admin-dashboard">Beta</NavLink>
+          <NavLink to="/admin/users">Users List</NavLink>
+        </div>)
+        }
 
       <Filters
         searchText={searchText}

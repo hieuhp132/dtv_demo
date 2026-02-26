@@ -80,7 +80,7 @@ export default function Navbar() {
     ],
     recruiter: [
       { label: "Dashboard", path: "/recruiter/jobs" },
-      { label: "My Brand", path: "/my-brand" },
+      // { label: "My Brand", path: "/my-brand" },
       { label: "My Candidates", path: "/recruiter/candidates" },
       { label: "Saved Jobs", path: "/recruiter/saved-jobs" },
     ],

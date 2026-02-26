@@ -49,7 +49,7 @@ export default function Filters({
       />
 
       <Select
-        placeholder="All Categories"
+        placeholder="Filter By Keywords"
         options={categoryOptions}
         isClearable
         styles={selectStyles}

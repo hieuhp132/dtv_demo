@@ -70,7 +70,7 @@ export default function Comments({ jobId, isAdmin }) {
   const handleDeleteComment = async (id) => {
     if (!window.confirm("Are you sure you want to delete this comment?")) return;
     try {
-      const res = await fetch(`${API_BASE}/api/comments/${jobId}/${id}`, {
+      const res = await fetch(`${API_BASE}/api/comments/comments/${jobId}/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: user.id || user.email, isAdmin }),

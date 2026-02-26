@@ -27,6 +27,22 @@ const PAGE_SIZE = 10;
 const paginate = (data, page) =>
   data.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+// Track downloaded CVs to support incremental downloads
+const STORAGE_KEY_DOWNLOADED = "downloadedCVs_v1";
+function readDownloadedMap() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY_DOWNLOADED);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+function writeDownloadedMap(map) {
+  try {
+    localStorage.setItem(STORAGE_KEY_DOWNLOADED, JSON.stringify(map));
+  } catch {}
+}
+
 /* ================= DEBOUNCE ================= */
 function useDebounce(value, delay = 200) {
   const [debounced, setDebounced] = useState(value);
@@ -98,6 +114,15 @@ export default function CandidateManagement() {
   const [jobMap, setJobMap] = useState({});
   const [recruiterMap, setRecruiterMap] = useState({});
   const [localStatuses, setLocalStatuses] = useState({});
+  const [zipping, setZipping] = useState(false);
+  const [zipProgress, setZipProgress] = useState(0);
+  const [zipAdded, setZipAdded] = useState(0);
+  const [zipTotal, setZipTotal] = useState(0);
+  const [downloadedMap, setDownloadedMap] = useState({});
+
+  useEffect(() => {
+    setDownloadedMap(readDownloadedMap());
+  }, []);
 
   /* ================= LOAD DATA ================= */
   useEffect(() => {
@@ -214,6 +239,31 @@ export default function CandidateManagement() {
   const activePaged = paginate(activeRows, activePage);
   const rejectedPaged = paginate(rejectedRows, rejectedPage);
 
+  // New CVs since last download
+  const newCvItems = useMemo(() => {
+    return sorted.filter((r) => {
+      if (!r.cvUrl) return false;
+      const saved = downloadedMap[r._id];
+      if (!saved) return true;
+      if (saved.cvUrl !== r.cvUrl) return true;
+      const savedTime = saved.updatedAt ? new Date(saved.updatedAt).getTime() : 0;
+      const currentTime = new Date(r.updatedAt || r.createdAt || Date.now()).getTime();
+      return currentTime > savedTime;
+    });
+  }, [sorted, downloadedMap]);
+
+  const markDownloaded = (items) => {
+    const next = { ...downloadedMap };
+    items.forEach((r) => {
+      next[r._id] = {
+        cvUrl: r.cvUrl,
+        updatedAt: r.updatedAt || r.createdAt || new Date().toISOString(),
+      };
+    });
+    setDownloadedMap(next);
+    writeDownloadedMap(next);
+  };
+
   /* ================= SORT UI ================= */
   const toggleSort = (key) => {
     setSortConfig((p) => {
@@ -251,25 +301,165 @@ export default function CandidateManagement() {
     setRows((p) => p.filter((r) => r._id !== id));
   };
 
-  const downloadCV = async (url) => {
-  try {
-    const res = await fetch(url);
-    const blob = await res.blob();
+  const downloadCV = async (r) => {
+    const url = r.cvUrl;
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const path = url.split("?")[0];
+      const urlName = decodeURIComponent(path.split("/").pop() || "");
+      const extFromUrl = urlName.includes(".") ? urlName.split(".").pop() : "";
+      const ext = extFromUrl || (blob.type === "application/pdf" ? "pdf" : "dat");
+      const safeCandidate = String(r.candidateName || "candidate").replace(/[^a-z0-9]+/gi, "_").slice(0, 32);
+      const safeJob = String(jobMap[r.job]?.title || "job").replace(/[^a-z0-9]+/gi, "_").slice(0, 32);
+      const filename = `${safeCandidate}_${safeJob}.${ext}`;
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = filename;
+      a.target = "_self";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(objectUrl);
+      markDownloaded([r]);
+    } catch (e) {
+      alert("Download failed");
+    }
+  };
 
-    const a = document.createElement("a");
-    const objectUrl = URL.createObjectURL(blob);
+  const downloadAllCVs = async () => {
+    try {
+      const items = sorted.filter((r) => r.cvUrl);
+      if (!items.length) {
+        alert("Không có CV để tải");
+        return;
+      }
+      setZipping(true);
+      setZipProgress(0);
+      setZipAdded(0);
+      setZipTotal(items.length);
+      const { default: JSZip } = await import("https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm");
+      const zip = new JSZip();
+      let added = 0;
+      for (let i = 0; i < items.length; i++) {
+        const r = items[i];
+        try {
+          const res = await fetch(r.cvUrl);
+          const blob = await res.blob();
+          const path = r.cvUrl.split("?")[0];
+          const urlName = decodeURIComponent(path.split("/").pop() || "");
+          const extFromUrl = urlName.includes(".") ? urlName.split(".").pop() : "";
+          const ext = extFromUrl || (blob.type === "application/pdf" ? "pdf" : "dat");
+          const safeCandidate = String(r.candidateName || "candidate").replace(/[^a-z0-9]+/gi, "_").slice(0, 32);
+          const safeJob = String(jobMap[r.job]?.title || "job").replace(/[^a-z0-9]+/gi, "_").slice(0, 32);
+          const filename = `${safeCandidate}_${safeJob}_${i + 1}.${ext}`;
+          zip.file(filename, blob);
+          added++;
+          setZipAdded(added);
+        } catch {}
+      }
+      if (!added) {
+        alert("Không có CV hợp lệ để nén");
+        setZipping(false);
+        return;
+      }
+      const blobZip = await zip.generateAsync({ type: "blob" }, (meta) => {
+        setZipProgress(Math.floor(meta.percent || 0));
+      });
+      const fileName = `cvs_${new Date().toISOString().slice(0, 10)}.zip`;
+      let ok = false;
+      try {
+        saveAs(blobZip, fileName);
+        ok = true;
+      } catch {}
+      if (!ok) {
+        try {
+          const url = URL.createObjectURL(blobZip);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+          ok = true;
+        } catch {}
+      }
+      if (!ok) {
+        alert("Không thể tải file ZIP");
+      }
+      // mark all as downloaded
+      markDownloaded(items);
+      setZipProgress(100);
+      setZipping(false);
+    } catch (e) {
+      alert("Không thể tạo file ZIP");
+      setZipping(false);
+    }
+  };
 
-    a.href = objectUrl;
-    a.download = "CV.pdf"; // hoặc tên động
-    document.body.appendChild(a);
-    a.click();
-
-    a.remove();
-    URL.revokeObjectURL(objectUrl);
-  } catch (e) {
-    alert("Download failed");
-  }
-};
+  const downloadNewCVs = async () => {
+    try {
+      const items = newCvItems;
+      if (!items.length) {
+        alert("Không có CV mới");
+        return;
+      }
+      setZipping(true);
+      setZipProgress(0);
+      setZipAdded(0);
+      setZipTotal(items.length);
+      const { default: JSZip } = await import("https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm");
+      const zip = new JSZip();
+      let added = 0;
+      for (let i = 0; i < items.length; i++) {
+        const r = items[i];
+        try {
+          const res = await fetch(r.cvUrl);
+          const blob = await res.blob();
+          const path = r.cvUrl.split("?")[0];
+          const urlName = decodeURIComponent(path.split("/").pop() || "");
+          const extFromUrl = urlName.includes(".") ? urlName.split(".").pop() : "";
+          const ext = extFromUrl || (blob.type === "application/pdf" ? "pdf" : "dat");
+          const safeCandidate = String(r.candidateName || "candidate").replace(/[^a-z0-9]+/gi, "_").slice(0, 32);
+          const safeJob = String(jobMap[r.job]?.title || "job").replace(/[^a-z0-9]+/gi, "_").slice(0, 32);
+          const filename = `${safeCandidate}_${safeJob}_${i + 1}.${ext}`;
+          zip.file(filename, blob);
+          added++;
+          setZipAdded(added);
+        } catch {}
+      }
+      if (!added) {
+        alert("Không có CV hợp lệ để nén");
+        setZipping(false);
+        return;
+      }
+      const blobZip = await zip.generateAsync({ type: "blob" }, (meta) => {
+        setZipProgress(Math.floor(meta.percent || 0));
+      });
+      const fileName = `cvs_new_${new Date().toISOString().slice(0, 10)}.zip`;
+      try {
+        saveAs(blobZip, fileName);
+      } catch {
+        const url = URL.createObjectURL(blobZip);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+      // mark new ones as downloaded
+      markDownloaded(items);
+      setZipProgress(100);
+      setZipping(false);
+    } catch (e) {
+      alert("Không thể tạo file ZIP");
+      setZipping(false);
+    }
+  };
 
   /* ================= TABLE ================= */
   const renderTable = (title, data, page, setPage, total) => (
@@ -310,9 +500,13 @@ export default function CandidateManagement() {
                 <td>{r.candidateEmail || "-"}</td>
                 <td>
                   {r.cvUrl ? (
-                    <button style={{background:"transparent", color:"black"}} onClick={() => downloadCV(r.cvUrl)}>
-                      Download
-                    </button>
+                    <span>
+                      <a href={r.cvUrl} target="_blank" rel="noopener noreferrer">View</a>
+                      {" "}|{" "}
+                      <button style={{background:"transparent", color:"black", padding:0}} onClick={() => downloadCV(r)}>
+                        Download
+                      </button>
+                    </span>
                   ) : (
                     "-"
                   )}
@@ -429,9 +623,10 @@ export default function CandidateManagement() {
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          gap: 12,
-          alignItems: "flex-end",
+          flexDirection: "row",
+          gap: 8,
+          alignItems: "center",
+          justifyContent: "flex-end",
         }}
       >
         <button
@@ -440,11 +635,44 @@ export default function CandidateManagement() {
             padding: "6px 12px",
             fontWeight: 600,
             cursor: "pointer",
-            marginBottom: "1rem",
           }}
         >
           Export Excel
         </button>
+        <button
+          onClick={downloadAllCVs}
+          disabled={zipping}
+          style={{
+            padding: "6px 12px",
+            fontWeight: 600,
+            cursor: "pointer",
+            opacity: zipping ? 0.6 : 1,
+          }}
+        >
+          Download All CVs (.zip)
+        </button>
+        {/* <button
+          onClick={downloadNewCVs}
+          disabled={zipping || newCvItems.length === 0}
+          style={{
+            padding: "6px 12px",
+            fontWeight: 600,
+            cursor: "pointer",
+            opacity: zipping || newCvItems.length === 0 ? 0.6 : 1,
+          }}
+        >
+          Download New CVs (.zip){newCvItems.length ? ` (${newCvItems.length})` : ""}
+        </button> */}
+        {zipping && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 220 }}>
+            <div style={{ flex: 1, height: 6, background: "#eee", borderRadius: 4, overflow: "hidden" }}>
+              <div style={{ width: `${zipProgress}%`, height: "100%", background: "#2e7d32" }} />
+            </div>
+            <span style={{ fontSize: 12, color: "#555" }}>
+              {zipProgress}% ({zipAdded}/{zipTotal})
+            </span>
+          </div>
+        )}
       </div>
 
       {renderTable(

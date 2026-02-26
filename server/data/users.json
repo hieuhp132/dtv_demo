@@ -12,7 +12,18 @@
       "68bdcf23131c403154a093f0"
     ],
     "__v": 1,
-    "updatedAt": "2026-01-14T12:52:11.217Z"
+    "updatedAt": "2026-02-26T08:01:48.658Z",
+    "bankInfo": {
+      "accountHolderName": "AAAAA",
+      "bankName": "vietcomebank",
+      "branchName": "BRANCH NAME",
+      "accountNumber": "11122233344444",
+      "ibanSwiftCode": "DEHANN123",
+      "currency": "VNĐ",
+      "registeredEmail": "immhisme1@gmail.com",
+      "registeredPhone": "015901976796",
+      "ethAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+    }
   },
   {
     "_id": "68c021ae824dc44d6e0831c5",
@@ -238,13 +249,24 @@
     "_id": "68e645db46d97a07d4bef771",
     "name": "minh hieu",
     "email": "hieuhp132@gmail.com",
-    "password": "$2b$10$2qVPCVWUPXaD5uW4IrodouSwjox7u9CcYGcI1mnInmnaRPq2YzQfu",
+    "password": "$2b$10$JrCcKSxMsKxmhXHsOQVlq.EmypklPphvaS83BvVbssxQYVoxWUXPO",
     "credit": 0,
     "role": "recruiter",
     "jobs": [],
     "__v": 0,
-    "updatedAt": "2026-01-16T16:30:06.993Z",
-    "status": "Active"
+    "updatedAt": "2026-02-26T07:59:52.614Z",
+    "status": "Active",
+    "bankInfo": {
+      "accountHolderName": "",
+      "bankName": "",
+      "branchName": "",
+      "accountNumber": "",
+      "ibanSwiftCode": "",
+      "currency": "VNĐ",
+      "registeredEmail": "",
+      "registeredPhone": "",
+      "ethAddress": ""
+    }
   },
   {
     "_id": "68e6916dc9ce3d6deba5aee4",

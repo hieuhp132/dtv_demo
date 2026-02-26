@@ -89,16 +89,15 @@ export default function Card({
 
       <div className="job-meta">
         <div>
-          <strong>Salary:</strong> {job.salary || "N/A"}
+          <strong style={{ marginRight: 4, fontSize: 13, color: "#555", }}>Salary:</strong> {job.salary || "N/A"}
         </div>
 
         {job.deadline && (
-          <span className="job-deadline">Deadline: {job.deadline}</span>
+          <span className="job-deadline" style={{ fontSize: 13, color: "#555", }}>Deadline: {job.deadline}</span>
         )}
 
         <span
           style={{
-            marginLeft: 8,
             fontWeight: "bold",
             color: isInactive ? "red" : "green",
           }}
@@ -162,14 +161,14 @@ export default function Card({
 
         {role === "recruiter" && (
           <>
-            <button
+            {/* <button
               onClick={(e) => {
                 e.stopPropagation();
                 onSharedJob(job);
               }}
             >
               Share this job
-            </button>
+            </button> */}
 
             <button
               onClick={(e) => {

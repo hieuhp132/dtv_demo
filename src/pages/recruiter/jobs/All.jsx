@@ -256,10 +256,7 @@ export default function All() {
   /* ================= RENDER ================= */
   return (
     <div className="admin-dashboard">
-      <div className="tasks">
-        <NavLink to="/admin-dashboard">Beta</NavLink>
-        <NavLink to="/users">Users List</NavLink>
-      </div>
+      
 
       <Filters
         searchText={searchText}

@@ -36,6 +36,7 @@ export default function ViewProfile() {
     currency: "VNĐ",
     registeredEmail: "",
     registeredPhone: "",
+    ethAddress: "",
   });
 
   /* ================= LOAD PROFILE (ONLY ONCE) ================= */
@@ -77,6 +78,11 @@ export default function ViewProfile() {
   /* ================= SAVE ================= */
   const handleSave = async () => {
     try {
+      const addr = String(bankInfo.ethAddress || "").trim();
+      if (addr && !/^0x[a-fA-F0-9]{40}$/.test(addr)) {
+        alert("Invalid Ethereum address");
+        return;
+      }
       const payload = {
         name: basicInfo.name,
         email: basicInfo.email,
@@ -193,13 +199,41 @@ export default function ViewProfile() {
       </section>
 
       {/* BANK INFO */}
+      {/* WALLET */}
+      <section className="card">
+        <h3>
+          <FaCreditCard /> Wallet
+        </h3>
+
+        <div className="grid">
+          <div className="grid-item">
+            <label>Ethereum Address</label>
+            {isEditing ? (
+              <input
+                name="ethAddress"
+                value={bankInfo.ethAddress || ""}
+                onChange={handleBankChange}
+                placeholder="0x..."
+              />
+            ) : (
+              <span>{bankInfo.ethAddress || "—"}</span>
+            )}
+          </div>
+        </div>
+
+        <div className="note">
+          This is where any bounties you earn will be paid to you in USDC.
+        </div>
+      </section>
+
+      {/* BANK INFO */}
       <section className="card">
         <h3>
           <FaCreditCard /> Bank Information
         </h3>
 
         <div className="grid">
-          {Object.entries(bankInfo).map(([key, value]) => (
+          {Object.entries(bankInfo).filter(([k]) => k !== "ethAddress").map(([key, value]) => (
             <div className="grid-item" key={key}>
               <label>{key.replace(/([A-Z])/g, " $1")}</label>
               {isEditing ? (
