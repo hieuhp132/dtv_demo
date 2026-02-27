@@ -267,11 +267,11 @@ export default function Login() {
           </button>
 
           {/* SERVER MESSAGE */}
-          {serverMessage && (
+          {/* {serverMessage && (
             <p className={`server-message ${serverMessage.includes("success") ? "success" : "error"}`}>
               {serverMessage}
             </p>
-          )}
+          )} */}
           </div>
           {/* FORGOT PASSWORD */}
           <div style={{ marginTop: "12px", textAlign: "right" }}>
@@ -309,9 +309,9 @@ export default function Login() {
               </div>
             </div>
           )}
-          {/* {serverMessage && (
+          {serverMessage && (
             <p className="server-message error">{serverMessage}</p>
-          )} */}
+          )}
 
           {/* <div className="divider">
             <span>or</span>
