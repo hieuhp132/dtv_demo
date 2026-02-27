@@ -237,6 +237,7 @@ button {
     .form {
       width: 95%;
       padding: 30px;
+      margin-top: 50px ;
     }
     .input-group {
       flex-direction: column;
