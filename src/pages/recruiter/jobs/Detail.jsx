@@ -14,6 +14,7 @@ import FilesView from "../../../components/FileView";
 import FileUploader from "../../../components/FileUploader";
 import Comments from "../../../components/Comments";
 import Activity from "../../../components/Activity";
+import SubmitCandidateModal from "../../../components/SubmitCandidateModal";
 import "./Detail.css";
 
 export default function JobDetail() {
@@ -506,7 +507,7 @@ export default function JobDetail() {
       </div>
 
       {/* Modal Submit */}
-      {open && (
+      {/* {open && (
         <div className="modal-overlay" onClick={() => setOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Submit Candidate</h3>
@@ -546,7 +547,19 @@ export default function JobDetail() {
             </form>
           </div>
         </div>
-      )}
+      
+      
+      )} */}
+
+      <SubmitCandidateModal
+        open={open}
+        job={job}
+        recruiterId={recruiterId}
+        onClose={() => setOpen(false)}
+        onSuccess={() => {
+          alert("Candidate submitted successfully!");
+        }}
+      />
     </div>
   );
 }
