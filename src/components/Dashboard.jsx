@@ -27,6 +27,49 @@ export default function Dashboard() {
   const [page, setPage] = useState(1);
   const pageSize = 9;
 
+  const getPaginationRange = (currentPage, totalPages, siblingCount = 1) => {
+    const totalPageNumbers = siblingCount * 2 + 5;
+
+    if (totalPages <= totalPageNumbers) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const leftSiblingIndex = Math.max(currentPage - siblingCount, 1);
+    const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages);
+
+    const showLeftDots = leftSiblingIndex > 2;
+    const showRightDots = rightSiblingIndex < totalPages - 1;
+
+    const firstPageIndex = 1;
+    const lastPageIndex = totalPages;
+
+    const pages = [];
+
+    if (!showLeftDots && showRightDots) {
+      const leftRange = Array.from(
+        { length: 3 + 2 * siblingCount },
+        (_, i) => i + 1
+      );
+      pages.push(...leftRange, "...", lastPageIndex);
+    } 
+    else if (showLeftDots && !showRightDots) {
+      const rightRange = Array.from(
+        { length: 3 + 2 * siblingCount },
+        (_, i) => totalPages - (3 + 2 * siblingCount) + 1 + i
+      );
+      pages.push(firstPageIndex, "...", ...rightRange);
+    } 
+    else {
+      const middleRange = Array.from(
+        { length: rightSiblingIndex - leftSiblingIndex + 1 },
+        (_, i) => leftSiblingIndex + i
+      );
+      pages.push(firstPageIndex, "...", ...middleRange, "...", lastPageIndex);
+    }
+
+    return pages;
+  };
+
   const [showSubmit, setShowSubmit] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -181,6 +224,11 @@ export default function Dashboard() {
     }).sort((a, b) => new Date(b.createdAt || b._id) - new Date(a.createdAt || a._id));
   }, [activeJobs, searchText, filterLocation, filterCompany, filterCategory]);
 
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchText, filterLocation, filterCompany, filterCategory]);
+
   const uniqueLocations = useMemo(() => {
     const m = new Map();
     activeJobs.forEach((j) => {
@@ -272,7 +320,7 @@ export default function Dashboard() {
 
       {/* Job list */}
       {loading ? <p>Loading...</p> : (
-        <div className="job-list">
+        <div className="jobs-grid">
           {displayedJobs.map((job) => (
             <div key={job._id} className="job-card" onClick={() => window.open(`/job/${job._id}`, "_blank")}>
               <div className="job-card-header">
@@ -322,13 +370,43 @@ export default function Dashboard() {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="pagination">
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <button key={i} onClick={() => setPage(i + 1)} className={i + 1 === page ? "active" : ""}>
+          {/* {Array.from({ length: totalPages }).map((_, i) => (
+            <button key={i} onClick={() => setPage(i + 1)} className="page-buttons">
               {i + 1}
             </button>
-          ))}
+          ))} */}
+          <button
+            onClick={() => setPage((p) => Math.max(p - 1, 1))}
+            disabled={page === 1}
+            className="page-btn"
+          >
+            ← Prev
+          </button>
+
+          {getPaginationRange(page, totalPages).map((p, index) =>
+            p === "..." ? (
+              <span key={index} className="dots">...</span>
+            ) : (
+              <button
+                key={index}
+                onClick={() => setPage(p)}
+                className={`page-btn ${p === page ? "active" : ""}`}
+              >
+                {p}
+              </button>
+            )
+          )}
+
+          <button
+            onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+            disabled={page === totalPages}
+            className="page-btn"
+          >
+            Next →
+          </button>
         </div>
       )}
+      <div style={{height:10}}></div>
 
       {/* Submit modal */}
       {showSubmit && selectedJob && (
