@@ -43,7 +43,19 @@ export const QUILL_MODULES = {
     ["clean"],
   ],
   clipboard: {
-    matchVisual: false,
+    matchVisual: true,
+  },
+  keyboard: {
+    bindings: {
+      softreturn: {
+        key: 13,
+        shiftKey: true,
+        handler(range, context) {
+          this.quill.insertText(range.index, "\n", Quill.sources.USER);
+          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        },
+      },
+    },
   },
 };
 
