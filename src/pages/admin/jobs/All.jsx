@@ -181,9 +181,7 @@ export default function All() {
 
   const openEditModal = (job) => {
     setEditingJob(job);
-    console.log("job before map:", job);
-    setJobForm(job);
-    console.log("job after map:", mapJobToForm(job));
+    setJobForm(mapJobToForm(job));
     setShowJobModal(true);
   };
 
@@ -216,7 +214,19 @@ export default function All() {
     setShowJobModal(false);
 
     if (!editingJob) {
-      const created = await createJobL(payload);
+      const created = await createJobL({
+        ...payload,
+        keywords: String(payload.keywords || "")
+          .split(",")
+          .map((k) => k.trim())
+          .filter(Boolean),
+        jobsdetail: {
+          description: payload.description || "",
+          requirement: payload.requirements || "",
+          benefits: payload.benefits || "",
+          other: payload.other || "",
+        },
+      });
       setJobs((j) => [created, ...j]);
       return;
     }
@@ -224,6 +234,16 @@ export default function All() {
     const updated = await updateJobL({
       _id: editingJob._id,
       ...payload,
+      keywords: String(payload.keywords || "")
+        .split(",")
+        .map((k) => k.trim())
+        .filter(Boolean),
+      jobsdetail: {
+        description: payload.description || "",
+        requirement: payload.requirements || "",
+        benefits: payload.benefits || "",
+        other: payload.other || "",
+      },
     });
 
     setJobs((j) => j.map((x) => (x._id === updated._id ? updated : x)));
