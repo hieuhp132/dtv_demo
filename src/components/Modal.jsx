@@ -214,7 +214,7 @@ export default function Modal({
             <div style={quillGroup}>
               <label style={labelStyle}>Description</label>
               <ReactQuill
-                value={jobForm.jobsdetail.description}
+                value={jobForm.description}
                 onChange={(v) => onChangeQuill("description", v)}
                 modules={QUILL_MODULES}
                 formats={QUILL_FORMATS}
@@ -223,7 +223,7 @@ export default function Modal({
             <div style={quillGroup}>
               <label style={labelStyle}>Requirements</label>
               <ReactQuill
-                value={jobForm.jobsdetail.requirements}
+                value={jobForm.requirements}
                 onChange={(v) => onChangeQuill("requirements", v)}
                 modules={QUILL_MODULES}
                 formats={QUILL_FORMATS}
@@ -232,7 +232,7 @@ export default function Modal({
             <div style={quillGroup}>
               <label style={labelStyle}>Benefits</label>
               <ReactQuill
-                value={jobForm.jobsdetail.benefits}
+                value={jobForm.benefits}
                 onChange={(v) => onChangeQuill("benefits", v)}
                 modules={QUILL_MODULES}
                 formats={QUILL_FORMATS}
@@ -241,7 +241,7 @@ export default function Modal({
             <div style={quillGroup}>
               <label style={labelStyle}>Other</label>
               <ReactQuill
-                value={jobForm.jobsdetail.other}
+                value={jobForm.other}
                 onChange={(v) => onChangeQuill("other", v)}
                 modules={QUILL_MODULES}
                 formats={QUILL_FORMATS}
