@@ -50,6 +50,7 @@ export default function Modal({
 
   return (
     <div style={overlayStyle}>
+      {console.log("debug:", jobForm)}
       <div style={modalStyle}>
         {/* Header */}
         <div style={modalHeader}>

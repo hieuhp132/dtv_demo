@@ -181,7 +181,9 @@ export default function All() {
 
   const openEditModal = (job) => {
     setEditingJob(job);
+    console.log("job before map:", job);
     setJobForm(mapJobToForm(job));
+    console.log("job after map:", mapJobToForm(job));
     setShowJobModal(true);
   };
 
