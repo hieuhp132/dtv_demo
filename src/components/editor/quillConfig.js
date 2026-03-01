@@ -47,12 +47,22 @@ export const QUILL_MODULES = {
   },
   keyboard: {
     bindings: {
+      enter: {
+        key: 13,
+        shiftKey: false,
+        handler(range, context) {
+          this.quill.clipboard.dangerouslyPasteHTML(range.index, "<br/>");
+          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+          return false;
+        },
+      },
       softreturn: {
         key: 13,
         shiftKey: true,
         handler(range, context) {
           this.quill.insertText(range.index, "\n", Quill.sources.USER);
           this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+          return false;
         },
       },
     },

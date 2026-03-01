@@ -60,6 +60,9 @@ const mapJobToForm = (job) => ({
   other: job.jobsdetail?.other || "",
 });
 
+const normalizeBreaks = (html) =>
+  typeof html === "string" ? html.replace(/\r\n|\n/g, "<br/>") : "";
+
 export default function All() {
   const { user } = useAuth();
   const adminId = user?.id || user?.email;
@@ -221,10 +224,10 @@ export default function All() {
           .map((k) => k.trim())
           .filter(Boolean),
         jobsdetail: {
-          description: payload.description || "",
-          requirement: payload.requirements || "",
-          benefits: payload.benefits || "",
-          other: payload.other || "",
+          description: normalizeBreaks(payload.description || ""),
+          requirement: normalizeBreaks(payload.requirements || ""),
+          benefits: normalizeBreaks(payload.benefits || ""),
+          other: normalizeBreaks(payload.other || ""),
         },
       });
       setJobs((j) => [created, ...j]);
@@ -239,10 +242,10 @@ export default function All() {
         .map((k) => k.trim())
         .filter(Boolean),
       jobsdetail: {
-        description: payload.description || "",
-        requirement: payload.requirements || "",
-        benefits: payload.benefits || "",
-        other: payload.other || "",
+        description: normalizeBreaks(payload.description || ""),
+        requirement: normalizeBreaks(payload.requirements || ""),
+        benefits: normalizeBreaks(payload.benefits || ""),
+        other: normalizeBreaks(payload.other || ""),
       },
     });
 
