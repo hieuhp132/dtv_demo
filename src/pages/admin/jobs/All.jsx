@@ -60,9 +60,6 @@ const mapJobToForm = (job) => ({
   other: job.jobsdetail?.other || "",
 });
 
-const normalizeBreaks = (html) =>
-  typeof html === "string" ? html.replace(/\r\n|\n/g, "<br/>") : "";
-
 export default function All() {
   const { user } = useAuth();
   const adminId = user?.id || user?.email;
@@ -184,7 +181,9 @@ export default function All() {
 
   const openEditModal = (job) => {
     setEditingJob(job);
-    setJobForm(mapJobToForm(job));
+    console.log("job before map:", job);
+    setJobForm(job);
+    console.log("job after map:", mapJobToForm(job));
     setShowJobModal(true);
   };
 
@@ -217,19 +216,7 @@ export default function All() {
     setShowJobModal(false);
 
     if (!editingJob) {
-      const created = await createJobL({
-        ...payload,
-        keywords: String(payload.keywords || "")
-          .split(",")
-          .map((k) => k.trim())
-          .filter(Boolean),
-        jobsdetail: {
-          description: normalizeBreaks(payload.description || ""),
-          requirement: normalizeBreaks(payload.requirements || ""),
-          benefits: normalizeBreaks(payload.benefits || ""),
-          other: normalizeBreaks(payload.other || ""),
-        },
-      });
+      const created = await createJobL(payload);
       setJobs((j) => [created, ...j]);
       return;
     }
@@ -237,16 +224,6 @@ export default function All() {
     const updated = await updateJobL({
       _id: editingJob._id,
       ...payload,
-      keywords: String(payload.keywords || "")
-        .split(",")
-        .map((k) => k.trim())
-        .filter(Boolean),
-      jobsdetail: {
-        description: normalizeBreaks(payload.description || ""),
-        requirement: normalizeBreaks(payload.requirements || ""),
-        benefits: normalizeBreaks(payload.benefits || ""),
-        other: normalizeBreaks(payload.other || ""),
-      },
     });
 
     setJobs((j) => j.map((x) => (x._id === updated._id ? updated : x)));
