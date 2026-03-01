@@ -398,6 +398,53 @@
   transition: all 0.3s ease;
 }
 
+/* ===== New Hero Enhancements ===== */
+.announcement-badge {
+  display: inline-block;
+  background: #fdebd3;
+  color: #a16207;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 12px;
+  border: 1px solid #f1c78a;
+}
+.hero-title .accent {
+  color: var(--primary-orange);
+  -webkit-text-fill-color: initial;
+}
+.cta-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: var(--primary-orange);
+  color: white;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 8px 18px rgba(255, 166, 61, 0.35);
+}
+.cta-primary:hover { transform: translateY(-1px); }
+.cta-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: transparent;
+  color: #0f1e2e;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  border: 2px solid #0f1e2e;
+}
+
 .btn-view:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);

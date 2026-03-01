@@ -249,5 +249,69 @@
   .stat-pill {
     display: none;
   }
+  .auth-actions, .navbar-actions {
+    display: none;
+  }
+  .mobile-toggle {
+    display: inline-flex;
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 6px;
+    border-radius: 8px;
+  }
 }
 
+.mobile-toggle {
+  display: none;
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  z-index: 2000;
+  display: flex;
+  justify-content: flex-end;
+}
+.mobile-menu-panel {
+  background: #ffffff;
+  width: 78%;
+  max-width: 320px;
+  height: 100%;
+  border-left: 1px solid #e6eaf2;
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  padding: 16px;
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.08);
+}
+.mobile-close {
+  background: transparent;
+  border: none;
+  color: #0f172a;
+  padding: 6px;
+  border-radius: 8px;
+  float: right;
+}
+.mobile-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 10px;
+  margin-top: 6px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e6eaf2;
+  color: #0f172a;
+  font-weight: 600;
+}
+.mobile-item.primary {
+  background: #FFA63D;
+  color: #ffffff;
+  border-color: transparent;
+}
+.mobile-item.danger {
+  background: #fff1f2;
+  color: #b91c1c;
+  border-color: #ffe4e6;
+}

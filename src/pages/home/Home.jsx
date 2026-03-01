@@ -130,8 +130,6 @@ export default function HomePage() {
         </div>
       </section>
 
-  
-
       {/* Jobs Section */}
       <section className="jobs-section" id="jobs">
         <div className="homepage-container">
@@ -250,15 +248,10 @@ export default function HomePage() {
                 Access to training and continuous support from the Ant-Tech HR
                 team
               </p>
-                 <p>
-                For program terms and compliance details, please read our{" "}
-                <Link to="/terms" style={{ textDecoration: "underline" }}>Terms & Conditions</Link>.
-              </p>
             </div>
           </div>
         </div>
       </section>
-         
 
       {/* Feature Grid / Solutions */}
       <section className="features-section" id="features">

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
 import "./Navbar.css";
 import logoImg from "../../assets/logo.png";
-import { MdMessage, MdNotifications } from "react-icons/md";
+import { MdMessage, MdNotifications, MdMenu, MdClose } from "react-icons/md";
 import Messenger from "../../components/Messenger.jsx";
 import Notifications from "../../components/Notifications.jsx";
 import { getUnreadMessages } from "../../services/api.js";
@@ -17,6 +17,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [messengerOpen, setMessengerOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const dropdownRef = useRef(null);
 
@@ -39,6 +40,7 @@ export default function Navbar() {
     setMessengerOpen(false);
     setNotificationsOpen(false);
     setOpen(false);
+    setMobileMenuOpen(false);
   }, [location.pathname]);
 
   /* ================= CLOSE DROPDOWN ================= */
@@ -97,8 +99,7 @@ export default function Navbar() {
           {/* LEFT */}
           <div className="navbar-left">
             <button className="logo-btn" onClick={goHome}>
-              <img src={logoImg} alt="Logo" className="logo-img" />
-              <span className="logo">Ant-Tech Asia</span>
+              <img src={logoImg} alt="Logo" className="logo-img" /> 
             </button>
           </div>
 
@@ -188,9 +189,40 @@ export default function Navbar() {
                 </div>
               </div>
             )}
+
+            <button className="mobile-toggle" onClick={() => setMobileMenuOpen(true)}>
+              <MdMenu size={22} />
+            </button>
           </div>
         </div>
       </header>
+
+      {mobileMenuOpen && (
+        <div className="mobile-menu" onClick={() => setMobileMenuOpen(false)}>
+          <div className="mobile-menu-panel" onClick={(e) => e.stopPropagation()}>
+            <button className="mobile-close" onClick={() => setMobileMenuOpen(false)}>
+              <MdClose size={20} />
+            </button>
+            {!user ? (
+              <>
+                <button className="mobile-item" onClick={() => { navigate("/"); setMobileMenuOpen(false); }}>Home</button>
+                <button className="mobile-item" onClick={() => { navigate("/login"); setMobileMenuOpen(false); }}>Login</button>
+                <button className="mobile-item primary" onClick={() => { navigate("/signup"); setMobileMenuOpen(false); }}>Signup</button>
+              </>
+            ) : (
+              <>
+                <button className="mobile-item" onClick={() => { navigate(`${user.role}/profile`); setMobileMenuOpen(false); }}>Profile</button>
+                { (Array.isArray(menuItemsByRole[user.role]) ? menuItemsByRole[user.role] : []).map((item) => (
+                  <button key={item.path} className="mobile-item" onClick={() => { navigate(item.path); setMobileMenuOpen(false); }}>
+                    {item.label}
+                  </button>
+                )) }
+                <button className="mobile-item danger" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>Logout</button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* OVERLAYS */}
       {/* <Messenger
