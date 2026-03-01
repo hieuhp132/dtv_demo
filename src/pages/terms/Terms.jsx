@@ -17,32 +17,23 @@ export default function TermsPage() {
   return (
     <div className="terms-page">
       {/* Header */}
-      <header className="terms-header">
-        <div className="container">
-          <div className="header-content">
-            <Link to="/" className="back-btn">
-              <FaArrowLeft /> Back to Home
-            </Link>
-            <div className="logo">
-              <img src={logoImg} alt="Ant-Tech Asia" className="logo-img" />
-              <span className="logo-text">Ant-Tech Asia</span>
-            </div>
-          </div>
-        </div>
-      </header>
+  
 
       {/* Main Content */}
       <main className="terms-content">
         <div className="terms-title-section">
           <h1 className="terms-title">
-            <FaFileContract className="title-icon" />
+            
             Ant-Tech Asia Collaborator Program – Terms & Conditions
+          <FaFileContract className="title-icon" />
           </h1>
           <p className="terms-subtitle">
             Please read these terms and conditions carefully before
             participating in our collaborator program.
           </p>
         </div>
+
+  
 
         {/* --- 2 COLUMN LAYOUT --- */}
         <div className="terms-container">
@@ -75,6 +66,8 @@ export default function TermsPage() {
                 </p>
               </div>
             </section>
+
+
 
             {/* Section 2 */}
             <section className="terms-section">
@@ -220,6 +213,26 @@ export default function TermsPage() {
 
         {/* FULL WIDTH SECTIONS */}
         <div className="full-width-footer">
+                {/* Platform Overview */}
+        <section className="terms-section">
+          <h2 className="section-title">
+            <FaShieldAlt className="section-icon" />
+            Platform Overview
+          </h2>
+          <div className="section-content">
+            <p>
+              Ant-Tech Asia’s collaborator platform enables professional referrals and transparent
+              rewards. Collaborators share openings, submit referrals, and track results in the
+              dashboard. Payouts are issued in USDC to the registered EVM wallet (e.g., MetaMask).
+            </p>
+            <ul className="responsibilities-list">
+              <li>Clear and fair reward policy tied to successful hires</li>
+              <li>USDC payouts via EVM wallets for speed and borderless access</li>
+              <li>Responsible handling of candidate data strictly for recruitment</li>
+              <li>Built for flexibility: refer from anywhere, anytime</li>
+            </ul>
+          </div>
+        </section>
           {/* Contact Information */}
           <section className="contact-section">
             <h2 className="section-title">Contact Information</h2>
@@ -283,15 +296,6 @@ export default function TermsPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="terms-footer">
-        <div className="container">
-          <div className="footer-content">
-            <p>&copy; 2024 Ant-Tech Asia. All rights reserved.</p>
-            <p>Last updated: December 2025</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

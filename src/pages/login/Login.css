@@ -1,61 +1,70 @@
 /* Reset */
-  
-/* Nền toàn màn hình */
-.container {
-  display: flex;
-  height: 1000px;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  animation: fadeInBg 1s ease-in-out;
-}
-  
-/* 🔧 Wrapper để rung khi lỗi (không ảnh hưởng animation của .form) */
-.shake-wrapper {
-  display: inline-block;
-  will-change: transform;
-}
-.shake-wrapper.is-shaking {
-  animation: shake 0.5s ease;
-}
-
-/* Glassmorphism form */
-.form {
-  padding: 100px 200px; /* tăng padding */
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  margin-top: 150px;
-  margin-bottom: 100px;
-  opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInForm 1s ease forwards;
-  animation-fill-mode: forwards;
-}
-
-/* Animations */
-@keyframes fadeInForm {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
-}
-@keyframes fadeInBg {
-  from { opacity: 0 }
-  to { opacity: 1 }
-}
-@keyframes shake {
-  0%, 100% { transform: translateX(0) }
-  20% { transform: translateX(-8px) }
-  40% { transform: translateX(8px) }
-  60% { transform: translateX(-6px) }
-  80% { transform: translateX(6px) }
-}
+  html, body, #root {
+    height: 100%;
+  }
+  
+  /* Nền toàn màn hình */
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    animation: fadeInBg 1s ease-in-out;
+  }
+  
+  /* 🔧 Wrapper để rung khi lỗi (không ảnh hưởng animation của .form) */
+  .shake-wrapper {
+    display: inline-block;
+    will-change: transform;
+  }
+  .shake-wrapper.is-shaking {
+    animation: shake 0.5s ease;
+  }
+  
+  /* Glassmorphism form */
+  .form {
+    margin-top: 100px;
+    width: 100%;
+    max-width: 560px; /* tăng size */
+    min-height: 400px; /* thêm chiều cao tối thiểu */
+    padding: 50px 60px; /* tăng padding */
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInForm 1s ease forwards;
+    animation-fill-mode: forwards;
+  }
+  
+  /* Animations */
+  @keyframes fadeInForm {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeInBg {
+    from { opacity: 0 }
+    to { opacity: 1 }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0) }
+    20% { transform: translateX(-8px) }
+    40% { transform: translateX(8px) }
+    60% { transform: translateX(-6px) }
+    80% { transform: translateX(6px) }
+  }
   
   /* Title */
 .title {
@@ -237,7 +246,7 @@ button {
     .form {
       width: 95%;
       padding: 30px;
-      margin-top: 50px ;
+      margin-top: 30px;
     }
     .input-group {
       flex-direction: column;
@@ -269,6 +278,8 @@ button {
   }
   
   @media (max-width: 480px) {
+    
+   
     .title {
       font-size: 1.1rem;
     }
@@ -283,4 +294,40 @@ button {
       padding: 10px 20px;
     }
   }
-
+  
+  .floating-icons {
+    position: fixed;
+    bottom: 40px;
+    right: 5px;
+    gap: 12px;
+    z-index: 1000;
+  }
+  
+  .floating-icon {
+    background-color: #ffffff;
+    color: white;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    transition: transform 0.2s ease;
+    background-color: transparent; /* không nền */
+    border-radius: 0;              /* không bo tròn */
+    box-shadow: none;              /* không đổ bóng */
+    padding: 0;                    /* không padding */
+  }
+  
+  .floating-icon:hover {
+    transform: scale(1.1);
+  }
+  
+  .floating-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  

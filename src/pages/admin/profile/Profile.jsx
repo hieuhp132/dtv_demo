@@ -199,32 +199,7 @@ export default function ViewProfile() {
       </section>
 
       {/* BANK INFO */}
-      {/* WALLET */}
-      <section className="card">
-        <h3>
-          <FaCreditCard /> Wallet
-        </h3>
 
-        <div className="grid">
-          <div className="grid-item">
-            <label>Ethereum Address</label>
-            {isEditing ? (
-              <input
-                name="ethAddress"
-                value={bankInfo.ethAddress || ""}
-                onChange={handleBankChange}
-                placeholder="0x..."
-              />
-            ) : (
-              <span>{bankInfo.ethAddress || "—"}</span>
-            )}
-          </div>
-        </div>
-
-        <div className="note">
-          This is where any bounties you earn will be paid to you in USDC.
-        </div>
-      </section>
 
       {/* BANK INFO */}
       <section className="card">
@@ -253,6 +228,65 @@ export default function ViewProfile() {
           By saving, you confirm the information is accurate and valid.
         </div>
       </section>
+
+      {/* WALLET */}
+      <section className="card">
+        <h3>
+          <FaCreditCard /> Wallet /  About MetaMask Wallet
+        </h3>
+
+        <div className="grid">
+          <div className="grid-item">
+            <label>Ethereum Address</label>
+            {isEditing ? (
+              <input
+                name="ethAddress"
+                value={bankInfo.ethAddress || ""}
+                onChange={handleBankChange}
+                placeholder="0x..."
+              />
+
+            ) : (
+              <>
+              <span>{bankInfo.ethAddress || "—"}</span>
+          
+        <div className="grid">
+          <div className="grid-item" style={{ gridColumn: "1 / -1" }}>
+            <div className="note">
+              <strong>MetaMask Wallet (Recommended)</strong><br />
+              Non-custodial EVM wallet used to receive bounty payouts. This is where any bounties you earn will be paid to you in USDC.
+              {/* <br /><br />
+              <strong>Setup</strong>
+              <ul>
+                <li>Install the extension from <span style={{fontWeight:600}}>metamask.io</span></li>
+                <li>Create a new wallet or import an existing one using your seed phrase</li>
+                <li>Store the seed phrase offline; never share it in chat/email</li>
+                <li>Select the intended EVM network (e.g., Ethereum Mainnet)</li>
+                <li>Copy your public address (starts with 0x…) and paste it in Ethereum Address field</li>
+              </ul> */}
+              {/* <strong>Security Best Practices</strong>
+              <ul>
+                <li>Never disclose your seed phrase or private keys</li>
+                <li>Enable auto-lock and OS login protection</li>
+                <li>Optional: use a hardware wallet (Ledger/Trezor) via MetaMask</li>
+                <li>Run a small test USDC transfer before large payouts</li>
+              </ul>
+              <strong>Payouts & Fees</strong>
+              <ul>
+                <li>Payouts are sent in USDC to the address provided</li>
+                <li>You may need a small amount of the network’s native token (e.g., ETH) to move funds</li>
+              </ul> */}
+              <br/><br/>
+              <strong>More: </strong> <a href="https://metamask.io/">https://metamask.io/</a>
+             
+            </div>
+          </div>
+        </div></>
+            )}
+          </div>
+        </div>
+      </section>
+
 
       <Icons />
     </div>

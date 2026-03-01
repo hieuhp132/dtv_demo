@@ -35,6 +35,7 @@ import RecrSavedJobs from "./pages/recruiter/jobs/Saved";
 import RecrCandidates from "./pages/recruiter/candidates_tracker/Candidates";
 import RecrNotification from "./pages/recruiter/notifications/Notification";
 import Update from "./pages/update/Update";
+import TermsPage from "./pages/terms/Terms";
 
 function PrivateRoute({ roles }) {
   const { user, authReady } = useAuth();
@@ -71,6 +72,7 @@ function AppRoutes() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/pending" element={<Pending />} />
         <Route path="/update" element={<Update />} />
+        <Route path="/terms" element={<TermsPage />} />
 
         {/* ADMIN */}
         <Route element={<PrivateRoute roles={["admin"]} />}>

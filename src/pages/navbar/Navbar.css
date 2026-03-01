@@ -1,7 +1,7 @@
 /* ===== NAVBAR WRAPPER ===== */
 .navbar {
   width: 100%;
-  background: var(--header-gradient);
+  background: #fc832b;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
