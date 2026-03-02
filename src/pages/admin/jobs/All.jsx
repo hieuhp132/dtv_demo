@@ -216,14 +216,64 @@ export default function All() {
     setShowJobModal(false);
 
     if (!editingJob) {
-      const created = await createJobL(payload);
+      const created = await createJobL({
+        title: payload.title,
+        company: payload.company,
+        location: payload.location,
+        salary: payload.salary,
+        bonus: payload.bonus,
+        rewardCandidateUSD: payload.rewardCandidateUSD,
+        rewardInterviewUSD: payload.rewardInterviewUSD,
+        vacancies: payload.vacancies,
+        applicants: payload.applicants,
+        deadline: payload.deadline,
+        status: payload.status,
+        keywords: String(payload.keywords || "")
+          .split(",")
+          .map((k) => k.trim())
+          .filter(Boolean),
+        jobsdetail: {
+          description: normalizeBreaks(payload.description || ""),
+          requirement: normalizeBreaks(payload.requirements || ""),
+          benefits: normalizeBreaks(payload.benefits || ""),
+          other: normalizeBreaks(payload.other || ""),
+        },
+        description: "",
+        requirements: "",
+        benefits: "",
+        other: "",
+      });
       setJobs((j) => [created, ...j]);
       return;
     }
 
     const updated = await updateJobL({
       _id: editingJob._id,
-      ...payload,
+      title: payload.title,
+      company: payload.company,
+      location: payload.location,
+      salary: payload.salary,
+      bonus: payload.bonus,
+      rewardCandidateUSD: payload.rewardCandidateUSD,
+      rewardInterviewUSD: payload.rewardInterviewUSD,
+      vacancies: payload.vacancies,
+      applicants: payload.applicants,
+      deadline: payload.deadline,
+      status: payload.status,
+      keywords: String(payload.keywords || "")
+        .split(",")
+        .map((k) => k.trim())
+        .filter(Boolean),
+      jobsdetail: {
+        description: normalizeBreaks(payload.description || ""),
+        requirement: normalizeBreaks(payload.requirements || ""),
+        benefits: normalizeBreaks(payload.benefits || ""),
+        other: normalizeBreaks(payload.other || ""),
+      },
+      description: "",
+      requirements: "",
+      benefits: "",
+      other: "",
     });
 
     setJobs((j) => j.map((x) => (x._id === updated._id ? updated : x)));

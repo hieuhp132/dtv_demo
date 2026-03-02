@@ -40,6 +40,17 @@ export default function Card({
     return "USD 0 / Interview";
   };
 
+  const textPreview = (() => {
+    const html =
+      job.jobsdetail?.description ||
+      job.description ||
+      "";
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    const t = tmp.textContent || tmp.innerText || "";
+    return t.replace(/\s+/g, " ").trim().slice(0, 180);
+  })();
+
   return (
     <div
       className="job-card"
@@ -110,6 +121,12 @@ export default function Card({
         <span>Vacancies: {job.vacancies}</span>
         <span style={{ marginLeft: 8 }}>Applicants: {job.applicants}</span>
       </div>
+
+      {textPreview && (
+        <div style={{ fontSize: 13, color: "#444", marginBottom: 10 }}>
+          {textPreview}...
+        </div>
+      )}
 
       {/* REWARD */}
 
