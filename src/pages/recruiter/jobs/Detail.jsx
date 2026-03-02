@@ -434,8 +434,7 @@ export default function JobDetail() {
         <aside className="job-sidebar">
           {isCTV && (
             <div className="card">
-              
-              <FilesView publicUrl={jdPublicUrl} name={jdFileName} />
+              <FilesView publicUrl={jdPublicUrl} name={jdFileName} /> <br/>
               <button className="primary" onClick={() => setOpen(true)}>Submit Candidate</button>
             </div>
           )}
