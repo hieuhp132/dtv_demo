@@ -32,6 +32,12 @@ const EMPTY_JOB_FORM = {
   requirements: "",
   benefits: "",
   other: "",
+  jobsdetail: {
+    description: "",
+    requirement: "",
+    benefits: "",
+    other: "",
+  },
 };
 
 // const mapJobToForm = (job) => ({

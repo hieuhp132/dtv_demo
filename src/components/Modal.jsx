@@ -33,7 +33,11 @@ export default function Modal({
 
   const onChangeQuill = (field, value) => {
     setIsDirty(true);
-    setJobForm((prev) => ({ ...prev, [field]: value }));
+    setJobForm((prev) => {
+      const mapped = field === "requirements" ? "requirement" : field;
+      const jd = { ...(prev.jobsdetail || {}), [mapped]: value };
+      return { ...prev, [field]: value, jobsdetail: jd };
+    });
   };
 
   const handleSubmit = (e) => {
@@ -224,7 +228,7 @@ export default function Modal({
             <div style={quillGroup}>
               <label style={labelStyle}>Requirements</label>
               <ReactQuill
-                value={jobForm.requirements}
+                value={jobForm.jobsdetail?.requirement}
                 onChange={(v) => onChangeQuill("requirements", v)}
                 modules={QUILL_MODULES}
                 formats={QUILL_FORMATS}
@@ -233,7 +237,7 @@ export default function Modal({
             <div style={quillGroup}>
               <label style={labelStyle}>Benefits</label>
               <ReactQuill
-                value={jobForm.benefits}
+                value={jobForm.jobsdetail?.benefits}
                 onChange={(v) => onChangeQuill("benefits", v)}
                 modules={QUILL_MODULES}
                 formats={QUILL_FORMATS}
@@ -242,7 +246,7 @@ export default function Modal({
             <div style={quillGroup}>
               <label style={labelStyle}>Other</label>
               <ReactQuill
-                value={jobForm.other}
+                value={jobForm.jobsdetail?.other}
                 onChange={(v) => onChangeQuill("other", v)}
                 modules={QUILL_MODULES}
                 formats={QUILL_FORMATS}
