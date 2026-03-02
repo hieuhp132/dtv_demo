@@ -36,7 +36,7 @@ export default function Modal({
     setJobForm((prev) => {
       const mapped = field === "requirements" ? "requirement" : field;
       const jd = { ...(prev.jobsdetail || {}), [mapped]: value };
-      return { ...prev, [field]: value, jobsdetail: jd };
+      return { ...prev, jobsdetail: jd };
     });
   };
 
