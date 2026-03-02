@@ -215,7 +215,7 @@ export default function Modal({
             <div style={quillGroup}>
               <label style={labelStyle}>Description</label>
               <ReactQuill
-                value={jobForm.description}
+                value={jobForm.jobsdetail?.description}
                 onChange={(v) => onChangeQuill("description", v)}
                 modules={QUILL_MODULES}
                 formats={QUILL_FORMATS}
