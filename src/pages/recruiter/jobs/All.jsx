@@ -29,10 +29,12 @@ const EMPTY_JOB_FORM = {
   deadline: "",
   status: "Active",
   keywords: "",
-  description: "",
-  requirements: "",
-  benefits: "",
-  other: "",
+  jobsdetail: {
+    description: "",
+    requirement: "",
+    benefits: "",
+    other: "",
+  },
 };
 
 const mapJobToForm = (job) => ({
@@ -50,10 +52,12 @@ const mapJobToForm = (job) => ({
   keywords: Array.isArray(job.keywords)
     ? job.keywords.join(", ")
     : job.keywords || "",
-  description: job.description || "",
-  requirements: job.requirements || "",
-  benefits: job.benefits || "",
-  other: job.other || "",
+  jobsdetail: {
+    description: job.jobsdetail?.description ?? job.description ?? "",
+    requirement: job.jobsdetail?.requirement ?? job.requirements ?? "",
+    benefits: job.jobsdetail?.benefits ?? job.benefits ?? "",
+    other: job.jobsdetail?.other ?? job.other ?? "",
+  },
 });
 
 export default function All() {
@@ -211,14 +215,56 @@ export default function All() {
     setShowJobModal(false);
 
     if (!editingJob) {
-      const created = await createJobL(payload);
+      const created = await createJobL({
+        title: payload.title,
+        company: payload.company,
+        location: payload.location,
+        salary: payload.salary,
+        bonus: payload.bonus,
+        rewardCandidateUSD: payload.rewardCandidateUSD,
+        rewardInterviewUSD: payload.rewardInterviewUSD,
+        vacancies: payload.vacancies,
+        applicants: payload.applicants,
+        deadline: payload.deadline,
+        status: payload.status,
+        keywords: String(payload.keywords || "")
+          .split(",")
+          .map((k) => k.trim())
+          .filter(Boolean),
+        jobsdetail: {
+          description: payload.jobsdetail?.description || "",
+          requirement: payload.jobsdetail?.requirement || "",
+          benefits: payload.jobsdetail?.benefits || "",
+          other: payload.jobsdetail?.other || "",
+        },
+      });
       setJobs((j) => [created, ...j]);
       return;
     }
 
     const updated = await updateJobL({
       _id: editingJob._id,
-      ...payload,
+      title: payload.title,
+      company: payload.company,
+      location: payload.location,
+      salary: payload.salary,
+      bonus: payload.bonus,
+      rewardCandidateUSD: payload.rewardCandidateUSD,
+      rewardInterviewUSD: payload.rewardInterviewUSD,
+      vacancies: payload.vacancies,
+      applicants: payload.applicants,
+      deadline: payload.deadline,
+      status: payload.status,
+      keywords: String(payload.keywords || "")
+        .split(",")
+        .map((k) => k.trim())
+        .filter(Boolean),
+      jobsdetail: {
+        description: payload.jobsdetail?.description || "",
+        requirement: payload.jobsdetail?.requirement || "",
+        benefits: payload.jobsdetail?.benefits || "",
+        other: payload.jobsdetail?.other || "",
+      },
     });
 
     setJobs((j) => j.map((x) => (x._id === updated._id ? updated : x)));
