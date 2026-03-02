@@ -34,31 +34,31 @@ const EMPTY_JOB_FORM = {
   other: "",
 };
 
-const mapJobToForm = (job) => ({
-  title: job.title || "",
-  company: job.company || "",
-  location: job.location || "",
-  salary: job.salary || "",
-  bonus: job.bonus || "",
-  rewardCandidateUSD: job.rewardCandidateUSD ?? "",
-  rewardInterviewUSD: job.rewardInterviewUSD ?? "",
-  vacancies: job.vacancies ?? 0,
-  applicants: job.applicants ?? 0,
-  deadline: job.deadline || "",
-  status: job.status || "Active",
-  keywords: Array.isArray(job.keywords)
-    ? job.keywords.join(", ")
-    : job.keywords || "",
-  // description: job.description || "",
-  // requirements: job.requirements || "",
-  // benefits: job.benefits || "",
-  // other: job.other || "",
+// const mapJobToForm = (job) => ({
+//   title: job.title || "",
+//   company: job.company || "",
+//   location: job.location || "",
+//   salary: job.salary || "",
+//   bonus: job.bonus || "",
+//   rewardCandidateUSD: job.rewardCandidateUSD ?? "",
+//   rewardInterviewUSD: job.rewardInterviewUSD ?? "",
+//   vacancies: job.vacancies ?? 0,
+//   applicants: job.applicants ?? 0,
+//   deadline: job.deadline || "",
+//   status: job.status || "Active",
+//   keywords: Array.isArray(job.keywords)
+//     ? job.keywords.join(", ")
+//     : job.keywords || "",
+//   // description: job.description || "",
+//   // requirements: job.requirements || "",
+//   // benefits: job.benefits || "",
+//   // other: job.other || "",
 
-  description: job.jobsdetail?.description || "",
-  requirements: job.jobsdetail?.requirement || "",
-  benefits: job.jobsdetail?.benefits || "",
-  other: job.jobsdetail?.other || "",
-});
+//   description: job.jobsdetail?.description || "",
+//   requirements: job.jobsdetail?.requirement || "",
+//   benefits: job.jobsdetail?.benefits || "",
+//   other: job.jobsdetail?.other || "",
+// });
 
 export default function All() {
   const { user } = useAuth();
@@ -183,7 +183,8 @@ export default function All() {
     setEditingJob(job);
     console.log("job before map:", job);
     setJobForm(job);
-    console.log("job after map:", mapJobToForm(job));
+    console.log("job after map:", jobForm);
+    // setJobForm(mapJobToForm(job));
     setShowJobModal(true);
   };
 
@@ -238,10 +239,10 @@ export default function All() {
           benefits: normalizeBreaks(payload.benefits || ""),
           other: normalizeBreaks(payload.other || ""),
         },
-        description: "",
-        requirements: "",
-        benefits: "",
-        other: "",
+        // description: "",
+        // requirements: "",
+        // benefits: "",
+        // other: "",
       });
       setJobs((j) => [created, ...j]);
       return;
@@ -270,10 +271,10 @@ export default function All() {
         benefits: normalizeBreaks(payload.benefits || ""),
         other: normalizeBreaks(payload.other || ""),
       },
-      description: "",
-      requirements: "",
-      benefits: "",
-      other: "",
+      // description: "",
+      // requirements: "",
+      // benefits: "",
+      // other: "",
     });
 
     setJobs((j) => j.map((x) => (x._id === updated._id ? updated : x)));
