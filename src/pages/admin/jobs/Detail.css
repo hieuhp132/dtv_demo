@@ -429,6 +429,11 @@
 /* ensure Quill-editor generated content keeps its spacing */
 .job-html-content p {
   margin: 0 0 0.75rem 0;
+  /* Force full-width paragraphs even if Quill / pasted content adds inline width styles */
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block;
+  box-sizing: border-box;
 }
 
 /* small fix: nested lists */
