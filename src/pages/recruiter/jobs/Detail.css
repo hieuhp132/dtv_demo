@@ -3,11 +3,6 @@
   background: #f9fafb;
 }
 
-.job-container {
-  margin: 0 auto;
-  padding: 24px 16px;
-}
-
 /* PAGE HEADER */
 .page-header {
   background: white;
@@ -97,6 +92,37 @@
   width: 100%;
 }
 
+@media (max-width: 1024px) {
+  .job-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .comments-activity-wrapper {
+    max-height: 500px;
+  }
+
+  .comments-activity-content {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 900px) {
+  .job-layout {
+    grid-template-columns: 1fr;
+    padding: 0 12px;
+  }
+
+  .comments-activity-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .comments-activity-container {
+    padding: 0;
+  }
+}
+
+
+
 /* TAGS */
 .job-tags {
   display: flex;
@@ -151,10 +177,53 @@
   font-size: 1rem;
 }
 
+/* SIDEBAR */
+.job-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.job-sidebar .card {
+  margin-bottom: 0;
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.job-sidebar .card h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.job-sidebar .card.admin {
+  background: #f0f9ff;
+  border: 1px solid #bfdbfe;
+}
+
 .primary {
   width: 100%;
   padding: 10px;
   margin-bottom: 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.primary:hover {
+  background: #2563eb;
+}
+
+.primary:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
 }
 
 /* MODAL */
@@ -270,24 +339,9 @@
 }
 
 /* MOBILE */
-@media (max-width: 1024px) {
-  .job-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .comments-activity-wrapper {
-    max-height: 500px;
-  }
-
-  .comments-activity-content {
-    max-height: 400px;
-  }
-}
-
 @media (max-width: 900px) {
   .job-layout {
     grid-template-columns: 1fr;
-    padding: 0 12px;
   }
 
   .job-info-grid {
@@ -318,8 +372,15 @@
 }
 
 .job-html-content {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  line-height: 1.7;
+  font-size: 16px;
+
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.job-html-content p {
+  margin-bottom: 12px;
 }
 
 .job-html-content ul {
@@ -341,6 +402,7 @@
 /* Support Quill indent metadata: data-indent="N" or class ql-indent-N */
 .job-html-content li[data-indent],
 .job-html-content li[class*="ql-indent-"] {
+  /* ensure marker is outside and we can shift the whole item */
   list-style-position: outside;
 }
 
@@ -365,15 +427,23 @@
   margin-left: 7.5rem;
 }
 
+/* Also support block-level paragraphs that Quill may indent using inline styles */
 .job-html-content p[data-indent],
 .job-html-content p[class*="ql-indent-"] {
   margin-left: 1.5rem;
 }
 
+/* ensure Quill-editor generated content keeps its spacing */
 .job-html-content p {
   margin: 0 0 0.75rem 0;
+  /* Force full-width paragraphs even if Quill / pasted content adds inline width styles */
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block;
+  box-sizing: border-box;
 }
 
+/* small fix: nested lists */
 .job-html-content ul ul,
 .job-html-content ol ol,
 .job-html-content ul ol,
@@ -381,51 +451,81 @@
   margin-left: 1rem;
 }
 
+/* Quill sometimes stores bullet lists as <ol data-list="bullet"> */
 .job-html-content ol[data-list="bullet"] {
-  list-style-type: disc;
+  list-style-type: disc; /* render bullets instead of numbers */
 }
 
+/* Ensure list items with Quill-specific attributes behave like normal list items */
 .job-html-content li[data-list="bullet"] {
   display: list-item;
 }
 
-/* Scrollable content */
-.comments-activity-content {
+/* Render a bullet marker for list items that Quill marked as bullets (even when parent is <ol>) */
+.job-html-content li[data-list="bullet"]::marker {
+  /* use a solid bullet and a small space */
+  content: "• ";
+  color: inherit;
+}
+
+/* Hide quill UI helper spans inside rendered content (they're non-editable markers) */
+.job-html-content .ql-ui {
+  display: none;
+}
+
+/* Quill size classes - render custom px/rem font sizes from editor */
+.job-html-content .ql-size-12px { font-size: 12px; }
+.job-html-content .ql-size-14px { font-size: 14px; }
+.job-html-content .ql-size-16px { font-size: 16px; }
+.job-html-content .ql-size-18px { font-size: 18px; }
+.job-html-content .ql-size-20px { font-size: 20px; }
+.job-html-content .ql-size-24px { font-size: 24px; }
+.job-html-content .ql-size-28px { font-size: 28px; }
+.job-html-content .ql-size-32px { font-size: 32px; }
+.job-html-content .ql-size-0\.75rem { font-size: 0.75rem; }
+.job-html-content .ql-size-1rem { font-size: 1rem; }
+.job-html-content .ql-size-1\.25rem { font-size: 1.25rem; }
+.job-html-content .ql-size-1\.5rem { font-size: 1.5rem; }
+.job-html-content .ql-size-1\.75rem { font-size: 1.75rem; }
+.job-html-content .ql-size-2rem { font-size: 2rem; }
+.job-html-content .ql-size-2\.5rem { font-size: 2.5rem; }
+
+/* Support data-size attribute format for custom sizes */
+.job-html-content span[data-size="12px"] { font-size: 12px; }
+.job-html-content span[data-size="14px"] { font-size: 14px; }
+.job-html-content span[data-size="16px"] { font-size: 16px; }
+.job-html-content span[data-size="18px"] { font-size: 18px; }
+.job-html-content span[data-size="20px"] { font-size: 20px; }
+.job-html-content span[data-size="24px"] { font-size: 24px; }
+.job-html-content span[data-size="28px"] { font-size: 28px; }
+.job-html-content span[data-size="32px"] { font-size: 32px; }
+.job-html-content span[data-size="0.75rem"] { font-size: 0.75rem; }
+.job-html-content span[data-size="1rem"] { font-size: 1rem; }
+.job-html-content span[data-size="1.25rem"] { font-size: 1.25rem; }
+.job-html-content span[data-size="1.5rem"] { font-size: 1.5rem; }
+.job-html-content span[data-size="1.75rem"] { font-size: 1.75rem; }
+.job-html-content span[data-size="2rem"] { font-size: 2rem; }
+.job-html-content span[data-size="2.5rem"] { font-size: 2.5rem; }
+/* Scrollable Timeline (if many activities) */
+.activity-timeline {
+  max-height: 500px;
   overflow-y: auto;
 }
 
-.comments-activity-content::-webkit-scrollbar {
+.activity-timeline::-webkit-scrollbar {
   width: 6px;
 }
 
-.comments-activity-content::-webkit-scrollbar-track {
+.activity-timeline::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 4px;
 }
 
-.comments-activity-content::-webkit-scrollbar-thumb {
+.activity-timeline::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 4px;
 }
 
-.comments-activity-content::-webkit-scrollbar-thumb:hover {
+.activity-timeline::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
-}
-
-.card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
-}
-
-.card.admin {
-  padding: 20px;
-}
-
-.card h4 {
-  margin: 0 0 12px 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1f2937;
 }

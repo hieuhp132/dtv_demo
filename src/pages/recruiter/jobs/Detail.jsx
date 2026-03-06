@@ -15,6 +15,7 @@ import FileUploader from "../../../components/FileUploader";
 import Comments from "../../../components/Comments";
 import Activity from "../../../components/Activity";
 import SubmitCandidateModal from "../../../components/SubmitCandidateModal";
+import { cleanJobHtml } from "../../../components/CleanJobHtml.jsx";
 import "./Detail.css";
 
 export default function JobDetail() {
@@ -409,24 +410,23 @@ export default function JobDetail() {
               <span>{job.rewardCandidateUSD ?? 0} USD</span>
             </div>
           </div>
-
           <section className="job-section">
-            <h1>Description</h1><br/>
-            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.description || "No description provided" }} />
+            <h1>Description</h1>
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: cleanJobHtml(job.jobsdetail.description)|| "No description provided" }} />
           </section>
 
           <section className="job-section">
-            <h1>Requirements</h1> <br />
-            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.requirement || "No requirements listed" }} />
+            <h1>Requirements</h1>
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: cleanJobHtml(job.jobsdetail?.requirement) || "No requirements listed" }} />
           </section>
 
-            <section className="job-section">
-              <h1>Benefits</h1><br/>
-              <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.benefits || "No benefits listed" }} />
-            </section>
           <section className="job-section">
-            <h1>Other Information</h1><br/>
-            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: job.jobsdetail?.other || "No other information provided" }} />
+            <h1>Benefits</h1>
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: cleanJobHtml(job.jobsdetail?.benefits) || "No benefits listed" }} />
+          </section>
+          <section className="job-section">
+            <h1>Other Information</h1>
+            <div className="job-html-content" dangerouslySetInnerHTML={{ __html: cleanJobHtml(job.jobsdetail?.other) || "No other information provided" }} />
           </section>
         </main>
 

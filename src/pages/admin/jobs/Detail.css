@@ -372,8 +372,15 @@
 }
 
 .job-html-content {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  line-height: 1.7;
+  font-size: 16px;
+
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.job-html-content p {
+  margin-bottom: 12px;
 }
 
 .job-html-content ul {
