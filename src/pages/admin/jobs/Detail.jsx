@@ -107,229 +107,175 @@ export default function JobDetail() {
     }
   };
 
+
+  
+  const sectionStyle = `
+    font-family: Arial;
+    font-size: 14px;
+    line-height: 1.5;
+    color:#000;
+    margin:0;
+  `;
+  const titleStyle = `
+    font-size:18px;
+    font-weight:bold;
+    margin:4px 0 2px 0;
+    padding-bottom:3px;
+    border-bottom:1px solid #333;
+    display:block;
+    width:100%;
+  `;
+  const blockStyle = `
+    margin:2px 0 4px 0;
+  `;
+
+  const renderSectionToCanvas = async (html) => {
+    const container = document.createElement("div");
+  
+    container.style.position = "fixed";
+    container.style.left = "-9999px";
+    container.style.width = "794px";
+    container.style.padding = "40px";
+    container.style.background = "#fff";
+    container.style.fontFamily = "Arial";
+    container.style.lineHeight = "1.6";
+    container.innerHTML = html;
+  
+    document.body.appendChild(container);
+  
+    await new Promise(r => setTimeout(r, 300));
+  
+    const canvas = await html2canvas(container, {
+      scale: 2,
+      backgroundColor: "#fff",
+      useCORS: true
+    });
+  
+    document.body.removeChild(container);
+  
+    return canvas;
+  };
+
+  
+  const buildSections = () => {
+    if (!job) return [];
+  
+    return [
+      `
+      <div style="${sectionStyle}">
+      <h1 style="font-size:26px;margin-bottom:6px;border-bottom:3px solid #3498db;padding-bottom:6px">
+      ${job.title}
+      </h1>
+      
+      <div style="${blockStyle}">
+      <b>Salary:</b> ${job.salary || "Negotiable"} |
+      <b>Location:</b> ${job.location || "Remote"} |
+      <b>Reward:</b> ${job.rewardCandidateUSD ?? 0} USD
+      </div>
+      
+      <div style="${blockStyle}">
+      ${(keywords || []).map(k =>
+      `<span style="background:#3498db;color:#fff;padding:3px 8px;margin-right:4px;border-radius:10px;font-size:11px">${k}</span>`
+      ).join("")}
+      </div>
+      </div>
+      `,
+      
+      job.jobsdetail?.description
+      ? `
+      <div style="${sectionStyle}">
+      <div style="${titleStyle}">Description</div>
+      <div>${cleanJobHtml(job.jobsdetail.description)}</div>
+      </div>
+      `
+      : "",
+      
+      job.jobsdetail?.requirement
+      ? `
+      <div style="${sectionStyle}">
+      <div style="${titleStyle}">Requirements</div>
+      <div>${cleanJobHtml(job.jobsdetail.requirement)}</div>
+      </div>
+      `
+      : "",
+      
+      job.jobsdetail?.benefits
+      ? `
+      <div style="${sectionStyle}">
+      <div style="${titleStyle}">Benefits</div>
+      <div>${cleanJobHtml(job.jobsdetail.benefits)}</div>
+      </div>
+      `
+      : "",
+      
+      job.jobsdetail?.other
+      ? `
+      <div style="${sectionStyle}">
+      <div style="${titleStyle}">Other Information</div>
+      <div>${cleanJobHtml(job.jobsdetail.other)}</div>
+      </div>
+      `
+      : ""
+      
+      ];
+  };
   const handleCreatePDF = async () => {
-    if (!job) return alert("Job data not available");
+    if (!job) return;
+  
     try {
       setCreatingPDF(true);
+  
+      const pdf = new jsPDF("p", "mm", "a4");
+  
+      const pageWidth = 210;
+      const pageHeight = 297;
+  
+      const sections = buildSections();
+  
+      let currentY = 10;
 
-      // Create temporary container with content
-      const container = document.createElement('div');
-      container.style.position = 'fixed';
-      container.style.left = '-9999px';
-      container.style.top = '-9999px';
-      container.style.width = '210mm';
-      container.style.padding = '15mm';
-      container.style.background = 'white';
-      container.style.fontSize = '95px';
-      container.style.lineHeight = '1.7';
-      container.style.color = '#000';
-      container.style.fontFamily = 'Arial, sans-serif';
-      container.style.wordWrap = 'break-word';
-      container.style.overflowWrap = 'break-word';
-      container.style.whiteSpace = 'normal';
+      for (const section of sections) {
       
-      container.innerHTML = `
-        <div style="text-align: left;">
-          <h1 style="color: #000; border-bottom: 3px solid #3498db; padding-bottom: 12px; font-size: 28px; font-weight: 800; margin: 0 0 15px 0; word-wrap: break-word; overflow-wrap: break-word;">${job.title || "Job Description"}</h1>
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
-            <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: 800; color: #000; font-size: 13px;">Salary</div>
-              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word;">${job.salary || "Negotiable"}</div>
-            </div>
-            <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: 800; color: #000; font-size: 13px;">Location</div>
-              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word;">${job.location || "Remote"}</div>
-            </div>
-          </div>
-
-          ${keywords.length > 0 ? `
-            <div style="margin-bottom: 12px;">
-              ${keywords.map(k => `<span style="display: inline-block; background: #3498db; color: white; padding: 6px 12px; margin-right: 6px; margin-bottom: 4px; border-radius: 15px; font-size: 12px; word-wrap: break-word;">${k}</span>`).join('')}
-            </div>
-          ` : ''}
-
-          ${job.jobsdetail.description ? `
-            <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Description</h2>
-              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.description}</div>
-            </div>
-          ` : ''}
-
-          ${job.jobsdetail?.requirement ? `
-            <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Requirements</h2>
-              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.requirement}</div>
-            </div>
-          ` : ''}
-
-          ${job.jobsdetail.benefits ? `
-            <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Benefits</h2>
-              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.jobsdetail.benefits}</div>
-            </div>
-          ` : ''}
-
-          <div style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 10px; color: #7f8c8d;">
-            <p style="margin: 0;">Generated on ${new Date().toLocaleString()}</p>
-          </div>
-        </div>
-      `;
+        if (!section) continue;
       
-      document.body.appendChild(container);
-
-      // Wait for content to render
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      // Convert to canvas
-      const canvas = await html2canvas(container, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        windowWidth: 794,
-        windowHeight: 1123,
-        imageTimeout: 0,
-        removeContainer: false
-      });
-
-      // Remove container
-      document.body.removeChild(container);
-
-      // Get PDF dimensions
-      const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = 297; // A4 height in mm
-      const margin = 15; // 15mm margins (same as padding)
-      const contentWidth = pdfWidth - 2 * margin; // 180mm
-
-      // Calculate image dimensions
-      const imgWidth = contentWidth;
-      const imgHeight = (canvas.height * imgWidth * 25.4) / (canvas.width * 25.4);
-
-      // Create PDF
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-        compress: true
-      });
-
-      // Calculate position
-      let yPosition = margin;
-      const pageHeight = pdfHeight - 2 * margin;
-
-      // Convert canvas to image
-      const imgData = canvas.toDataURL('image/jpeg', 0.95);
-
-      // Add pages with proper pagination
-      if (imgHeight <= pageHeight) {
-        // Content fits in one page
-        pdf.addImage(imgData, 'JPEG', margin, yPosition, imgWidth, imgHeight);
-      } else {
-        // Content spans multiple pages
-        let sourceY = 0;
-        let pageNumber = 0;
-
-        while (sourceY < canvas.height) {
-          if (pageNumber > 0) {
-            pdf.addPage();
-            yPosition = margin;
-          }
-
-          // Calculate how much of the canvas fits on this page
-          const canvasHeightPerPage = (pageHeight * canvas.width * 25.4) / (imgWidth * 25.4);
-          let targetEnd = Math.min(sourceY + canvasHeightPerPage, canvas.height);
-
-          const ctxFull = canvas.getContext('2d');
-          const width = canvas.width;
-          const sampleStepX = Math.max(1, Math.floor(width / 80));
-          const range = 40;
-          const threshold = 0.97;
-          const isRowWhite = (y) => {
-            const data = ctxFull.getImageData(0, y, width, 1).data;
-            let whiteCount = 0;
-            let samples = 0;
-            for (let x = 0; x < width; x += sampleStepX) {
-              const idx = x * 4;
-              const r = data[idx];
-              const g = data[idx + 1];
-              const b = data[idx + 2];
-              const a = data[idx + 3];
-              if (a === 0 || (r > 245 && g > 245 && b > 245)) whiteCount++;
-              samples++;
-            }
-            return whiteCount / samples >= threshold;
-          };
-          let sourceYEnd = targetEnd;
-          for (let dy = 0; dy <= range; dy++) {
-            const down = targetEnd + dy;
-            const up = targetEnd - dy;
-            if (down < canvas.height && isRowWhite(down)) { sourceYEnd = down; break; }
-            if (up > sourceY && isRowWhite(up)) { sourceYEnd = up; break; }
-          }
-          const heightOnPage = (sourceYEnd - sourceY) / canvas.height * imgHeight;
-
-          // Create temporary canvas for this page's content
-          const pageCanvas = document.createElement('canvas');
-          pageCanvas.width = canvas.width;
-          pageCanvas.height = sourceYEnd - sourceY;
-
-          const ctx = pageCanvas.getContext('2d');
-          ctx.drawImage(
-            canvas,
-            0,
-            sourceY,
-            canvas.width,
-            sourceYEnd - sourceY,
-            0,
-            0,
-            canvas.width,
-            sourceYEnd - sourceY
-          );
-
-          const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.95);
-          pdf.addImage(pageImgData, 'JPEG', margin, yPosition, imgWidth, heightOnPage);
-
-          sourceY = sourceYEnd;
-          pageNumber++;
+        const canvas = await renderSectionToCanvas(section);
+      
+        const imgData = canvas.toDataURL("image/jpeg", 1);
+      
+        const imgWidth = pageWidth - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+        if (currentY + imgHeight > pageHeight - 10) {
+          pdf.addPage();
+          currentY = 10;
         }
+      
+        pdf.addImage(imgData, "JPEG", 10, currentY, imgWidth, imgHeight);
+      
+        currentY += imgHeight + 2; // giảm khoảng cách từ 10 -> 4
       }
-
-      // Get PDF blob and upload
-      const pdfBlob = pdf.output('blob');
-      const fileName = `${job.title?.replace(/\s+/g, '_') || 'job'}_${Date.now()}.pdf`;
-      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
-      const res = await uploadFile(pdfFile);
+  
+      const blob = pdf.output("blob");
+  
+      const fileName = `${job.title.replace(/\s+/g, "_")}_${Date.now()}.pdf`;
+  
+      const file = new File([blob], fileName, { type: "application/pdf" });
+  
+      const res = await uploadFile(file);
+  
       if (res?.publicUrl) {
         setPdfUrl(res.publicUrl);
         setPdfFileName(fileName);
-        
-        // Save to localStorage
-        try {
-          localStorage.setItem(`pdf_${id}`, JSON.stringify({
-            url: res.publicUrl,
-            name: fileName,
-            createdAt: new Date().toISOString()
-          }));
-        } catch (err) {
-          console.error('Error saving PDF to localStorage:', err);
-        }
-        
-        alert('PDF created and uploaded successfully!');
-      } else {
-        alert('PDF created but upload failed');
+        alert("PDF created successfully");
       }
+  
     } catch (err) {
-      console.error('PDF creation error:', err);
-      alert('Failed to create PDF: ' + err.message);
+      console.error(err);
+      alert("PDF creation failed");
     } finally {
       setCreatingPDF(false);
     }
   };
-
- 
 
   const handleDeletePDF = async () => {
     if (!pdfUrl) return alert("No PDF file to delete");
