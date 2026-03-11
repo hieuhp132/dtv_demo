@@ -1,5 +1,18 @@
 [
   {
+    "id": "1773245967107",
+    "type": "job_updated",
+    "description": "Admin updated job \"Senior Compliance Officer -bitFlyer Europe S.A\"",
+    "metadata": {
+      "jobId": "1773132493762",
+      "jobTitle": "Senior Compliance Officer -bitFlyer Europe S.A",
+      "adminName": "Admin",
+      "adminRole": "admin",
+      "details": "general update"
+    },
+    "timestamp": "2026-03-11T16:19:27.107Z"
+  },
+  {
     "id": "1772812046866",
     "type": "job_updated",
     "description": "Admin updated job \"Quantitative Trading Analyst - Ostium Labs\"",

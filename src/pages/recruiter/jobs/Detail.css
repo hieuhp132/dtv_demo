@@ -123,21 +123,46 @@
 
 
 
-/* TAGS */
+/* TAGS & BADGES */
 .job-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .job-tags span {
-  background: #eef2ff;
-  color: #3730a3;
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-salary {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #d1fae5;
+}
+
+.badge-location {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #dbeafe;
+}
+
+.badge-reward {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fef3c7;
+}
+
+.badge-keyword {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
 }
 
 /* INFO GRID */
@@ -170,11 +195,44 @@
 /* SECTIONS */
 .job-section {
   min-width: 0;
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
 }
 
-.job-section h4 {
-  margin-bottom: 10px;
-  font-size: 1rem;
+.job-section h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.job-html-content {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #374151;
+  white-space: pre-wrap; /* Quan trọng để hiển thị xuống dòng từ text thuần */
+}
+
+.job-html-content p {
+  margin-bottom: 12px;
+}
+
+.job-html-content ul, .job-html-content ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+
+.job-html-content li {
+  margin-bottom: 8px;
+}
+
+.job-html-content strong {
+  color: #111827;
 }
 
 /* SIDEBAR */

@@ -13,7 +13,7 @@ import Section from "../../../components/Section.jsx";
 import Modal from "../../../components/Modal.jsx";
 import Filters from "../../../components/Filters.jsx";
 import { useAuth } from "../../../context/AuthContext";
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 
 const EMPTY_JOB_FORM = {
   title: "",
@@ -62,6 +62,7 @@ const mapJobToForm = (job) => ({
 export default function All() {
   const { user } = useAuth();
   const adminId = user?.id || user?.email;
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [jobs, setJobs] = useState([]);
   const [jobForm, setJobForm] = useState(EMPTY_JOB_FORM);
@@ -73,10 +74,23 @@ export default function All() {
   const [filterCompany, setFilterCompany] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
 
-  const [activePage, setActivePage] = useState(1);
+  const activePage = parseInt(searchParams.get("page") || "1", 10);
+  const setActivePage = (p) => {
+    const page = typeof p === "function" ? p(activePage) : p;
+    setSearchParams((prev) => {
+      prev.set("page", String(page));
+      return prev;
+    });
+  };
+
   const [inactivePage, setInactivePage] = useState(1);
 
   const jobsPerPage = 9;
+
+  /* ================= RESET PAGE ON FILTER ================= */
+  useEffect(() => {
+    setActivePage(1);
+  }, [searchText, filterLocation, filterCompany, filterCategory]);
 
   /* ================= LOAD ================= */
   useEffect(() => {

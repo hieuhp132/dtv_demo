@@ -108,170 +108,283 @@ export default function JobDetail() {
   };
 
 
-  
-  const sectionStyle = `
-    font-family: Arial;
-    font-size: 14px;
-    line-height: 1.5;
-    color:#000;
-    margin:0;
-  `;
-  const titleStyle = `
-    font-size:18px;
-    font-weight:bold;
-    margin:4px 0 2px 0;
-    padding-bottom:3px;
-    border-bottom:1px solid #333;
-    display:block;
-    width:100%;
-  `;
-  const blockStyle = `
-    margin:2px 0 4px 0;
-  `;
-
-  const renderSectionToCanvas = async (html) => {
-    const container = document.createElement("div");
-  
-    container.style.position = "fixed";
-    container.style.left = "-9999px";
-    container.style.width = "794px";
-    container.style.padding = "40px";
-    container.style.background = "#fff";
-    container.style.fontFamily = "Arial";
-    container.style.lineHeight = "1.6";
-    container.innerHTML = html;
-  
-    document.body.appendChild(container);
-  
-    await new Promise(r => setTimeout(r, 300));
-  
-    const canvas = await html2canvas(container, {
-      scale: 2,
-      backgroundColor: "#fff",
-      useCORS: true
-    });
-  
-    document.body.removeChild(container);
-  
-    return canvas;
-  };
-
-  
-  const buildSections = () => {
-    if (!job) return [];
-  
-    return [
-      `
-      <div style="${sectionStyle}">
-      <h1 style="font-size:26px;margin-bottom:6px;border-bottom:3px solid #3498db;padding-bottom:6px">
-      ${job.title}
-      </h1>
-      
-      <div style="${blockStyle}">
-      <b>Salary:</b> ${job.salary || "Negotiable"} |
-      <b>Location:</b> ${job.location || "Remote"} |
-      <b>Reward:</b> ${job.rewardCandidateUSD ?? 0} USD
-      </div>
-      
-      <div style="${blockStyle}">
-      ${(keywords || []).map(k =>
-      `<span style="background:#3498db;color:#fff;padding:3px 8px;margin-right:4px;border-radius:10px;font-size:11px">${k}</span>`
-      ).join("")}
-      </div>
-      </div>
-      `,
-      
-      job.jobsdetail?.description
-      ? `
-      <div style="${sectionStyle}">
-      <div style="${titleStyle}">Description</div>
-      <div>${cleanJobHtml(job.jobsdetail.description)}</div>
-      </div>
-      `
-      : "",
-      
-      job.jobsdetail?.requirement
-      ? `
-      <div style="${sectionStyle}">
-      <div style="${titleStyle}">Requirements</div>
-      <div>${cleanJobHtml(job.jobsdetail.requirement)}</div>
-      </div>
-      `
-      : "",
-      
-      job.jobsdetail?.benefits
-      ? `
-      <div style="${sectionStyle}">
-      <div style="${titleStyle}">Benefits</div>
-      <div>${cleanJobHtml(job.jobsdetail.benefits)}</div>
-      </div>
-      `
-      : "",
-      
-      // job.jobsdetail?.other
-      // ? `
-      // <div style="${sectionStyle}">
-      // <div style="${titleStyle}">Other Information</div>
-      // <div>${cleanJobHtml(job.jobsdetail.other)}</div>
-      // </div>
-      // `
-      // : ""
-      
-      ];
-  };
   const handleCreatePDF = async () => {
-    if (!job) return;
-  
+    if (!job) return alert("Job data not available");
     try {
       setCreatingPDF(true);
-  
-      const pdf = new jsPDF("p", "mm", "a4");
-  
-      const pageWidth = 210;
-      const pageHeight = 297;
-  
-      const sections = buildSections();
-  
-      let currentY = 10;
 
-      for (const section of sections) {
+      // Create temporary container with content
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.left = '-9999px';
+      container.style.top = '-9999px';
+      container.style.width = '800px'; // Use px for better compatibility
+      container.style.background = 'white';
       
-        if (!section) continue;
+      const jobDescription = cleanJobHtml(job.jobsdetail?.description || job.description || "");
+      const jobRequirement = cleanJobHtml(job.jobsdetail?.requirement || job.requirements || "");
+      const jobBenefits = cleanJobHtml(job.jobsdetail?.benefits || job.benefits || "");
+      const jobOther = cleanJobHtml(job.jobsdetail?.other || job.other || "");
+
+      container.innerHTML = `
+        <style>
+          * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+          .pdf-container {
+            font-family: "Arial", sans-serif;
+            color: #374151;
+            line-height: 1.7;
+            padding: 40px;
+            width: 800px;
+            background: white;
+          }
+          .job-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #111827;
+            margin: 0 0 16px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #3b82f6;
+          }
+          .info-grid {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+          }
+          .info-item {
+            flex: 1;
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 6px;
+          }
+          .info-label {
+            font-size: 11px;
+            font-weight: bold;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+          }
+          .info-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #111827;
+          }
+          .tags {
+            margin-bottom: 24px;
+          }
+          .tag {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 6px;
+            margin-bottom: 6px;
+          }
+          .section {
+            margin-bottom: 24px;
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            border: 1px solid #e5e7eb;
+          }
+          .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f3f4f6;
+            text-transform: none; /* Trả về dạng thường giống web */
+          }
+          .section-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #374151;
+            white-space: pre-wrap;
+            word-break: break-word; /* Đảm bảo không tràn nhưng vẫn tự nhiên */
+          }
+          .section-content p { margin-bottom: 12px; }
+          .section-content ul, .section-content ol { padding-left: 24px; margin-bottom: 16px; }
+          .section-content li { margin-bottom: 8px; }
+          .section-content strong { color: #111827; }
+        </style>
+        <div class="pdf-container">
+          <h1 class="job-title">${job.title || "Job Description"}</h1>
+          
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Salary</div>
+              <div class="info-value">${job.salary || "Negotiable"}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Location</div>
+              <div class="info-value">${job.location || "Remote"}</div>
+            </div>
+          </div>
+
+          ${keywords.length > 0 ? `
+            <div class="tags">
+              ${keywords.map(k => `<span class="tag">${k}</span>`).join('')}
+            </div>
+          ` : ''}
+
+          ${jobDescription ? `
+            <div class="section">
+              <h3 class="section-title">Description</h3>
+              <div class="section-content">${jobDescription}</div>
+            </div>
+          ` : ''}
+
+          ${jobRequirement ? `
+            <div class="section">
+              <h3 class="section-title">Requirements</h3>
+              <div class="section-content">${jobRequirement}</div>
+            </div>
+          ` : ''}
+
+          ${jobBenefits ? `
+            <div class="section">
+              <h3 class="section-title">Benefits</h3>
+              <div class="section-content">${jobBenefits}</div>
+            </div>
+          ` : ''}
+
+          ${jobOther ? `
+            <div class="section">
+              <h3 class="section-title">Other Information</h3>
+              <div class="section-content">${jobOther}</div>
+            </div>
+          ` : ''}
+        </div>
+      `;
       
-        const canvas = await renderSectionToCanvas(section);
-      
-        const imgData = canvas.toDataURL("image/jpeg", 1);
-      
-        const imgWidth = pageWidth - 20;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-        if (currentY + imgHeight > pageHeight - 10) {
-          pdf.addPage();
-          currentY = 10;
+      document.body.appendChild(container);
+
+      // Wait for content and potential images
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const canvas = await html2canvas(container, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      document.body.removeChild(container);
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true
+      });
+
+      const pdfWidth = 210; // A4 width in mm
+      const pdfHeight = 297; // A4 height in mm
+      const margin = 10; // 10mm margins
+      const contentWidth = pdfWidth - 2 * margin;
+      const contentHeight = pdfHeight - 2 * margin;
+
+      // Calculate image dimensions in mm
+      const imgWidthMM = contentWidth;
+      const imgHeightMM = (canvas.height * imgWidthMM) / canvas.width;
+
+      if (imgHeightMM <= contentHeight) {
+        // Fits on one page
+        pdf.addImage(imgData, 'JPEG', margin, margin, imgWidthMM, imgHeightMM);
+      } else {
+        // Spans multiple pages
+        let sourceY = 0;
+        let pageNumber = 0;
+
+        // Detection settings
+        const ctxFull = canvas.getContext('2d', { willReadFrequently: true });
+        const width = canvas.width;
+        const SCAN_RANGE = Math.floor(canvas.height / imgHeightMM * 20); // Scan 20mm range
+        const THRESH = 0.98; // 98% white is considered safe
+        const rowWhiteness = (y) => {
+          if (y < 0 || y >= canvas.height) return 0;
+          const data = ctxFull.getImageData(0, y, width, 1).data;
+          let whiteCount = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+            if (a === 0 || (r > 245 && g > 245 && b > 245)) whiteCount++;
+          }
+          return whiteCount / (data.length / 4);
+        };
+
+        while (sourceY < canvas.height) {
+          if (pageNumber > 0) pdf.addPage();
+
+          // Target end in canvas pixels
+          const canvasHeightPerPage = (contentHeight * canvas.width) / imgWidthMM;
+          let targetEnd = Math.min(sourceY + canvasHeightPerPage, canvas.height);
+
+          // If not the last page, find best cut point
+          if (targetEnd < canvas.height) {
+            let bestY = targetEnd;
+            let bestScore = -1;
+            for (let dy = 0; dy <= SCAN_RANGE; dy++) {
+              const y = targetEnd - dy;
+              if (y <= sourceY) break;
+              const s = rowWhiteness(y);
+              if (s > bestScore) {
+                bestScore = s;
+                bestY = y;
+              }
+              if (s >= THRESH) break; // Found a good enough spot
+            }
+            targetEnd = bestY;
+          }
+
+          const sourceHeight = targetEnd - sourceY;
+          const displayHeightMM = (sourceHeight * imgWidthMM) / canvas.width;
+
+          // Create temporary canvas for the slice
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = sourceHeight;
+          const tempCtx = tempCanvas.getContext('2d');
+          tempCtx.drawImage(canvas, 0, sourceY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
+
+          pdf.addImage(tempCanvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, imgWidthMM, displayHeightMM);
+
+          sourceY = targetEnd;
+          pageNumber++;
         }
-      
-        pdf.addImage(imgData, "JPEG", 10, currentY, imgWidth, imgHeight);
-      
-        currentY += imgHeight + 2; // giảm khoảng cách từ 10 -> 4
       }
-  
-      const blob = pdf.output("blob");
-  
-      const fileName = `${job.title.replace(/\s+/g, "_")}_${Date.now()}.pdf`;
-  
-      const file = new File([blob], fileName, { type: "application/pdf" });
-  
-      const res = await uploadFile(file);
-  
+
+      // Get PDF blob and upload
+      const pdfBlob = pdf.output('blob');
+      const fileName = `${job.title?.replace(/\s+/g, '_') || 'job'}_${Date.now()}.pdf`;
+      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+      const res = await uploadFile(pdfFile);
       if (res?.publicUrl) {
         setPdfUrl(res.publicUrl);
         setPdfFileName(fileName);
-        alert("PDF created successfully");
+        
+        // Save to localStorage
+        try {
+          localStorage.setItem(`pdf_${id}`, JSON.stringify({
+            url: res.publicUrl,
+            name: fileName,
+            createdAt: new Date().toISOString()
+          }));
+        } catch (err) {
+          console.error('Error saving PDF to localStorage:', err);
+        }
+        
+        alert('PDF created and uploaded successfully!');
+      } else {
+        alert('PDF created but upload failed');
       }
-  
     } catch (err) {
-      console.error(err);
-      alert("PDF creation failed");
+      console.error('PDF creation error:', err);
+      alert('Failed to create PDF: ' + err.message);
     } finally {
       setCreatingPDF(false);
     }
@@ -308,30 +421,17 @@ export default function JobDetail() {
       {console.log("Rendering JobDetail with job:", job)}
       <header className="page-header">
         <h2>{job.title || "Untitled Job"}</h2>
-        {keywords.length > 0 && (
-          <div className="job-tags">
-            {keywords.map((k) => <span key={k}>{k}</span>)}
-          </div>
-        )}
+        <div className="job-tags">
+          <span className="badge-salary">💰 {job.salary || "Negotiable"}</span>
+          <span className="badge-location">📍 {job.location || "Remote"}</span>
+          <span className="badge-reward">🏆 Reward: {job.rewardCandidateUSD ?? 0} USD</span>
+          {keywords.length > 0 && keywords.map((k) => <span key={k} className="badge-keyword">{k}</span>)}
+        </div>
       </header>
 
       <div className="job-layout">
         {/* Main Content */}
         <main className="job-main-content">
-          <div className="job-info-grid">
-            <div className="info-box">
-              <strong>Salary</strong>
-              <span>{job.salary || "Negotiable"}</span>
-            </div>
-            <div className="info-box">
-              <strong>Location</strong>
-              <span>{job.location || "Remote"}</span>
-            </div>
-            <div className="info-box">
-              <strong>Reward</strong>
-              <span>{job.rewardCandidateUSD ?? 0} USD</span>
-            </div>
-          </div>
 
           <section className="job-section">
             <h1>Description</h1>

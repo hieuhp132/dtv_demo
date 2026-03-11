@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 
 export default function Card({
@@ -51,6 +51,18 @@ export default function Card({
     return t.replace(/\s+/g, " ").trim().slice(0, 180);
   })();
 
+  const jobUrl = `/${role}/job/${job._id}`;
+
+  const handleCardClick = (e) => {
+    // If the user clicked a button or a link, don't trigger the card click
+    if (e.target.closest('button') || e.target.closest('a')) {
+      return;
+    }
+    if (!isInactive) {
+      navigate(jobUrl);
+    }
+  };
+
   return (
     <div
       className="job-card"
@@ -60,7 +72,7 @@ export default function Card({
         filter: isInactive ? "" : "none",
         pointerEvents: "auto",
       }}
-      onClick={() => navigate(`/${role}/job/${job._id}`)}
+      onClick={handleCardClick}
     >
       {/* HEADER */}
       <div
@@ -70,12 +82,19 @@ export default function Card({
           justifyContent: "space-between",
         }}
       >
-        <div
+        <Link
+          to={jobUrl}
           className="job-title"
-          style={{ fontWeight: 600, fontSize: "1.1em" }}
+          style={{ 
+            fontWeight: 600, 
+            fontSize: "1.1em",
+            color: "inherit",
+            textDecoration: "none"
+          }}
+          onClick={(e) => e.stopPropagation()}
         >
           {job.title}
-        </div>
+        </Link>
 
         {/* SAVE */}
         <button

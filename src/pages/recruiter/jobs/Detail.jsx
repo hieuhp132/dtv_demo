@@ -118,107 +118,158 @@ export default function JobDetail() {
       container.style.position = 'fixed';
       container.style.left = '-9999px';
       container.style.top = '-9999px';
-      container.style.width = '210mm';
-      container.style.padding = '15mm';
+      container.style.width = '800px'; // Use px for better compatibility
       container.style.background = 'white';
-      container.style.fontSize = '15px';
-      container.style.lineHeight = '1.7';
-      container.style.color = '#000';
-      container.style.fontFamily = 'Arial, sans-serif';
-      container.style.wordWrap = 'break-word';
-      container.style.overflowWrap = 'break-word';
-      container.style.whiteSpace = 'normal';
       
+      const jobDescription = job.jobsdetail?.description || job.description || "";
+      const jobRequirement = job.jobsdetail?.requirement || job.requirements || "";
+      const jobBenefits = job.jobsdetail?.benefits || job.benefits || "";
+      const jobOther = job.jobsdetail?.other || job.other || "";
+
       container.innerHTML = `
         <style>
-          p { margin: 7px 0; }
-          li { margin: 4px 0; }
-          ul, ol { padding-left: 18px; }
-          h2 { margin-top: 16px; }
+          * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+          .pdf-container {
+            font-family: "Arial", sans-serif;
+            color: #1f2937;
+            line-height: 1.5;
+            padding: 40px;
+            width: 800px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+          }
+          .job-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #111827;
+            margin: 0 0 16px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #3b82f6;
+          }
+          .info-grid {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 24px;
+          }
+          .info-item {
+            flex: 1;
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 6px;
+          }
+          .info-label {
+            font-size: 11px;
+            font-weight: bold;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+          }
+          .info-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #111827;
+          }
+          .tags {
+            margin-bottom: 24px;
+          }
+          .tag {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 6px;
+            margin-bottom: 6px;
+          }
+          .section {
+            margin-bottom: 20px;
+          }
+          .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #111827;
+            margin: 0 0 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 4px;
+            text-transform: uppercase;
+          }
+          .section-content {
+            font-size: 13px;
+            color: #374151;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+          }
+          .section-content p { margin-bottom: 8px; }
+          .section-content ul, .section-content ol { padding-left: 20px; margin-bottom: 8px; }
+          .section-content li { margin-bottom: 4px; }
         </style>
-        <div style="text-align: left;">
-          <h1 style="color: #000; border-bottom: 3px solid #3498db; padding-bottom: 12px; font-size: 28px; font-weight: 800; margin: 0 0 15px 0; word-wrap: break-word; overflow-wrap: break-word;">${job.title || "Job Description"}</h1>
+        <div class="pdf-container">
+          <h1 class="job-title">${job.title || "Job Description"}</h1>
           
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 15px;">
-            <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: 800; color: #000; font-size: 13px;">Salary</div>
-              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word;">${job.salary || "Negotiable"}</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Salary</div>
+              <div class="info-value">${job.salary || "Negotiable"}</div>
             </div>
-            <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: 800; color: #000; font-size: 13px;">Location</div>
-              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word;">${job.location || "Remote"}</div>
-            </div>
-            <div style="background: #ecf0f1; padding: 10px; border-radius: 6px; word-wrap: break-word; overflow-wrap: break-word;">
-              <div style="font-weight: 800; color: #000; font-size: 13px;">Reward</div>
-              <div style="color: #000; margin-top: 6px; font-size: 14px; font-weight: 600;">$${job.rewardCandidateUSD ?? 0}</div>
+            <div class="info-item">
+              <div class="info-label">Location</div>
+              <div class="info-value">${job.location || "Remote"}</div>
             </div>
           </div>
 
           ${keywords.length > 0 ? `
-            <div style="margin-bottom: 12px;">
-              ${keywords.map(k => `<span style="display: inline-block; background: #3498db; color: white; padding: 6px 12px; margin-right: 6px; margin-bottom: 4px; border-radius: 15px; font-size: 12px; word-wrap: break-word;">${k}</span>`).join('')}
+            <div class="tags">
+              ${keywords.map(k => `<span class="tag">${k}</span>`).join('')}
             </div>
           ` : ''}
 
-          ${job.description ? `
-            <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Description</h2>
-              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.description}</div>
+          ${jobDescription ? `
+            <div class="section">
+              <h3 class="section-title">Description</h3>
+              <div class="section-content">${jobDescription}</div>
             </div>
           ` : ''}
 
-          ${job.requirements ? `
-            <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Requirements</h2>
-              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.requirements}</div>
+          ${jobRequirement ? `
+            <div class="section">
+              <h3 class="section-title">Requirements</h3>
+              <div class="section-content">${jobRequirement}</div>
             </div>
           ` : ''}
 
-          ${job.benefits ? `
-            <div style="margin-bottom: 15px; word-wrap: break-word; overflow-wrap: break-word;">
-              <h2 style="color: #000; margin: 0 0 10px 0; font-size: 18px; font-weight: 800; border-bottom: 2px solid #bdc3c7; padding-bottom: 6px;">Benefits</h2>
-              <div style="color: #000; font-size: 15px; line-height: 1.7; font-weight: 600; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">${job.benefits}</div>
+          ${jobBenefits ? `
+            <div class="section">
+              <h3 class="section-title">Benefits</h3>
+              <div class="section-content">${jobBenefits}</div>
             </div>
           ` : ''}
 
-          <div style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 10px; color: #7f8c8d;">
-            <p style="margin: 0;">Generated on ${new Date().toLocaleString()}</p>
-          </div>
+          ${jobOther ? `
+            <div class="section">
+              <h3 class="section-title">Other Information</h3>
+              <div class="section-content">${jobOther}</div>
+            </div>
+          ` : ''}
         </div>
       `;
       
       document.body.appendChild(container);
 
-      // Wait for content to render
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Wait for content and potential images
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Convert to canvas
       const canvas = await html2canvas(container, {
         scale: 2,
         useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
         logging: false,
-        windowWidth: 794,
-        windowHeight: 1123,
-        imageTimeout: 0,
-        removeContainer: false
+        backgroundColor: '#ffffff'
       });
 
-      // Remove container
       document.body.removeChild(container);
 
-      // Get PDF dimensions
-      const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = 297; // A4 height in mm
-      const margin = 15; // 15mm margins (same as padding)
-      const contentWidth = pdfWidth - 2 * margin; // 180mm
-
-      // Calculate image dimensions
-      const imgWidth = contentWidth;
-      const imgHeight = (canvas.height * imgWidth * 25.4) / (canvas.width * 25.4);
-
-      // Create PDF
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -226,97 +277,77 @@ export default function JobDetail() {
         compress: true
       });
 
-      // Calculate position
-      let yPosition = margin;
-      const pageHeight = pdfHeight - 2 * margin;
+      const pdfWidth = 210; // A4 width in mm
+      const pdfHeight = 297; // A4 height in mm
+      const margin = 10; // 10mm margins
+      const contentWidth = pdfWidth - 2 * margin;
+      const contentHeight = pdfHeight - 2 * margin;
 
-      // Convert canvas to image
-      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      // Calculate image dimensions in mm
+      const imgWidthMM = contentWidth;
+      const imgHeightMM = (canvas.height * imgWidthMM) / canvas.width;
 
-      // Add pages with proper pagination
-      if (imgHeight <= pageHeight) {
-        // Content fits in one page
-        pdf.addImage(imgData, 'JPEG', margin, yPosition, imgWidth, imgHeight);
+      if (imgHeightMM <= contentHeight) {
+        // Fits on one page
+        pdf.addImage(imgData, 'JPEG', margin, margin, imgWidthMM, imgHeightMM);
       } else {
-        // Content spans multiple pages
+        // Spans multiple pages
         let sourceY = 0;
         let pageNumber = 0;
 
-        // Reuse context across loop
+        // Detection settings
         const ctxFull = canvas.getContext('2d', { willReadFrequently: true });
         const width = canvas.width;
-        const sampleStepX = Math.max(1, Math.floor(width / 120));
-        const SCAN_RANGE = 160;
-        const THRESH = 0.95;
-        const BAND = 6;
-        const OVERLAP = 8;
+        const SCAN_RANGE = Math.floor(canvas.height / imgHeightMM * 20); // Scan 20mm range
+        const THRESH = 0.98; // 98% white is considered safe
         const rowWhiteness = (y) => {
           if (y < 0 || y >= canvas.height) return 0;
-          const h = Math.min(BAND, canvas.height - y);
-          const data = ctxFull.getImageData(0, y, width, h).data;
-          let whiteCount = 0, samples = 0;
-          for (let yy = 0; yy < h; yy++) {
-            for (let x = 0; x < width; x += sampleStepX) {
-              const idx = (yy * width + x) * 4;
-              const r = data[idx], g = data[idx + 1], b = data[idx + 2], a = data[idx + 3];
-              if (a === 0 || (r > 238 && g > 238 && b > 238)) whiteCount++;
-              samples++;
-            }
+          const data = ctxFull.getImageData(0, y, width, 1).data;
+          let whiteCount = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+            if (a === 0 || (r > 245 && g > 245 && b > 245)) whiteCount++;
           }
-          return samples ? whiteCount / samples : 0;
+          return whiteCount / (data.length / 4);
         };
 
         while (sourceY < canvas.height) {
-          if (pageNumber > 0) {
-            pdf.addPage();
-            yPosition = margin;
+          if (pageNumber > 0) pdf.addPage();
+
+          // Target end in canvas pixels
+          const canvasHeightPerPage = (contentHeight * canvas.width) / imgWidthMM;
+          let targetEnd = Math.min(sourceY + canvasHeightPerPage, canvas.height);
+
+          // If not the last page, find best cut point
+          if (targetEnd < canvas.height) {
+            let bestY = targetEnd;
+            let bestScore = -1;
+            for (let dy = 0; dy <= SCAN_RANGE; dy++) {
+              const y = targetEnd - dy;
+              if (y <= sourceY) break;
+              const s = rowWhiteness(y);
+              if (s > bestScore) {
+                bestScore = s;
+                bestY = y;
+              }
+              if (s >= THRESH) break; // Found a good enough spot
+            }
+            targetEnd = bestY;
           }
 
-          // Calculate how much of the canvas fits on this page
-          const canvasHeightPerPage = (pageHeight * canvas.width * 25.4) / (imgWidth * 25.4);
-          const targetEnd = Math.min(sourceY + canvasHeightPerPage, canvas.height);
+          const sourceHeight = targetEnd - sourceY;
+          const displayHeightMM = (sourceHeight * imgWidthMM) / canvas.width;
 
-          let bestY = targetEnd;
-          let bestScore = -1;
-          for (let dy = 0; dy <= SCAN_RANGE; dy++) {
-            const down = targetEnd + dy;
-            const up = targetEnd - dy;
-            if (down < canvas.height) {
-              const s = rowWhiteness(down);
-              if (s > bestScore) { bestScore = s; bestY = down; }
-              if (s >= THRESH) { bestY = down; break; }
-            }
-            if (up > sourceY) {
-              const s = rowWhiteness(up);
-              if (s > bestScore) { bestScore = s; bestY = up; }
-              if (s >= THRESH) { bestY = up; break; }
-            }
-          }
-          const sourceYEnd = bestY;
-          const heightOnPage = (sourceYEnd - sourceY) / canvas.height * imgHeight;
+          // Create temporary canvas for the slice
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = sourceHeight;
+          const tempCtx = tempCanvas.getContext('2d');
+          tempCtx.drawImage(canvas, 0, sourceY, canvas.width, sourceHeight, 0, 0, canvas.width, sourceHeight);
 
-          // Create temporary canvas for this page's content
-          const pageCanvas = document.createElement('canvas');
-          pageCanvas.width = canvas.width;
-          pageCanvas.height = sourceYEnd - sourceY;
+          pdf.addImage(tempCanvas.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, imgWidthMM, displayHeightMM);
 
-          const ctx = pageCanvas.getContext('2d');
-          ctx.drawImage(
-            canvas,
-            0,
-            sourceY,
-            canvas.width,
-            sourceYEnd - sourceY,
-            0,
-            0,
-            canvas.width,
-            sourceYEnd - sourceY
-          );
-
-          const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.95);
-          pdf.addImage(pageImgData, 'JPEG', margin, yPosition, imgWidth, heightOnPage);
-
-          sourceY = Math.max(sourceYEnd - OVERLAP, 0);
+          sourceY = targetEnd;
           pageNumber++;
         }
       }
@@ -386,30 +417,16 @@ export default function JobDetail() {
     <div className="job-detail">
       <header className="page-header">
         <h2>{job.title || "Untitled Job"}</h2>
-        {keywords.length > 0 && (
-          <div className="job-tags">
-            {keywords.map((k) => <span key={k}>{k}</span>)}
-          </div>
-        )}
+        <div className="job-tags">
+          <span className="badge-salary">💰 {job.salary || "Negotiable"}</span>
+          <span className="badge-location">📍 {job.location || "Remote"}</span>
+          {keywords.length > 0 && keywords.map((k) => <span key={k} className="badge-keyword">{k}</span>)}
+        </div>
       </header>
 
       <div className="job-layout">
         {/* Main Content */}
         <main className="job-main-content">
-          <div className="job-info-grid">
-            <div className="info-box">
-              <strong>Salary</strong>
-              <span>{job.salary || "Negotiable"}</span>
-            </div>
-            <div className="info-box">
-              <strong>Location</strong>
-              <span>{job.location || "Remote"}</span>
-            </div>
-            <div className="info-box">
-              <strong>Reward</strong>
-              <span>{job.rewardCandidateUSD ?? 0} USD</span>
-            </div>
-          </div>
           <section className="job-section">
             <h1>Description</h1>
             <div className="job-html-content" dangerouslySetInnerHTML={{ __html: cleanJobHtml(job.jobsdetail.description)|| "No description provided" }} />
