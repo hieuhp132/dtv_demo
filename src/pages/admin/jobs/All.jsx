@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import "./All.css";
 import {
   fetchAllJobs,
@@ -70,6 +70,8 @@ export default function All() {
   const [showJobModal, setShowJobModal] = useState(false);
 
   const [searchText, setSearchText] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
   const [filterLocation, setFilterLocation] = useState("");
   const [filterCompany, setFilterCompany] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
@@ -87,10 +89,33 @@ export default function All() {
 
   const jobsPerPage = 9;
 
-  /* ================= RESET PAGE ON FILTER ================= */
-  useEffect(() => {
+  /* ================= HANDLERS ================= */
+  const handleSearchChange = (text) => {
+    setSearchText(text);
+    setShowSuggestions(true);
+    if (!text) setActivePage(1); // Reset when cleared
+  };
+
+  const handleSuggestionClick = (text) => {
+    setSearchText(text);
+    setShowSuggestions(false);
     setActivePage(1);
-  }, [searchText, filterLocation, filterCompany, filterCategory]);
+  };
+
+  const handleLocationChange = (val) => {
+    setFilterLocation(val);
+    setActivePage(1);
+  };
+
+  const handleCompanyChange = (val) => {
+    setFilterCompany(val);
+    setActivePage(1);
+  };
+
+  const handleCategoryChange = (val) => {
+    setFilterCategory(val);
+    setActivePage(1);
+  };
 
   /* ================= LOAD ================= */
   useEffect(() => {
@@ -116,10 +141,12 @@ export default function All() {
 
   /* ================= FILTER ================= */
   const filteredJobs = useMemo(() => {
-    const text = searchText.toLowerCase();
+    // If showSuggestions is true, we DON'T apply the new search text to the grid.
+    // The grid should only update when suggestions are closed (meaning a selection was made or cleared).
+    const text = showSuggestions ? "" : searchText.toLowerCase();
 
     return jobs.filter((j) => {
-      const matchText = [j.title, j.company, j.location, j.keywords]
+      const matchText = !text || [j.title, j.company, j.location, j.keywords]
         .join(" ")
         .toLowerCase()
         .includes(text);
@@ -136,7 +163,21 @@ export default function All() {
 
       return matchText && matchLocation && matchCompany && matchCategory;
     });
-  }, [jobs, searchText, filterLocation, filterCompany, filterCategory]);
+  }, [jobs, searchText, showSuggestions, filterLocation, filterCompany, filterCategory]);
+
+  const searchSuggestions = useMemo(() => {
+    if (!searchText || !showSuggestions) return [];
+    const text = searchText.toLowerCase();
+    
+    // Get unique titles and companies that match
+    const suggestions = new Set();
+    jobs.forEach(j => {
+      if (j.title?.toLowerCase().includes(text)) suggestions.add(j.title);
+      if (j.company?.toLowerCase().includes(text)) suggestions.add(j.company);
+    });
+    
+    return Array.from(suggestions).slice(0, 8);
+  }, [jobs, searchText, showSuggestions]);
 
   /* ================= ACTIVE / INACTIVE ================= */
   const today = new Date();
@@ -326,13 +367,15 @@ export default function All() {
 
       <Filters
         searchText={searchText}
-        setSearchText={setSearchText}
+        setSearchText={handleSearchChange}
+        suggestions={searchSuggestions}
+        onSuggestionClick={handleSuggestionClick}
         filterLocation={filterLocation}
-        setFilterLocation={setFilterLocation}
+        setFilterLocation={handleLocationChange}
         filterCompany={filterCompany}
-        setFilterCompany={setFilterCompany}
+        setFilterCompany={handleCompanyChange}
         filterCategory={filterCategory}
-        setFilterCategory={setFilterCategory}
+        setFilterCategory={handleCategoryChange}
         locationOptions={locationOptions}
         companyOptions={companyOptions}
         categoryOptions={categoryOptions}

@@ -8,10 +8,13 @@ const ONE_DAY = 24 * 60 * 60 * 1000;
 /* ===== session helpers ===== */
 const readSession = () => {
   try {
-    const raw = sessionStorage.getItem(LS_SESSION);
+    const raw = localStorage.getItem(LS_SESSION);
     if (!raw) return null;
     const s = JSON.parse(raw);
-    if (Date.now() > s.expiresAt) return null;
+    if (Date.now() > s.expiresAt) {
+      localStorage.removeItem(LS_SESSION);
+      return null;
+    }
     return s;
   } catch {
     return null;
@@ -19,17 +22,17 @@ const readSession = () => {
 };
 
 const writeSession = (user, token) => {
-  sessionStorage.setItem(
-    LS_SESSION,
-    JSON.stringify({
-      user,
-      token,
-      expiresAt: Date.now() + ONE_DAY,
-    }),
-  );
+  const sessionData = JSON.stringify({
+    user,
+    token,
+    expiresAt: Date.now() + ONE_DAY,
+  });
+  localStorage.setItem(LS_SESSION, sessionData);
 };
 
-const clearSession = () => sessionStorage.removeItem(LS_SESSION);
+const clearSession = () => {
+  localStorage.removeItem(LS_SESSION);
+};
 
 /* ===== Provider ===== */
 export function AuthProvider({ children }) {

@@ -3,6 +3,8 @@ import Select from "react-select";
 export default function Filters({
   searchText,
   setSearchText,
+  suggestions = [],
+  onSuggestionClick,
   filterLocation,
   setFilterLocation,
   filterCompany,
@@ -16,13 +18,30 @@ export default function Filters({
 }) {
   return (
     <div className="filter-bar">
-      <input
-        type="text"
-        placeholder="Search jobs, companies, skills..."
-        className="filter-input"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-      />
+      <div style={{ position: 'relative', flex: 2, minWidth: '240px' }}>
+        <input
+          type="text"
+          placeholder="Search jobs, companies, skills..."
+          className="filter-input"
+          style={{ width: '100%' }}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        
+        {suggestions.length > 0 && (
+          <div className="search-suggestions">
+            {suggestions.map((s, i) => (
+              <div 
+                key={i} 
+                className="suggestion-item"
+                onClick={() => onSuggestionClick(s)}
+              >
+                {s}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <Select
         placeholder="All Locations"

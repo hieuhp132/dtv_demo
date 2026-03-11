@@ -53,16 +53,6 @@ export default function Card({
 
   const jobUrl = `/${role}/job/${job._id}`;
 
-  const handleCardClick = (e) => {
-    // If the user clicked a button or a link, don't trigger the card click
-    if (e.target.closest('button') || e.target.closest('a')) {
-      return;
-    }
-    if (!isInactive) {
-      navigate(jobUrl);
-    }
-  };
-
   return (
     <div
       className="job-card"
@@ -71,152 +61,168 @@ export default function Card({
         cursor: isInactive ? "not-allowed" : "pointer",
         filter: isInactive ? "" : "none",
         pointerEvents: "auto",
+        padding: 0, // Remove padding from card to let Link fill it
       }}
-      onClick={handleCardClick}
     >
-      {/* HEADER */}
-      <div
+      <Link
+        to={jobUrl}
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: "block",
+          padding: "16px", // Restore padding inside Link
+          textDecoration: "none",
+          color: "inherit",
+          height: "100%",
+        }}
+        onClick={(e) => {
+          if (isInactive) e.preventDefault();
         }}
       >
-        <Link
-          to={jobUrl}
-          className="job-title"
-          style={{ 
-            fontWeight: 600, 
-            fontSize: "1.1em",
-            color: "inherit",
-            textDecoration: "none"
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {job.title}
-        </Link>
-
-        {/* SAVE */}
-        <button
-          className={`save-btn ${job.isSaved ? "saved" : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSaveToggle(job);
-          }}
-        >
-          {job.isSaved ? <BsBookmarkFill /> : <BsBookmark />}
-        </button>
-      </div>
-
-      {/* INFO */}
-      <div style={{ fontSize: 13, color: "#555", marginBottom: 6 }}>
-        <strong>Company:</strong> {job.company}
-      </div>
-
-      <div style={{ fontSize: 13, color: "#555", marginBottom: 6 }}>
-        <strong>Location:</strong> {job.location}
-      </div>
-
-      <div className="job-meta">
-        <div>
-          <strong style={{ marginRight: 4, fontSize: 13, color: "#555", }}>Salary:</strong> {job.salary || "N/A"}
-        </div>
-
-        {job.deadline && (
-          <span className="job-deadline" style={{ fontSize: 13, color: "#555", }}>Deadline: {job.deadline}</span>
-        )}
-
-        <span
+        {/* HEADER */}
+        <div
           style={{
-            fontWeight: "bold",
-            color: isInactive ? "red" : "green",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          Status: {isInactive ? "Inactive" : "Active"}
-        </span>
-      </div>
+          <div
+            className="job-title"
+            style={{ 
+              fontWeight: 600, 
+              fontSize: "1.1em",
+            }}
+          >
+            {job.title}
+          </div>
 
-      <div style={{ fontSize: 12, color: "#666", marginBottom: 6 }}>
-        <span>Vacancies: {job.vacancies}</span>
-        <span style={{ marginLeft: 8 }}>Applicants: {job.applicants}</span>
-      </div>
-
-      {textPreview && (
-        <div style={{ fontSize: 13, color: "#444", marginBottom: 10 }}>
-          {textPreview}...
+          {/* SAVE */}
+          <button
+            className={`save-btn ${job.isSaved ? "saved" : ""}`}
+            onClick={(e) => {
+              e.preventDefault(); // Prevent Link navigation
+              e.stopPropagation();
+              onSaveToggle(job);
+            }}
+          >
+            {job.isSaved ? <BsBookmarkFill /> : <BsBookmark />}
+          </button>
         </div>
-      )}
 
-      {/* REWARD */}
+        {/* INFO */}
+        <div style={{ fontSize: 13, color: "#555", marginBottom: 6 }}>
+          <strong>Company:</strong> {job.company}
+        </div>
 
-      <div className="reward-line">
-        <span className="reward-badge">
-          {normalizeReward(job.rewardCandidateUSD)}
-        </span>
+        <div style={{ fontSize: 13, color: "#555", marginBottom: 6 }}>
+          <strong>Location:</strong> {job.location}
+        </div>
 
-        <span className="reward-badge secondary">
-          {normalizeInterviewReward(job.rewardInterviewUSD)}
-        </span>
+        <div className="job-meta">
+          <div>
+            <strong style={{ marginRight: 4, fontSize: 13, color: "#555", }}>Salary:</strong> {job.salary || "N/A"}
+          </div>
 
-        {job.bonus && <span className="job-bonus">{job.bonus}</span>}
-      </div>
+          {job.deadline && (
+            <span className="job-deadline" style={{ fontSize: 13, color: "#555", }}>Deadline: {job.deadline}</span>
+          )}
 
-      {/* ACTIONS */}
-      <div className="job-actions">
-        {role === "admin" && (
-          <>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(job);
-              }}
-            >
-              Edit
-            </button>
+          <span
+            style={{
+              fontWeight: "bold",
+              color: isInactive ? "red" : "green",
+            }}
+          >
+            Status: {isInactive ? "Inactive" : "Active"}
+          </span>
+        </div>
 
-            <button
-              className="danger"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(job);
-              }}
-            >
-              Delete
-            </button>
+        <div style={{ fontSize: 12, color: "#666", marginBottom: 6 }}>
+          <span>Vacancies: {job.vacancies}</span>
+          <span style={{ marginLeft: 8 }}>Applicants: {job.applicants}</span>
+        </div>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleStatus(job);
-              }}
-            >
-              {job.status === "Active" ? "Pause" : "Resume"}
-            </button>
-          </>
+        {textPreview && (
+          <div style={{ fontSize: 13, color: "#444", marginBottom: 10 }}>
+            {textPreview}...
+          </div>
         )}
 
-        {role === "recruiter" && (
-          <>
-            {/* <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSharedJob(job);
-              }}
-            >
-              Share this job
-            </button> */}
+        {/* REWARD */}
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSubmitCandidate(job);
-              }}
-            >
-              Submit Candidate
-            </button>
-          </>
-        )}
-      </div>
+        <div className="reward-line">
+          <span className="reward-badge">
+            {normalizeReward(job.rewardCandidateUSD)}
+          </span>
+
+          <span className="reward-badge secondary">
+            {normalizeInterviewReward(job.rewardInterviewUSD)}
+          </span>
+
+          {job.bonus && <span className="job-bonus">{job.bonus}</span>}
+        </div>
+
+        {/* ACTIONS */}
+        <div className="job-actions">
+          {role === "admin" && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onEdit(job);
+                }}
+              >
+                Edit
+              </button>
+
+              <button
+                className="danger"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(job);
+                }}
+              >
+                Delete
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onToggleStatus(job);
+                }}
+              >
+                {job.status === "Active" ? "Pause" : "Resume"}
+              </button>
+            </>
+          )}
+
+          {role === "recruiter" && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSharedJob(job);
+                }}
+              >
+                Share
+              </button>
+              <button
+                className="primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSubmitCandidate(job);
+                }}
+              >
+                Submit
+              </button>
+            </>
+          )}
+        </div>
+      </Link>
     </div>
   );
 }
