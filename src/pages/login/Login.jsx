@@ -19,7 +19,7 @@ const LoginPage = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
   const { login, user } = useAuth();
-  
+
   // ================= REMEMBER ME =================
   const [rememberMe, setRememberMe] = useState(
     localStorage.getItem("rememberMe") === "true"
@@ -76,13 +76,13 @@ const LoginPage = () => {
   /* 🔹 Google OAuth Login */
   const signInWithGoogle = async () => {
     try {
-      if(supabase) {
-          await supabase.auth.signInWithOAuth({
-            provider: "google",
-            options: {
-              redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}auth/callback`,
-            },
-          });
+      if (supabase) {
+        await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}auth/callback`,
+          },
+        });
       }
     } catch (err) {
       console.error("Google Login Error:", err);
@@ -97,7 +97,7 @@ const LoginPage = () => {
       const res = await fetch(`${API_BASE}/local/users/reset`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: resetEmail, newPassword:"123456", responseWithEmail: true }),
+        body: JSON.stringify({ email: resetEmail, newPassword: "123456", responseWithEmail: true }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Reset failed");
@@ -115,17 +115,17 @@ const LoginPage = () => {
 
   const onLogin = async () => {
     if (!email || !password) {
-        setErrorMsg("Please enter email and password");
-        triggerShake();
-        return;
+      setErrorMsg("Please enter email and password");
+      triggerShake();
+      return;
     }
-    
+
     setErrorMsg("");
     setServerMessage("");
     setLoading(true);
     try {
       const { user: apiUser, token } = await llogin(email.trim().toLowerCase(), password);
-      
+
       if (rememberMe) {
         localStorage.setItem("rememberMe", "true");
         localStorage.setItem("rememberEmail", email);
@@ -146,22 +146,22 @@ const LoginPage = () => {
         else navigate("/");
       }
     } catch (err) {
-        const msg = err.message || "Login failed";
-        setErrorMsg(msg);
-        setServerMessage(msg);
-        triggerShake();
+      const msg = err.message || "Login failed";
+      setErrorMsg(msg);
+      setServerMessage(msg);
+      triggerShake();
 
-        if (
-          msg.includes("chờ Admin phê duyệt") ||
-          msg.includes("bị từ chối truy cập")
-        ) {
+      if (
+        msg.includes("chờ Admin phê duyệt") ||
+        msg.includes("bị từ chối truy cập")
+      ) {
         localStorage.setItem("pendingEmail", email);
         navigate("/pending");
       }
     }
     setLoading(false);
   };
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 font-sans relative overflow-hidden">
       <ParticleBackground />
@@ -172,7 +172,7 @@ const LoginPage = () => {
         transition={{ x: { duration: 0.4 } }}
         className="w-full max-w-[1000px] relative z-10 flex flex-col md:flex-row backdrop-blur-xl bg-white/10 border border-white/20 rounded-[40px] shadow-2xl overflow-hidden min-h-[600px]"
       >
-        <button 
+        <button
           onClick={() => navigate("/")}
           className="absolute top-6 left-6 z-50 text-white/50 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium"
         >
@@ -183,7 +183,7 @@ const LoginPage = () => {
         <div className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-center border-r border-white/10">
           <div className="max-w-md w-full mx-auto">
             <div className="mb-10">
-              
+
               <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
                 AntTech Asia
               </h1>
@@ -282,9 +282,9 @@ const LoginPage = () => {
                 className="w-full py-4 rounded-2xl text-white font-bold text-sm uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] mt-4 bg-gradient-to-r from-[#FF465E] to-[#FFA63D] flex justify-center items-center"
               >
                 {loading ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
-                    "LOGIN TO DASHBOARD"
+                  "LOGIN TO DASHBOARD"
                 )}
               </button>
             </form>
@@ -298,13 +298,13 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <button
+            {/* <button
                 type="button"
                 onClick={signInWithGoogle}
                 className="w-full mt-6 py-4 rounded-2xl text-white font-bold text-sm shadow-xl transition-all hover:bg-white/10 active:scale-[0.98] bg-white/5 border border-white/10 flex justify-center items-center gap-2"
               >
                 <FaEnvelope className="text-xl" /> Login with Google
-            </button>
+            </button> */}
 
             <div className="mt-8 pt-6 border-t border-white/10 text-center">
               <p className="text-white/40 text-xs">
@@ -317,59 +317,59 @@ const LoginPage = () => {
                 </button>
               </p>
             </div>
-            
+
             <div className="flex justify-center gap-4 mt-6">
-                <a href="https://m.me/anttechasia" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                    <img src={fbIcon} alt="FB" className="w-6 h-6 rounded-full" />
-                </a>
-                <a href="https://t.me/anttechasia" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                    <img src={teleIcon} alt="TELE" className="w-6 h-6 rounded-full" />
-                </a>
+              <a href="https://m.me/anttechasia" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                <img src={fbIcon} alt="FB" className="w-6 h-6 rounded-full" />
+              </a>
+              <a href="https://t.me/anttechasia" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                <img src={teleIcon} alt="TELE" className="w-6 h-6 rounded-full" />
+              </a>
             </div>
 
             {/* RESET PASSWORD MODAL */}
             {showReset && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                  <motion.div 
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="bg-[#1a1c23] border border-white/10 p-8 rounded-3xl w-full max-w-md shadow-2xl"
-                  >
-                    <h3 className="text-2xl font-bold text-white mb-2">Forgot your password?</h3>
-                    <p className="text-white/60 text-sm mb-6">Enter your email, and we'll send you a new one.</p>
-    
-                    <input
-                      type="email"
-                      value={resetEmail}
-                      onChange={(e) => setResetEmail(e.target.value)}
-                      placeholder="Your email address"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm text-white outline-none mb-6 focus:border-primary/50 transition-colors"
-                    />
-    
-                    <div className="flex justify-end gap-3">
-                      <button 
-                        onClick={() => setShowReset(false)} 
-                        disabled={resetLoading}
-                        className="px-6 py-3 rounded-xl text-white/60 font-semibold hover:bg-white/5 transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button 
-                        onClick={sendResetEmail} 
-                        disabled={resetLoading}
-                        className="px-6 py-3 rounded-xl text-white font-bold bg-gradient-to-r from-[#FF465E] to-[#FFA63D] shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center min-w-[100px]"
-                      >
-                        {resetLoading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : "Send"}
-                      </button>
-                    </div>
-    
-                    {resetMessage && (
-                        <p className={`mt-6 text-sm ${resetMessage.includes("❌") ? "text-red-400" : "text-green-400"}`}>
-                            {resetMessage}
-                        </p>
-                    )}
-                  </motion.div>
-                </div>
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="bg-[#1a1c23] border border-white/10 p-8 rounded-3xl w-full max-w-md shadow-2xl"
+                >
+                  <h3 className="text-2xl font-bold text-white mb-2">Forgot your password?</h3>
+                  <p className="text-white/60 text-sm mb-6">Enter your email, and we'll send you a new one.</p>
+
+                  <input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="Your email address"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm text-white outline-none mb-6 focus:border-primary/50 transition-colors"
+                  />
+
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => setShowReset(false)}
+                      disabled={resetLoading}
+                      className="px-6 py-3 rounded-xl text-white/60 font-semibold hover:bg-white/5 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={sendResetEmail}
+                      disabled={resetLoading}
+                      className="px-6 py-3 rounded-xl text-white font-bold bg-gradient-to-r from-[#FF465E] to-[#FFA63D] shadow-lg hover:shadow-primary/20 transition-all flex items-center justify-center min-w-[100px]"
+                    >
+                      {resetLoading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : "Send"}
+                    </button>
+                  </div>
+
+                  {resetMessage && (
+                    <p className={`mt-6 text-sm ${resetMessage.includes("❌") ? "text-red-400" : "text-green-400"}`}>
+                      {resetMessage}
+                    </p>
+                  )}
+                </motion.div>
+              </div>
             )}
           </div>
         </div>

@@ -1,7 +1,9 @@
-
 import React, { useEffect, useMemo, useState } from "react";
 import { listReferrals } from "../../../services/api.js";
 import { useAuth } from "../../../context/AuthContext";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { Info, Users, CheckCircle2, RefreshCw } from "lucide-react";
+
 /* ================= CONSTANTS ================= */
 export const STATUS_COLORS = {
   submitted: "#6366f1",    // Indigo
@@ -24,89 +26,6 @@ const STATUS_OPTIONS = [
   "rejected",
 ];
 
-/* ================= SVG HELPERS ================= */
-function polarToCartesian(cx, cy, r, angleDeg) {
-  const angleRad = ((angleDeg - 90) * Math.PI) / 180;
-  return {
-    x: cx + r * Math.cos(angleRad),
-    y: cy + r * Math.sin(angleRad),
-  };
-}
-
-function describeArcSector(cx, cy, rOuter, rInner, startAngle, endAngle) {
-  const startOuter = polarToCartesian(cx, cy, rOuter, endAngle);
-  const endOuter = polarToCartesian(cx, cy, rOuter, startAngle);
-  const startInner = polarToCartesian(cx, cy, rInner, endAngle);
-  const endInner = polarToCartesian(cx, cy, rInner, startAngle);
-
-  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-
-  return [
-    `M ${startOuter.x} ${startOuter.y}`,
-    `A ${rOuter} ${rOuter} 0 ${largeArcFlag} 0 ${endOuter.x} ${endOuter.y}`,
-    `L ${endInner.x} ${endInner.y}`,
-    `A ${rInner} ${rInner} 0 ${largeArcFlag} 1 ${startInner.x} ${startInner.y}`,
-    "Z",
-  ].join(" ");
-}
-
-/* ================= PIE CHART COMPONENT ================= */
-function PieChart({ title, data, size = 200, thickness = 45 }) {
-  const total = data.reduce((s, d) => s + d.value, 0) || 1;
-  let angle = 0;
-
-  const cx = size / 2;
-  const cy = size / 2;
-  const rOuter = size / 2 - 10;
-  const rInner = rOuter - thickness;
-
-  return (
-    <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 p-8 flex flex-col items-center">
-      <h3 className="text-xl font-bold text-gray-800 mb-8">{title}</h3>
-      <div className="chart-container">
-        <svg width={size} height={size} className="pie-svg">
-          {data.map((d, i) => {
-            if (d.value === 0) return null;
-            const start = angle;
-            const sweep = (d.value / total) * 360;
-            const end = start + sweep;
-            angle = end;
-
-            return (
-              <path
-                key={i}
-                d={describeArcSector(cx, cy, rOuter, rInner, start, end)}
-                fill={d.color}
-                className="chart-path"
-              />
-            );
-          })}
-          <circle cx={cx} cy={cy} r={rInner - 4} fill="#fff" />
-          <text x={cx} y={cy} className="pointer-events-none" textAnchor="middle">
-            <tspan x={cx} dy="-0.2em" className="text-4xl font-extrabold fill-gray-800 tracking-tight">{total}</tspan>
-            <tspan x={cx} dy="1.6em" className="text-[10px] font-bold fill-gray-500 tracking-widest uppercase">CANDIDATES</tspan>
-          </text>
-        </svg>
-      </div>
-
-      <div className="w-full max-w-sm mt-8 space-y-3 overflow-y-auto max-h-48 pr-2 custom-scrollbar">
-        {data.map((d, i) => (
-          <div key={i} className="flex flex-row items-center justify-between p-3 rounded-xl bg-gray-50 border border-transparent hover:border-gray-200 transition-colors" style={{ opacity: d.value === 0 ? 0.4 : 1 }}>
-            <div className="flex items-center gap-3">
-              <span className="w-3 h-3 rounded-full" style={{ background: d.color }} />
-              <span className="text-sm font-medium text-gray-700 capitalize">{d.label.replace(/_/g, ' ')}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-gray-900">{d.value}</span>
-              <span className="text-xs font-semibold text-gray-500 w-8 text-right">({Math.round((d.value / total) * 100)}%)</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 /* ================= MAIN COMPONENT ================= */
 export default function CandidateStatusCharts() {
   const { user } = useAuth();
@@ -116,12 +35,17 @@ export default function CandidateStatusCharts() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchData = () => {
     if (!adminId) return;
     setLoading(true);
     listReferrals({ id: adminId, email, isAdmin: true, limit: 1000 })
       .then((res = []) => setRows(Array.isArray(res) ? res : []))
+      .catch((err) => console.error("Failed to list referrals", err))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [adminId, email]);
 
   const statusCounts = useMemo(() => {
@@ -135,11 +59,14 @@ export default function CandidateStatusCharts() {
   }, [rows]);
 
   const overallChartData = useMemo(() => 
-    Object.keys(statusCounts).map((k) => ({
-      label: k,
-      value: statusCounts[k],
-      color: STATUS_COLORS[k] || STATUS_COLORS.other,
-    })), [statusCounts]
+    Object.keys(statusCounts)
+      .map((k) => ({
+        name: k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        value: statusCounts[k],
+        color: STATUS_COLORS[k] || STATUS_COLORS.other,
+      }))
+      .filter((item) => item.value > 0), 
+    [statusCounts]
   );
 
   const focusChartData = useMemo(() => {
@@ -148,32 +75,176 @@ export default function CandidateStatusCharts() {
     const total = Object.values(statusCounts).reduce((s, v) => s + v, 0);
 
     return [
-      { label: "New Leads (Submitted)", value: submitted, color: STATUS_COLORS.submitted },
-      { label: "Success (Hired)", value: hired, color: STATUS_COLORS.hired },
-      { label: "In Progress(Totals)", value: total - submitted - hired, color: STATUS_COLORS.other },
-    ];
+      { name: "New Leads (Submitted)", value: submitted, color: STATUS_COLORS.submitted },
+      { name: "Success (Hired/Onboard)", value: hired, color: STATUS_COLORS.hired },
+      { name: "In Progress", value: total - submitted - hired, color: STATUS_COLORS.under_review },
+    ].filter(item => item.value > 0);
   }, [statusCounts]);
 
-  if (loading) return (
-      <div className="flex items-center justify-center p-12 bg-white rounded-[24px] shadow-sm border border-gray-100">
-          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mr-3"></div>
-          <span className="text-gray-500 font-medium">Generating Insights...</span>
+  const totalCandidates = rows.length;
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-16 bg-white/50 backdrop-blur-md rounded-3xl shadow-sm border border-gray-100 min-h-[400px]">
+        <div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
+        <span className="text-gray-500 font-medium tracking-wide">Synthesizing Pipeline Data...</span>
       </div>
-  );
-  if (!rows.length) return (
-      <div className="flex flex-col items-center justify-center p-12 bg-white rounded-[24px] shadow-sm border border-gray-100 text-center">
-          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 text-gray-400">
-              <i data-lucide="bar-chart-2" className="w-8 h-8"></i>
-          </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-1">No Data Available</h3>
-          <p className="text-gray-500 text-sm">There is no candidate data to display yet.</p>
+    );
+  }
+
+  if (!rows.length) {
+    return (
+      <div className="flex flex-col items-center justify-center p-16 bg-white rounded-3xl shadow-sm border border-gray-100 min-h-[400px] text-center">
+        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 text-gray-300">
+          <Users className="w-10 h-10" />
+        </div>
+        <h3 className="text-xl font-bold text-gray-800 mb-2">Awaiting Candidates</h3>
+        <p className="text-gray-500 max-w-sm">Your pipeline is currently empty. Candidate data will automatically populate here once referrals start coming in.</p>
       </div>
-  );
+    );
+  }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-      <PieChart title="Overall Status Distribution" data={overallChartData} />
-      <PieChart title="Conversion Pipeline" data={focusChartData} thickness={50} />
+    <div className="space-y-6 mb-8">
+      {/* Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-4 transition-transform hover:-translate-y-1 duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <Users className="w-7 h-7" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Candidates</p>
+            <h4 className="text-3xl font-extrabold text-gray-900">{totalCandidates}</h4>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-4 transition-transform hover:-translate-y-1 duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <CheckCircle2 className="w-7 h-7" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total Hires</p>
+            <h4 className="text-3xl font-extrabold text-gray-900">
+              {(statusCounts.hired || 0) + (statusCounts.onboard || 0)}
+            </h4>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex items-center gap-4 transition-transform hover:-translate-y-1 duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <RefreshCw className="w-7 h-7" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider">In Progress</p>
+            <h4 className="text-3xl font-extrabold text-gray-900">
+               {totalCandidates - (statusCounts.hired || 0) - (statusCounts.onboard || 0) - (statusCounts.rejected || 0)}
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Overall Distribution */}
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center relative overflow-hidden group">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-indigo-500 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div className="w-full flex justify-between items-center mb-6">
+            <h3 className="text-lg font-bold text-gray-800">Pipeline Distribution</h3>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-indigo-600 cursor-help transition-colors">
+              <Info className="w-4 h-4" />
+            </div>
+          </div>
+
+          <div className="w-full h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={overallChartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={100}
+                  paddingAngle={2}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {overallChartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  formatter={(value, name) => [value, name]}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+                  itemStyle={{ fontWeight: 600 }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="w-full mt-4 grid grid-cols-2 gap-3">
+            {Object.keys(statusCounts).map((key) => {
+              if (statusCounts[key] === 0) return null;
+              return (
+                <div key={key} className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: STATUS_COLORS[key] || STATUS_COLORS.other }} />
+                    <span className="text-xs font-semibold text-gray-600 capitalize">{key.replace(/_/g, ' ')}</span>
+                  </div>
+                  <span className="text-sm font-bold text-gray-900">{statusCounts[key]}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Conversion Focus Chart */}
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col items-center relative overflow-hidden group">
+           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-400 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+           <div className="w-full flex justify-between items-center mb-6">
+            <h3 className="text-lg font-bold text-gray-800">Conversion Focus</h3>
+            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-emerald-600 cursor-help transition-colors">
+              <Info className="w-4 h-4" />
+            </div>
+          </div>
+
+          <div className="w-full h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={focusChartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={80}
+                  outerRadius={100}
+                  paddingAngle={4}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {focusChartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  formatter={(value) => [`${value} Candidates`, '']}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+                  itemStyle={{ fontWeight: 600 }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="w-full mt-4 flex justify-around">
+            {focusChartData.map((item, idx) => (
+              <div key={idx} className="flex flex-col items-center text-center px-2">
+                <span className="w-3 h-3 rounded-full mb-2" style={{ backgroundColor: item.color }} />
+                <span className="text-2xl font-black text-gray-900 leading-none mb-1">{item.value}</span>
+                <span className="text-xs font-semibold text-gray-500">{item.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+}
