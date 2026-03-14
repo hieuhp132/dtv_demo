@@ -30,19 +30,19 @@ const SignUp = ({ onSignup }) => {
     setError("");
 
     if (!name.trim()) {
-        setError("Please enter your name");
-        triggerShake();
-        return;
+      setError("Please enter your name");
+      triggerShake();
+      return;
     }
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        setError("Please enter a valid email");
-        triggerShake();
-        return;
+      setError("Please enter a valid email");
+      triggerShake();
+      return;
     }
     if (!password || password.length < 6) {
-        setError("Password must be at least 6 characters");
-        triggerShake();
-        return;
+      setError("Password must be at least 6 characters");
+      triggerShake();
+      return;
     }
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -84,7 +84,7 @@ const SignUp = ({ onSignup }) => {
         transition={{ x: { duration: 0.4 } }}
         className="w-full max-w-[1000px] relative z-10 flex flex-col md:flex-row backdrop-blur-xl bg-white/10 border border-white/20 rounded-[40px] shadow-2xl overflow-hidden min-h-[600px]"
       >
-        <button 
+        <button
           onClick={() => navigate("/")}
           className="absolute top-6 left-6 z-50 text-white/50 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium"
         >
@@ -95,9 +95,6 @@ const SignUp = ({ onSignup }) => {
         <div className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-center border-r border-white/10">
           <div className="max-w-md w-full mx-auto">
             <div className="mb-10">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FF465E] to-[#FFA63D] mb-6">
-                <UserPlus className="text-white w-7 h-7" />
-              </div>
 
               <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
                 Create Account
@@ -226,9 +223,9 @@ const SignUp = ({ onSignup }) => {
                 className="w-full py-4 rounded-2xl text-white font-bold text-sm uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] mt-4 bg-gradient-to-r from-[#FF465E] to-[#FFA63D] flex justify-center items-center"
               >
                 {isSubmitting ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
-                    "CREATE ACCOUNT"
+                  "CREATE ACCOUNT"
                 )}
               </button>
             </form>

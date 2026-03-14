@@ -1,0 +1,170 @@
+[33md7f3a30[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33mdc1ca0a[m HEAD@{1}: commit: 3d version
+[33md7f3a30[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{2}: commit: remove alert delete
+[33m8345540[m HEAD@{3}: commit: remove shared button and remove render other section when createing new page
+[33md4b6b65[m HEAD@{4}: commit: f
+[33mc6df3f4[m HEAD@{5}: commit: new v
+[33m835f85a[m HEAD@{6}: commit: fix pdf
+[33m2cc0d41[m HEAD@{7}: commit: install jspdf
+[33m887ce2b[m HEAD@{8}: commit: fix name
+[33m6575f25[m HEAD@{9}: commit: app
+[33m889fbe3[m HEAD@{10}: commit: remove other section from pdf generator
+[33m8644177[m HEAD@{11}: commit: refactoring create pdf
+[33m1cbba5e[m HEAD@{12}: commit: fix rendering text
+[33mb4685d3[m HEAD@{13}: commit: s
+[33m5ebaddf[m HEAD@{14}: commit: s
+[33m8eda0c0[m HEAD@{15}: commit: add to gg seacrh
+[33m258e096[m HEAD@{16}: commit: remove e
+[33mb6e90c4[m HEAD@{17}: commit: ignore
+[33mf1bbfd5[m HEAD@{18}: commit: rename signup on app.jsx
+[33m2735ea8[m HEAD@{19}: commit: phase 3
+[33m9d96e91[m HEAD@{20}: commit: update page db recruiter
+[33m796350a[m HEAD@{21}: commit: fix footer height
+[33ma57e955[m HEAD@{22}: commit: fix navbar
+[33md5ef692[m HEAD@{23}: commit: update file view
+[33m90ab1fd[m HEAD@{24}: commit: s
+[33m5677c0f[m HEAD@{25}: commit: new layout
+[33m9dc55f6[m HEAD@{26}: commit: s
+[33maae5a28[m HEAD@{27}: commit: display keywords
+[33mf8a56b5[m HEAD@{28}: commit: remove max width lauoit
+[33mcbe6182[m HEAD@{29}: commit: fix layout job detail
+[33m19174a9[m HEAD@{30}: commit: update logo ig on ták
+[33meae460b[m HEAD@{31}: commit: update logo ig
+[33mf7e54a2[m HEAD@{32}: commit: ád
+[33m8bed2e3[m HEAD@{33}: commit: s
+[33m002a39c[m HEAD@{34}: commit: restore navbar style3
+[33m78e8dd5[m HEAD@{35}: commit: restore navbar style2
+[33macd8a40[m HEAD@{36}: commit: restore navbar style
+[33m349f6fe[m HEAD@{37}: commit: debug formsubmit
+[33m0fab145[m HEAD@{38}: commit: import naviga on pending page
+[33m89fd179[m HEAD@{39}: commit: remove search
+[33mfdb5bc2[m HEAD@{40}: commit: comment console log
+[33m74137af[m HEAD@{41}: commit: fix export data style
+[33m2756020[m HEAD@{42}: commit: fix export data
+[33m611e3da[m HEAD@{43}: commit: add bank info
+[33me52848a[m HEAD@{44}: commit: userlist infor debug
+[33mb28e7ed[m HEAD@{45}: commit: userlist refactor
+[33m0064190[m HEAD@{46}: commit: save UserInfos
+[33me797954[m HEAD@{47}: commit: move Chart Components
+[33me052d30[m HEAD@{48}: commit: sss
+[33m1368cd7[m HEAD@{49}: commit: Phase 3
+[33m2d06490[m HEAD@{50}: commit: debug
+[33m5f023bc[m HEAD@{51}: commit: Add Chart 3
+[33m48f8b0f[m HEAD@{52}: commit: Add Chart 2
+[33m2284f13[m HEAD@{53}: commit: Add Chart 1
+[33md95637e[m HEAD@{54}: commit: Add Chart
+[33mf1feb4e[m HEAD@{55}: commit: style export excel button 2
+[33m36bb388[m HEAD@{56}: commit: style export excel button 1
+[33mdbd2f3f[m HEAD@{57}: commit: style export excel button
+[33md2c06c4[m HEAD@{58}: commit: add excel file export
+[33me6bed45[m HEAD@{59}: commit: split candidates trakcer by status 3.
+[33m03c65c5[m HEAD@{60}: commit: split candidates trakcer by status 2. Add debug
+[33me85f480[m HEAD@{61}: commit: split candidates trakcer by status 1
+[33me3966dc[m HEAD@{62}: commit: split candidates trakcer by status
+[33mdd43fa3[m HEAD@{63}: commit: fix submit form
+[33m2e96344[m HEAD@{64}: commit: np
+[33m3111234[m HEAD@{65}: commit: route
+[33m725a3f0[m HEAD@{66}: commit: reset pas
+[33m349e09e[m HEAD@{67}: commit: cv
+[33m96cd972[m HEAD@{68}: commit: s
+[33m2256b1d[m HEAD@{69}: commit: sort
+[33mfbb813f[m HEAD@{70}: commit: updates
+[33m75e9216[m HEAD@{71}: commit: update
+[33m816b979[m HEAD@{72}: commit: update actions for admin
+[33meb828e2[m HEAD@{73}: commit: debug
+[33mfb51b0d[m HEAD@{74}: commit: ss
+[33meab1d13[m HEAD@{75}: commit: submit
+[33me1abced[m HEAD@{76}: commit: debug
+[33m45d8b22[m HEAD@{77}: commit: debug
+[33md138f31[m HEAD@{78}: commit: de
+[33m768603c[m HEAD@{79}: commit: debug
+[33mba403f9[m HEAD@{80}: commit: add form
+[33m6c42dfe[m HEAD@{81}: commit: date
+[33m4d3d845[m HEAD@{82}: commit: d
+[33md3450ad[m HEAD@{83}: commit: s
+[33m187ba8f[m HEAD@{84}: commit: debug
+[33m4f287b7[m HEAD@{85}: commit: debug c
+[33m6049282[m HEAD@{86}: commit: debug
+[33m64055ad[m HEAD@{87}: commit: fix re
+[33me88f48b[m HEAD@{88}: commit: fix ren
+[33m4e1fc0b[m HEAD@{89}: commit: fix rende
+[33m6c1fceb[m HEAD@{90}: commit: fix render
+[33m26ffcbd[m HEAD@{91}: commit: render
+[33mea989a0[m HEAD@{92}: commit: render detail
+[33m8af3ce8[m HEAD@{93}: commit: ui
+[33m60a4adb[m HEAD@{94}: commit: update
+[33md41e7f6[m HEAD@{95}: commit: jf
+[33m59b9eb3[m HEAD@{96}: commit: client
+[33m92bbd61[m HEAD@{97}: commit: add stylings
+[33m4515e5a[m HEAD@{98}: commit: add styling
+[33mb9faced[m HEAD@{99}: commit: at
+[33m1b30411[m HEAD@{100}: commit: auts
+[33m1251c0f[m HEAD@{101}: commit: auth
+[33m17efe41[m HEAD@{102}: commit: menu open
+[33m6bb1674[m HEAD@{103}: commit: remove console log
+[33m511f85e[m HEAD@{104}: commit: fix
+[33m61e6271[m HEAD@{105}: commit: import
+[33me412228[m HEAD@{106}: commit: import css
+[33m900188f[m HEAD@{107}: commit: debug
+[33m828db32[m HEAD@{108}: commit: import css
+[33m3371fc0[m HEAD@{109}: commit: fix css
+[33m129db1e[m HEAD@{110}: commit: fix s
+[33m3dd5240[m HEAD@{111}: commit: fix
+[33maab436f[m HEAD@{112}: commit: fix ps
+[33m525aef3[m HEAD@{113}: commit: fix ul
+[33mbfbf241[m HEAD@{114}: commit: fix ul
+[33m7f791f7[m HEAD@{115}: commit: s
+[33m6bf3c2b[m HEAD@{116}: commit: remove
+[33m38d755a[m HEAD@{117}: commit: saved job
+[33ma851062[m HEAD@{118}: commit: saved jobs
+[33m33693f0[m HEAD@{119}: commit: saved jobss
+[33mc319c15[m HEAD@{120}: commit: saved jobs
+[33m5b7488c[m HEAD@{121}: commit: email
+[33m1767c0a[m HEAD@{122}: commit: debugs
+[33m1f4d0c3[m HEAD@{123}: commit: debug
+[33mabdf4e4[m HEAD@{124}: commit: debu
+[33mb6ec8db[m HEAD@{125}: commit: debug
+[33m073079f[m HEAD@{126}: commit: jids
+[33m2fdefd0[m HEAD@{127}: commit: c
+[33m7dcde11[m HEAD@{128}: commit: cc
+[33m955e134[m HEAD@{129}: commit: cc
+[33m59c2106[m HEAD@{130}: commit: c
+[33mb624962[m HEAD@{131}: commit: userss list
+[33m92587d0[m HEAD@{132}: commit: userss
+[33mb24ac9c[m HEAD@{133}: commit: users
+[33mdb629e3[m HEAD@{134}: commit: columns
+[33m5e32e11[m HEAD@{135}: commit: column
+[33m02e8e73[m HEAD@{136}: commit: columnss
+[33m369615e[m HEAD@{137}: commit: columns
+[33mfb33462[m HEAD@{138}: commit: update
+[33m45e23cf[m HEAD@{139}: commit: update
+[33mae78fa3[m HEAD@{140}: commit: .
+[33m4046309[m HEAD@{141}: commit: render statuss
+[33m75d5551[m HEAD@{142}: commit: render status
+[33m954bb52[m HEAD@{143}: commit: daten
+[33m0fd2388[m HEAD@{144}: commit: datas
+[33mbecc8cc[m HEAD@{145}: commit: data
+[33m74ea3b2[m HEAD@{146}: commit: api f buttonss
+[33m89e9e5e[m HEAD@{147}: commit: api f buttons
+[33m8cd790b[m HEAD@{148}: commit: butonss
+[33m2fe1d06[m HEAD@{149}: commit: butons
+[33m8739fc2[m HEAD@{150}: commit: remove
+[33mbf7183f[m HEAD@{151}: commit: remove top jobs
+[33md3598a2[m HEAD@{152}: commit: filters wrapper ctv
+[33m0cddd97[m HEAD@{153}: commit: filters wrapper
+[33m3292005[m HEAD@{154}: commit: filters
+[33mc846973[m HEAD@{155}: commit: render input
+[33m506beb4[m HEAD@{156}: commit: only render active jobs
+[33m8ca1d98[m HEAD@{157}: commit: vs
+[33m5b94582[m HEAD@{158}: commit: vo
+[33m368ac82[m HEAD@{159}: commit: csss
+[33m6a418b6[m HEAD@{160}: commit: css
+[33m9cd7f78[m HEAD@{161}: commit: c hide filtds
+[33m005c8e0[m HEAD@{162}: commit: c hide filt
+[33md550133[m HEAD@{163}: commit: c hide filter
+[33mf98b118[m HEAD@{164}: commit: admin c add sort mobile filter
+[33m8a5c6a5[m HEAD@{165}: commit: admin c add sort mobile
+[33m4d044ec[m HEAD@{166}: commit: admin c 2
+[33mff8edcf[m HEAD@{167}: commit: admin c style
+[33me365b34[m HEAD@{168}: commit: admin c
+[33mea0d652[m HEAD@{169}: commit: a
