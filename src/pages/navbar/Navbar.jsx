@@ -103,17 +103,11 @@ export default function Navbar() {
               <div className="w-10 h-10 flex items-center justify-center">
                 <img src={logoImg} alt="Logo" className="w-full h-full object-contain" />
               </div>
-              <span className="text-2xl font-display font-bold text-text-dark tracking-tight">Ant Tech-<span
-                className="text-red-500">Asia</span></span>
+              <span className="text-2xl font-display font-bold text-text-dark tracking-tight"></span>
             </div>
 
             {/* MIDDLE LINKS */}
-            <div className="hidden md:flex items-center gap-8">
-              <a href="" onClick={() => navigate(`/${user?.role}/jobs`)} className="text-sm font-medium text-text-medium hover:text-primary transition-colors">Find Jobs</a>
-              <a href="" onClick={() => alert("Comming soon")} className="text-sm font-medium text-text-medium hover:text-primary transition-colors">For Companies</a>
-              <a href="" onClick={() => alert("Comming soon")} className="text-sm font-medium text-text-medium hover:text-primary transition-colors">Headhunters</a>
-              <a href="" onClick={() => alert("Comming soon")} className="text-sm font-medium text-text-medium hover:text-primary transition-colors">Resources</a>
-            </div>
+     
 
             {/* RIGHT DESKTOP */}
             <div className="hidden md:flex items-center gap-4">
